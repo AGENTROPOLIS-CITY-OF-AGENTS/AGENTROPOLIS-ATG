@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05030a" />
+  <meta name="description" content="AGENTROPOLIS Agentdex prototype for discovering governed agents through ATG identity, mandate, capability, authority, evidence, and receipt metadata." />
+  <title>AGENTROPOLIS Agentdex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="agentdex.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span>ATG</span><strong>AGENTROPOLIS</strong></a>
+    <div class="prototype-badge">PUBLIC PROTOTYPE · NO LIVE INSTALLATION</div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">AGENTDEX ENTRY NO. <span id="entry-number">0001</span></p>
+        <h1 id="agent-name">AEGIS SENTINEL</h1>
+        <p id="agent-summary" class="lede"></p>
+      </div>
+      <div class="hero-actions">
+        <button class="button ghost" id="copy-id">Copy ATG ID</button>
+        <button class="button primary" id="copy-install">Copy Preview Command</button>
+      </div>
+    </section>
+
+    <section class="profile-grid">
+      <aside class="portrait-card">
+        <div class="portrait" id="portrait" aria-label="Agent avatar placeholder">AS</div>
+        <div class="status-row"><span class="status-dot"></span><strong id="verification-state">DECLARED</strong></div>
+        <p class="truth-label">Metadata shown here is a static preview. Identity, signatures, reputation, receipts, and installation are not cryptographically verified or operational.</p>
+      </aside>
+
+      <article class="agent-card">
+        <div class="command-row">
+          <code id="install-command">npx agentropolis install aegis-sentinel --preview</code>
+          <button id="copy-command" aria-label="Copy preview command">COPY</button>
+        </div>
+
+        <div class="facts">
+          <div><span>ATG ID</span><strong id="atg-id"></strong></div>
+          <div><span>DISTRICT</span><strong id="district"></strong></div>
+          <div><span>RUNTIME</span><strong id="runtime"></strong></div>
+          <div><span>DEPLOYMENT</span><strong id="deployment"></strong></div>
+        </div>
+
+        <div class="section-block">
+          <span class="label">MANDATE</span>
+          <p id="mandate"></p>
+        </div>
+
+        <div class="section-block two-col">
+          <div><span class="label">CAPABILITIES</span><ul id="capabilities"></ul></div>
+          <div><span class="label">AUTHORITY LIMITS</span><ul id="authority"></ul></div>
+        </div>
+
+        <div class="section-block two-col">
+          <div><span class="label">EVIDENCE REQUIREMENTS</span><ul id="evidence"></ul></div>
+          <div><span class="label">RECEIPT MODEL</span><ul id="receipts"></ul></div>
+        </div>
+
+        <div class="section-block">
+          <span class="label">TAGS</span>
+          <div id="tags" class="tags"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="registry-note">
+      <strong>Petdex sells personality. Agentdex exposes accountable labor.</strong>
+      <p>Every future installable entry should bind identity, mandate, authority, capability claims, evidence, and receipts into one machine-readable ATG declaration.</p>
+    </section>
+  </main>
+
+  <script src="agentdex.js" type="module"></script>
+</body>
+</html>
