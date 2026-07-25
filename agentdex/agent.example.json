@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_status": "prototype_non_normative",
+  "entry_number": "0001",
+  "identity": {
+    "name": "AEGIS SENTINEL",
+    "slug": "aegis-sentinel",
+    "atg_id": "atg:agentropolis:aegis-sentinel:v0.1-preview",
+    "district": ["governance", "audit"],
+    "version": "0.1.0-preview"
+  },
+  "mandate": {
+    "purpose": "Inspect proposed agent actions against declared policy, authority scope, evidence requirements, and receipt completeness.",
+    "escalation": "human_mission_control"
+  },
+  "capabilities": [
+    "policy_envelope_inspection",
+    "authority_scope_comparison",
+    "receipt_completeness_check",
+    "drift_detection"
+  ],
+  "authority": {
+    "mode": "read_only",
+    "key_custody": false,
+    "settlement": false,
+    "self_approval": false,
+    "human_review_required": true
+  },
+  "evidence_requirements": [
+    "source_references",
+    "policy_decision_trace",
+    "uncertainty_declaration",
+    "timestamped_context"
+  ],
+  "receipt_states": [
+    "receipt_pending",
+    "unsigned_preview",
+    "pending_verification",
+    "human_review_required"
+  ],
+  "deployment": {
+    "preference": "local_first",
+    "runtime": "atralith_compatible_preview",
+    "bounded_execution": true
+  },
+  "installation": {
+    "status": "non_operational_preview",
+    "command": "npx agentropolis install aegis-sentinel --preview"
+  }
+}
