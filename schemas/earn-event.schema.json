@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/schemas/earn-event.schema.json",
+  "title": "ATG EARN Economic Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id","event_type","occurred_at","mission_id","district_id","actor_agent_id","status","receipt_state"],
+  "properties": {
+    "event_id": {"type":"string","minLength":8},
+    "event_type": {"type":"string","enum":["budget.requested","budget.reserved","budget.approved","budget.denied","cost.estimated","cost.incurred","revenue.attributed","revenue.confirmed","bounty.claimed","bounty.completed","runway.warning","agent.throttled","agent.hibernated","agent.reactivated"]},
+    "occurred_at": {"type":"string","format":"date-time"},
+    "mission_id": {"type":"string","minLength":3},
+    "district_id": {"type":"string","minLength":2},
+    "actor_agent_id": {"type":"string","minLength":3},
+    "subject_agent_id": {"type":["string","null"]},
+    "mandate_id": {"type":["string","null"]},
+    "work_receipt_id": {"type":["string","null"]},
+    "acceptance_evidence": {"type":"array","items":{"type":"string"},"default":[]},
+    "amount": {"type":["number","null"],"minimum":0},
+    "unit": {"type":["string","null"],"enum":["OPERATING_CREDIT","USD","XENTS","OTHER",null]},
+    "gross_value": {"type":["number","null"],"minimum":0},
+    "direct_cost": {"type":["number","null"],"minimum":0},
+    "net_contribution": {"type":["number","null"]},
+    "contribution_weights": {"type":"object","additionalProperties":{"type":"number","minimum":0,"maximum":1}},
+    "policy_version": {"type":["string","null"]},
+    "status": {"type":"string","enum":["proposed","pending_approval","approved","denied","recorded","confirmed","reversed"]},
+    "settlement_state": {"type":"string","enum":["not_applicable","dry_run","pending","approved","settled","failed","reversed"],"default":"not_applicable"},
+    "receipt_state": {"type":"string","enum":["unsigned_preview","pending_verification","verified","rejected"]},
+    "idempotency_key": {"type":["string","null"]},
+    "metadata": {"type":"object","additionalProperties":true}
+  }
+}
