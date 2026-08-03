@@ -1,0 +1,29 @@
+{
+  "mandate_id": "mdt_7x3a9k",
+  "agent_id": "agent:treasury-01",
+  "action": {
+    "type": "transfer",
+    "method": "send",
+    "target": "0x1234567890abcdef1234567890abcdef12345678"
+  },
+  "scope": {
+    "maximum_value": "1.5",
+    "allowed_assets": ["ETH"],
+    "allowed_chains": ["ethereum"],
+    "allowed_destinations": ["0xabcdef..."],
+    "forbidden_fallbacks": ["software_key"]
+  },
+  "constraints": {
+    "valid_from": "2026-08-01T00:00:00Z",
+    "valid_until": "2026-08-08T00:00:00Z",
+    "max_uses": 3,
+    "rate_limit_per_hour": 1,
+    "required_approvers": ["principal:tony"],
+    "required_signer_class": "hardware_signer",
+    "revocation_conditions": ["price exceeds 2.0 ETH", "destination address rotates"]
+  },
+  "enforcement": "advisory",
+  "mandate_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+  "created_at": "2026-08-01T00:00:00Z",
+  "issued_by": "principal:tony"
+}

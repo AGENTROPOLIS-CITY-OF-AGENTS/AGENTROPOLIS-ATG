@@ -1,0 +1,41 @@
+name: ATG Schema Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validator deps
+        run: pip install jsonschema
+      - name: Validate all schemas are well-formed
+        run: python3 validate_atg.py --check-schemas
+      - name: Validate fixtures
+        run: |
+          python3 validate_atg.py mandate tests/fixtures/valid-mandate.json
+          python3 validate_atg.py envelope tests/fixtures/valid-envelope.json
+          python3 validate_atg.py receipt tests/fixtures/valid-receipt.json
+          python3 validate_atg.py risk tests/fixtures/valid-risk.json
+      - name: Confirm invalid fixtures are rejected
+        run: |
+          python3 validate_atg.py mandate tests/fixtures/invalid-mandate.json && exit 1 || true
+          python3 validate_atg.py envelope tests/fixtures/invalid-envelope-blind-without-fallback.json && exit 1 || true
+          python3 validate_atg.py receipt tests/fixtures/invalid-receipt-missing-fields.json && exit 1 || true
+      - name: Lint existing JSON schemas
+        run: |
+          python3 -c '
+import json, glob
+for f in glob.glob("contracts/**/*.schema.json", recursive=True):
+    with open(f) as fh:
+        json.load(fh)
+    print("OK", f)
+          '

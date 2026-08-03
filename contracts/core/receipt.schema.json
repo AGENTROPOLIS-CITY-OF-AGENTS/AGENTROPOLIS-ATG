@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/schemas/core/receipt.schema.json",
+  "title": "ATG Authorization Receipt",
+  "description": "A verifiable authorization receipt covering the mandate, policy decision, reviewed rendering, payload, authorization method, execution result, and verification state. Per RFC-0001, the receipt MUST NOT claim hardware enforcement, human review, clear signing, or non-exportable key residency unless evidence exists to support the claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["receipt_id", "mandate_hash", "payload_hash", "authorization_class", "verification_state", "created_at"],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "description": "Unique identifier for this receipt."
+    },
+    "mandate_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the mandate authorizing this action."
+    },
+    "policy_decision_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the policy decision that evaluated the mandate."
+    },
+    "rendered_intent_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the human-readable intent that was reviewed and approved."
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the exact executable payload."
+    },
+    "authorization_class": {
+      "type": "string",
+      "enum": ["A0_OBSERVE", "A1_REVERSIBLE", "A2_BOUNDED", "A3_IRREVERSIBLE", "A4_ROOT"]
+    },
+    "display_trust": {
+      "type": "string",
+      "enum": ["independent_trusted_path", "independent_secondary_verification", "host_rendered", "opaque"]
+    },
+    "signer_type": {
+      "type": "string",
+      "enum": ["software_session", "hardware_signer", "hsm", "threshold_signer", "quorum", "none"]
+    },
+    "confirmation": {
+      "type": "string",
+      "enum": ["none", "human_physical", "human_passkey", "machine_policy", "quorum_vote", "simulated"]
+    },
+    "blind_signing": {
+      "type": "boolean",
+      "description": "Whether the payload was signed without clear rendering."
+    },
+    "fallback_used": {
+      "type": "boolean",
+      "default": false
+    },
+    "result_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the executed result."
+    },
+    "verification_state": {
+      "type": "string",
+      "enum": ["verified", "pending_verification", "unsigned_preview", "simulated", "failed_verification"],
+      "description": "Current verification state. 'unsigned_preview' and 'simulated' are prototype states — see README truth labels."
+    },
+    "receipt_chain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step", "component", "hash"],
+        "properties": {
+          "step": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "component": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "maxLength": 72 }
+        }
+      },
+      "maxItems": 128,
+      "description": "Ordered chain of hashes from mandate to execution."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verifier": {
+      "type": "string",
+      "maxLength": 256,
+      "description": "Component or agent that verified this receipt."
+    }
+  }
+}

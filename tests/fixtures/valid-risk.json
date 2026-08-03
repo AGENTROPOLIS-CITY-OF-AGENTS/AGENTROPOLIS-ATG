@@ -1,0 +1,9 @@
+{
+  "blind_signing": true,
+  "reason": "unsupported_contract_parser",
+  "required_action": "escalate_or_abort",
+  "payload_decode_coverage": 0.15,
+  "unresolved_fields": ["data", "value", "to"],
+  "escalation_target": "quorum:governance",
+  "override_authorized": false
+}
