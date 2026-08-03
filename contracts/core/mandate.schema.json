@@ -40,12 +40,17 @@
           "type": "string",
           "maxLength": 2048,
           "description": "Target resource, contract, or destination."
+        },
+        "stage": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Pipeline stage for profiled mandates (CITYFLIGHT, RCP, etc.)."
         }
       }
     },
     "scope": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "maximum_value": {
           "type": "string",
@@ -80,7 +85,7 @@
     },
     "constraints": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "valid_from": {
           "type": "string",
