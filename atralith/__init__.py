@@ -7,3 +7,7 @@ receipt verifier.
 """
 
 __version__ = "0.1.0"
+
+from atralith.mandate_builder import build, hash_mandate, validate
+
+__all__ = ["build", "hash_mandate", "validate", "__version__"]
