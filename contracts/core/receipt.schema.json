@@ -68,9 +68,22 @@
       "description": "SHA-256 hash of the executed result."
     },
     "verification_state": {
-      "type": "string",
-      "enum": ["verified", "pending_verification", "unsigned_preview", "simulated", "failed_verification"],
-      "description": "Current verification state. 'unsigned_preview' and 'simulated' are prototype states — see README truth labels."
+    "type": "string",
+    "enum": [
+    "verified",
+    "pending_verification",
+    "unsigned_preview",
+    "simulated",
+    "failed_verification",
+    "generation_pending",
+    "validation_pending",
+    "validation_passed",
+    "release_approved",
+    "deployed",
+    "rollback_triggered",
+    "rejected"
+    ],
+    "description": "Current verification state. 'unsigned_preview' and 'simulated' are prototype states — see README truth labels."
     },
     "receipt_chain": {
       "type": "array",
