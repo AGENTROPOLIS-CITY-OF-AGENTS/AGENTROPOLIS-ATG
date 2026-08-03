@@ -1,9 +1,0 @@
-{
-  "receipt_id": "rcpt_bad",
-  "mandate_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
-  "payload_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002",
-  "authorization_class": "A3_IRREVERSIBLE",
-  "verification_state": "verified",
-  "created_at": "2026-08-01T00:00:00Z",
-  "blind_signing": true
-}

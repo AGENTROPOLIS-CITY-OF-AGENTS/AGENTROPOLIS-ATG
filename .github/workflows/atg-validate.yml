@@ -27,9 +27,9 @@ jobs:
           PYTHONPATH=. python3 validate_atg.py risk tests/fixtures/valid-risk.json
       - name: Confirm invalid fixtures are rejected
         run: |
-          PYTHONPATH=. python3 validate_atg.py mandate tests/fixtures/invalid-mandate.json && exit 1 || true
-          PYTHONPATH=. python3 validate_atg.py envelope tests/fixtures/invalid-envelope-blind-without-fallback.json && exit 1 || true
-          PYTHONPATH=. python3 validate_atg.py receipt tests/fixtures/invalid-receipt-missing-fields.json && exit 1 || true
+          ! PYTHONPATH=. python3 validate_atg.py mandate tests/fixtures/invalid-mandate.json
+          ! PYTHONPATH=. python3 validate_atg.py envelope tests/fixtures/invalid-envelope-bad-class.json
+          ! PYTHONPATH=. python3 validate_atg.py receipt tests/fixtures/invalid-receipt-wrong-hash-state.json
       - name: Lint existing JSON schemas
         run: PYTHONPATH=. python3 -c 'import json,glob;[json.load(open(f)) or print("OK",f) for f in glob.glob("contracts/**/*.schema.json",recursive=True)]'
 

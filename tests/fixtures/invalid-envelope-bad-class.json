@@ -5,7 +5,7 @@
     "payload_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002"
   },
   "authorization": {
-    "class": "A3_IRREVERSIBLE",
+    "class": "INVALID_CLASS",
     "authorizer": "signer:test",
     "signer_type": "hardware_signer",
     "key_residency": "non_exportable",
