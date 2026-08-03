@@ -1,0 +1,21 @@
+{
+  "receipt_id": "rcpt_9f2b1a",
+  "mandate_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+  "policy_decision_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000003",
+  "rendered_intent_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000004",
+  "payload_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002",
+  "authorization_class": "A3_IRREVERSIBLE",
+  "display_trust": "independent_trusted_path",
+  "signer_type": "hardware_signer",
+  "confirmation": "human_physical",
+  "blind_signing": false,
+  "fallback_used": false,
+  "result_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000005",
+  "verification_state": "verified",
+  "receipt_chain": [
+    {"step": "mandate_evaluated", "component": "aegis", "hash": "sha256:0000000000000000000000000000000000000000000000000000000000000010"},
+    {"step": "payload_rendered", "component": "atralith", "hash": "sha256:0000000000000000000000000000000000000000000000000000000000000011"}
+  ],
+  "created_at": "2026-08-01T00:00:00Z",
+  "verifier": "agent:auditor"
+}

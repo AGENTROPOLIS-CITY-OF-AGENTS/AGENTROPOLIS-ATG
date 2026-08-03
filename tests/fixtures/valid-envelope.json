@@ -1,0 +1,17 @@
+{
+  "proposal": {
+    "agent_id": "agent:planner",
+    "mandate_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+    "payload_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002"
+  },
+  "authorization": {
+    "class": "A3_IRREVERSIBLE",
+    "authorizer": "signer:treasury-01",
+    "signer_type": "hardware_signer",
+    "key_residency": "non_exportable",
+    "display_trust": "independent_trusted_path",
+    "confirmation": "human_physical",
+    "blind_signing": false,
+    "fallback_used": false
+  }
+}

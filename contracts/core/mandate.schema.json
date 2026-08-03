@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/schemas/core/mandate.schema.json",
+  "title": "ATG Mandate",
+  "description": "An ATG mandate specifying the scope of authority, constraints, and metadata for a delegated action. Mandates are advisory by default unless enforced by a runtime policy-decision point.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mandate_id", "agent_id", "action", "scope", "enforcement"],
+  "properties": {
+    "mandate_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "description": "Unique identifier for this mandate."
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "The agent authorized to act under this mandate."
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "The action type (e.g., 'transfer', 'deploy', 'publish')."
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "description": "Permitted method for the action."
+        },
+        "target": {
+          "type": "string",
+          "maxLength": 2048,
+          "description": "Target resource, contract, or destination."
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maximum_value": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Maximum value for economic actions."
+        },
+        "allowed_assets": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 256 },
+          "maxItems": 256,
+          "description": "Allowed asset identifiers or contract addresses."
+        },
+        "allowed_chains": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 64 },
+          "maxItems": 64,
+          "description": "Allowed chain identifiers."
+        },
+        "allowed_destinations": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 256 },
+          "maxItems": 256,
+          "description": "Allowed destination addresses or endpoints."
+        },
+        "forbidden_fallbacks": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 128 },
+          "maxItems": 128,
+          "description": "Authorization paths that must not be used as fallbacks."
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "valid_from": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Earliest time the mandate is valid."
+        },
+        "valid_until": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Latest time the mandate is valid."
+        },
+        "max_uses": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of times this mandate may be exercised."
+        },
+        "rate_limit_per_hour": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum invocations per hour."
+        },
+        "required_approvers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 256 },
+          "maxItems": 64,
+          "description": "Agent or principal identifiers required to co-approve."
+        },
+        "required_signer_class": {
+          "type": "string",
+          "enum": ["software_session", "hardware_signer", "hsm", "threshold_signer", "quorum"],
+          "description": "Minimum required signer class for the authorization path."
+        },
+        "revocation_conditions": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 512 },
+          "maxItems": 64,
+          "description": "Conditions that trigger mandate revocation."
+        }
+      }
+    },
+    "enforcement": {
+      "type": "string",
+      "enum": ["advisory", "enforced"],
+      "description": "Whether the mandate constraints are advisory text or enforced by a runtime policy-decision point. A system that can describe but not block violations MUST label its mandates 'advisory'."
+    },
+    "mandate_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "maxLength": 72,
+      "description": "SHA-256 hash of the canonical serialized mandate content."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issued_by": {
+      "type": "string",
+      "maxLength": 256,
+      "description": "Principal or authority that issued this mandate."
+    }
+  }
+}
