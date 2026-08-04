@@ -1,4 +1,4 @@
-"""Authorization envelope signer — separates proposal from authorization.
+"""Authorization envelope builder — separates proposal from authorization.
 
 Usage:
     from atralith.envelope import sign_envelope
@@ -50,10 +50,12 @@ def sign_envelope(
     blind_signing: bool = False,
     fallback_used: bool = False,
 ) -> dict[str, Any]:
-    """Produce an ATG authorization envelope.
+    """Construct and validate an ATG authorization envelope.
 
     The envelope separates the proposing agent from the authorizing component.
     The mandate_hash and payload_hash bind the envelope to those exact inputs.
+    It records caller-provided authorization claims; it does not perform
+    cryptographic signing or authenticate the authorizer.
 
     Args:
         mandate: A validated mandate dict (from build_mandate).

@@ -3,18 +3,19 @@
 ATRALITH-lite is the first working slice of the ATRALITH Agent Kit — a reference
 implementation of ATG mandate, envelope, and receipt primitives.
 
-It implements RFC-0001 (Trusted Authorization Path) as runnable code: build
-mandates, sign authorization envelopes, generate verifiable receipts, and verify
-receipt chain integrity.
+It implements a structural RFC-0001 (Trusted Authorization Path) reference
+slice: build mandates, construct authorization envelopes, generate receipts, and
+cross-check receipt claims and hashes against supplied artifacts. It does not
+perform cryptographic signing or verify signer authenticity.
 
 ## What it does
 
 | Module | Function | Purpose |
 |--------|----------|---------|
 | `atralith.mandate` | `build_mandate()` | Build and validate an ATG mandate against the normative schema |
-| `atralith.envelope` | `sign_envelope()` | Produce an authorization envelope separating proposal from authority |
-| `atralith.receipt` | `generate_receipt()` | Generate a verifiable receipt binding mandate → payload → result |
-| `atralith.receipt` | `verify_receipt()` | Verify receipt chain integrity and cross-check hashes |
+| `atralith.envelope` | `sign_envelope()` | Construct an authorization envelope separating proposal from authority |
+| `atralith.receipt` | `generate_receipt()` | Generate a receipt binding mandate → payload → result |
+| `atralith.receipt` | `verify_receipt()` | Check receipt structure and supplied artifact claims/hashes |
 
 Every function validates its output against the normative JSON Schema 2020-12
 contracts in `contracts/core/`.
@@ -34,7 +35,7 @@ mandate = build_mandate(
     issued_by="principal:tony",
 )
 
-# 2. Sign an authorization envelope
+# 2. Construct an authorization envelope
 envelope = sign_envelope(
     mandate=mandate,
     payload={"action": "deploy", "artifact_id": "img_7f3a"},
@@ -50,7 +51,7 @@ receipt = generate_receipt(
     verification_state="deployed",
 )
 
-# 4. Verify
+# 4. Verify structural/hash consistency against independently supplied evidence
 valid, findings = verify_receipt(receipt, envelope, {"status": "deployed"})
 assert valid, findings
 ```
@@ -61,7 +62,8 @@ assert valid, findings
 # Build a mandate
 python3 -m atralith.cli build-mandate "agent:test" "read" --issued-by "principal:tony"
 
-# Sign an envelope
+# Construct an envelope
+# `sign-envelope` is a legacy command name; it does not create a cryptographic signature.
 python3 -m atralith.cli sign-envelope mandate.json payload.json --auth-class A2_BOUNDED
 
 # Generate a receipt
@@ -71,18 +73,23 @@ python3 -m atralith.cli generate-receipt envelope.json result.json --state deplo
 python3 -m atralith.cli verify receipt.json --envelope envelope.json --result result.json
 ```
 
+Successful verification means the receipt structure and supplied artifact
+hashes/claims are consistent. It does not verify signer identity, cryptographic
+authorization, or cryptographic validity of `receipt_chain` entries.
+
 ## Smoke test
 
 ```bash
 python3 atralith/smoke_test.py
 ```
 
-Runs a full CITYFLIGHT pipeline: mandate → envelope → receipt → verification → tamper detection.
+Runs a full CITYFLIGHT pipeline: mandate → envelope → receipt → structural/hash
+verification → tamper detection.
 
 ## Dependencies
 
 - Python ≥ 3.10
-- jsonschema ≥ 4.18
+- `jsonschema[format]` ≥ 4.18 (`pip install "jsonschema[format]>=4.18"`)
 
 No other dependencies. No network access during operation.
 
