@@ -18,7 +18,7 @@ from pathlib import Path
 try:
     import jsonschema
 except ImportError:
-    print("jsonschema not installed. Run: pip install jsonschema", file=sys.stderr)
+    print("jsonschema not installed. Run: pip install 'jsonschema[format]'", file=sys.stderr)
     sys.exit(2)
 
 
@@ -47,10 +47,58 @@ def load_document(path: Path) -> dict:
         return json.load(f)
 
 
+class MissingFormatSupportError(RuntimeError):
+    """Raised when jsonschema lacks a format checker required by a schema."""
+
+
+def schema_formats(value: object) -> set[str]:
+    """Return every format keyword used anywhere in a JSON Schema value."""
+    if isinstance(value, dict):
+        formats = {
+            format_name
+            for key, format_name in value.items()
+            if key == "format" and isinstance(format_name, str)
+        }
+        for nested_value in value.values():
+            formats.update(schema_formats(nested_value))
+        return formats
+    if isinstance(value, list):
+        return set().union(*(schema_formats(item) for item in value)) if value else set()
+    return set()
+
+
+def ensure_format_support(format_checker: jsonschema.FormatChecker, *schemas: dict) -> None:
+    """Fail when a checker lacks a format keyword asserted by a schema."""
+    required_formats = (
+        set().union(*(schema_formats(schema) for schema in schemas)) if schemas else set()
+    )
+    missing_formats = sorted(required_formats - set(format_checker.checkers))
+    if missing_formats:
+        raise MissingFormatSupportError(
+            "Missing JSON Schema format checker support for: "
+            f"{', '.join(missing_formats)}. Install it with: "
+            "pip install 'jsonschema[format]'"
+        )
+
+
+def format_checker_for(*schemas: dict) -> jsonschema.FormatChecker:
+    """Return a checker only when every schema format has a registered checker."""
+    format_checker = jsonschema.FormatChecker()
+    ensure_format_support(format_checker, *schemas)
+    return format_checker
+
+
+def build_validator(schema: dict, format_checker: jsonschema.FormatChecker | None = None):
+    """Build a validator only when every schema format has a registered checker."""
+    format_checker = format_checker or jsonschema.FormatChecker()
+    ensure_format_support(format_checker, schema)
+    validator_cls = jsonschema.validators.validator_for(schema)
+    return validator_cls(schema, format_checker=format_checker)
+
+
 def validate_doc(doc: dict, schema: dict, label: str) -> list[str]:
     """Validate a single document. Returns list of error strings (empty = valid)."""
-    validator_cls = jsonschema.validators.validator_for(schema)
-    validator = validator_cls(schema)
+    validator = build_validator(schema)
     errors = []
     for err in sorted(validator.iter_errors(doc), key=str):
         errors.append(f"{label}: {err.message} (path: {' → '.join(str(p) for p in err.path)})")
@@ -88,6 +136,21 @@ def main():
 
     if args.all:
         directory = Path(args.all)
+        if not directory.is_dir():
+            parser.error(f"--all path must be a directory: {directory}")
+        schemas = {
+            name: load_schema(schema_path)
+            for name, schema_path in {**SCHEMA_MAP, **EXISTING_SCHEMAS}.items()
+        }
+        try:
+            format_checker = format_checker_for(*schemas.values())
+            validators = {
+                name: build_validator(schema, format_checker)
+                for name, schema in schemas.items()
+            }
+        except MissingFormatSupportError as e:
+            parser.error(str(e))
+
         errors = []
         for path in sorted(directory.rglob("*.json")):
             if str(path).startswith(str(SCHEMA_DIR)):
@@ -95,19 +158,17 @@ def main():
             try:
                 doc = load_document(path)
             except json.JSONDecodeError as e:
-                print(f"SKIP {path}: not valid JSON ({e})")
+                errors.append(f"{path}: not valid JSON ({e})")
                 continue
 
             matched = False
-            for name, schema_path in {**SCHEMA_MAP, **EXISTING_SCHEMAS}.items():
-                schema = load_schema(schema_path)
-                validator = jsonschema.validators.validator_for(schema)(schema)
+            for name, validator in validators.items():
                 if validator.is_valid(doc):
                     print(f"PASS {path}: matches '{name}'")
                     matched = True
                     break
             if not matched:
-                print(f"FAIL {path}: does not match any ATG schema")
+                errors.append(f"{path}: does not match any ATG schema")
 
         if errors:
             for e in errors:
@@ -115,13 +176,19 @@ def main():
             sys.exit(1)
         sys.exit(0)
 
+    if args.schema_name and not args.file:
+        parser.error("file is required when a schema name is supplied")
+
     if args.schema_name not in SCHEMA_MAP:
         print(f"Unknown schema: {args.schema_name}. Choose from: {', '.join(SCHEMA_MAP)}", file=sys.stderr)
         sys.exit(2)
 
     schema = load_schema(SCHEMA_MAP[args.schema_name])
     doc = load_document(Path(args.file))
-    errors = validate_doc(doc, schema, args.file)
+    try:
+        errors = validate_doc(doc, schema, args.file)
+    except MissingFormatSupportError as e:
+        parser.error(str(e))
 
     if errors:
         for e in errors:
