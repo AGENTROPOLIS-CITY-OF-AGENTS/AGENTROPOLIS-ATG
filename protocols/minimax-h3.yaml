@@ -1,0 +1,138 @@
+schema: agentropolis.production-dialect.v1
+protocol_id: minimax.h3.context-ir.v1
+status: adopted
+canonical_owner: wiredchaos/AGENTROPOLIS-ATG
+district_owner: 789_STUDIOS
+orchestrator: HERMES
+vendor:
+  name: MiniMax
+  model_family: MiniMax-H3
+  dialect: H3-Context-IR
+  references:
+    - https://github.com/MiniMax-AI/MiniMax-H3
+    - https://platform.minimax.io/docs/api-reference/video-generation-v2-h3-context-ir
+
+purpose: >-
+  Register MiniMax H3 as a vendor production-language dialect compiled from the
+  sovereign AGENTROPOLIS production program. MiniMax does not become the city-wide
+  canonical language; it is one execution dialect behind governed adapters.
+
+canonical_nodes:
+  - ProductionProgram
+  - Asset
+  - AssetRole
+  - Subject
+  - Environment
+  - Shot
+  - TimeEvent
+  - Action
+  - MotionPath
+  - CameraInstruction
+  - DialogueEvent
+  - SoundEvent
+  - Soundscape
+  - MusicInstruction
+  - RetentionRule
+  - ExclusionRule
+  - OutputConstraint
+  - ValidationRule
+  - RepairOperation
+  - ProductionDialect
+  - GenerationResult
+  - ActionReceipt
+
+canonical_edges:
+  - DECLARES
+  - USES
+  - ASSIGNED_ROLE
+  - FEATURES
+  - FOLLOWS
+  - PERFORMED_BY
+  - OCCURS_AT
+  - CONTROLS
+  - TRACKS
+  - SPOKEN_BY
+  - SYNCHRONIZED_WITH
+  - PRESERVES
+  - REMOVES
+  - VALIDATES
+  - CORRECTS
+  - COMPILES_TO
+  - EXECUTED_BY
+  - DERIVED_FROM
+  - REVIEWED_BY
+  - PRODUCES
+
+h3_mapping:
+  visual_timeline: integrated_multimodal_description
+  soundscape: overall_soundscape
+  music: non_diegetic_music
+  subjects: subject_definitions
+  preservation: retention_analysis
+  shots: bracketed_shot_blocks
+  timestamps: temporal_events
+  assets:
+    image: Picture
+    video: Video
+    audio: Audio
+    reusable_entity: Subject
+  dialogue:
+    speaker_ids: S1_Sn
+    exact_speech: d_blocks
+
+modes:
+  - t2va
+  - i2va
+  - fl2va
+  - l2va
+  - ref2va
+  - edit
+
+required_controls:
+  - asset_role_ledger
+  - retention_matrix
+  - exclusion_contract
+  - timeline_validation
+  - speaker_binding
+  - camera_vector_validation
+  - reference_limit_preflight
+  - annotation_residue_detection
+  - identity_drift_detection
+  - motion_path_drift_detection
+  - audio_sync_validation
+  - contextual_regeneration_receipt
+
+thermodynamic_metrics:
+  - identity_entropy
+  - motion_entropy
+  - timeline_entropy
+  - camera_entropy
+  - audio_entropy
+  - reference_conflict_entropy
+  - instruction_ambiguity
+  - exclusion_leakage
+  - semantic_compression_loss
+  - vendor_translation_loss
+
+governance:
+  external_assets_are_untrusted: true
+  ingest_membrane_required: true
+  provenance_required: true
+  rights_attestation_required: true
+  raw_secrets_in_model_context: false
+  human_approval_required_for:
+    - public_release
+    - identity_sensitive_edit
+    - irreversible_publish
+    - high_cost_generation
+
+pipeline:
+  - creative_intent
+  - canonical_production_program
+  - dialect_compile
+  - h3_context_ir
+  - h3_base_generation
+  - temporal_visual_audio_qa
+  - bounded_repair
+  - contextual_2k_regeneration
+  - provenance_receipt
