@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install deps
-        run: pip install jsonschema
+        run: pip install "jsonschema[format]"
       - name: Validate all schemas are well-formed
         run: PYTHONPATH=. python3 validate_atg.py --check-schemas
       - name: Validate fixtures
@@ -42,6 +42,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install deps
-        run: pip install jsonschema
+        run: pip install "jsonschema[format]"
       - name: Run ATRALITH smoke test
         run: PYTHONPATH=. python3 atralith/smoke_test.py

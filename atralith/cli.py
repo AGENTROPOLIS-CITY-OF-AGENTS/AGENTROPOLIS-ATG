@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""ATRALITH-lite CLI — build, sign, and verify ATG artifacts.
+"""ATRALITH-lite CLI — build and check ATG artifacts.
 
 Usage:
     atralith build-mandate AGENT_ID ACTION_TYPE [--enforcement enforced]
     atralith sign-envelope MANDATE_JSON PAYLOAD_JSON
     atralith generate-receipt ENVELOPE_JSON RESULT_JSON
-    atralith verify RECEIPT_JSON [--envelope ENVELOPE_JSON] [--result RESULT_JSON]
+    atralith verify RECEIPT_JSON --envelope ENVELOPE_JSON --result RESULT_JSON
 """
 
 import argparse
@@ -85,7 +85,8 @@ def cmd_verify(args):
     valid, findings = verify_receipt(receipt, envelope, result)
 
     if valid:
-        print("VERIFIED — receipt is valid and all hash chains match.")
+        print("CONSISTENT — receipt structure and supplied artifact hashes/claims are consistent.")
+        print("NOTE — signer identity and cryptographic authorization were not verified.")
         sys.exit(0)
     else:
         print("FAILED — receipt verification failed:")
@@ -110,7 +111,7 @@ def main():
     p.set_defaults(func=cmd_build_mandate)
 
     # sign-envelope
-    p = sub.add_parser("sign-envelope", help="Sign an authorization envelope")
+    p = sub.add_parser("sign-envelope", help="Build an authorization envelope")
     p.add_argument("mandate_json")
     p.add_argument("payload_json")
     p.add_argument("--auth-class", default="A1_REVERSIBLE")
@@ -130,10 +131,10 @@ def main():
     p.set_defaults(func=cmd_generate_receipt)
 
     # verify
-    p = sub.add_parser("verify", help="Verify a receipt")
+    p = sub.add_parser("verify", help="Check a receipt against supplied evidence")
     p.add_argument("receipt_json")
-    p.add_argument("--envelope", dest="envelope_json")
-    p.add_argument("--result", dest="result_json")
+    p.add_argument("--envelope", dest="envelope_json", required=True)
+    p.add_argument("--result", dest="result_json", required=True)
     p.set_defaults(func=cmd_verify)
 
     args = parser.parse_args()

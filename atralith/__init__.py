@@ -1,9 +1,8 @@
-"""ATRALITH-lite — reference implementation of ATG mandate, envelope, and receipt primitives.
+"""ATRALITH-lite — prototype ATG mandate, envelope, and receipt helpers.
 
-This is a lightweight Python package that produces and verifies RFC-0001-compliant
-ATG artifacts. It is not the full ATRALITH Agent Kit — it is the first working
-slice: mandate builder, authorization envelope signer, receipt generator, and
-receipt verifier.
+This lightweight package builds mandate, envelope, and receipt artifacts and
+checks their schema and hash consistency against supplied evidence. It does not
+authenticate signers or create cryptographic authorization.
 """
 
 __version__ = "0.1.0"
