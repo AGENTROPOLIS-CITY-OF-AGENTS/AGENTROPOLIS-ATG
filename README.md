@@ -67,6 +67,37 @@ For consequential actions, Agentropolis should minimize the trusted computing ba
 
 See [`docs/RFC-0001-TRUSTED-AUTHORIZATION-PATH.md`](docs/RFC-0001-TRUSTED-AUTHORIZATION-PATH.md).
 
+## Economic authority and settlement
+
+ATG now defines a draft economic authority profile for governed agent transactions.
+
+Core rule:
+
+> **User intent is not transaction authority.**
+
+The profile separates commerce discovery from execution authority and compiles each economic action into the smallest effective capability surface:
+
+```text
+Intent -> Inspect -> Simulate -> Preview -> Approve -> Execute -> Verify -> Receipt
+```
+
+Key controls include:
+
+- purpose-bound economic mandates
+- amount, asset, merchant, address, network, time, use-count, retry, recurrence, and delegation limits
+- third-party impact checks
+- passkey, physical, quorum, machine-policy, or dual-control approval classes
+- capability handles, ephemeral tokens, bounded session wallets, single-use credentials, or sealed signers instead of raw production secrets
+- crypto-native modes for `$XENTS`, x402, XRPL, EVM, and Solana
+- optional fiat/card bridges as adapters rather than constitutional dependencies
+- durable ATG receipts for consequential execution
+
+See:
+
+- [`docs/RFC-0003-ECONOMIC-AUTHORITY-AND-SETTLEMENT.md`](docs/RFC-0003-ECONOMIC-AUTHORITY-AND-SETTLEMENT.md)
+- [`contracts/core/economic-mandate.schema.json`](contracts/core/economic-mandate.schema.json)
+- [`examples/economic-mandate.example.json`](examples/economic-mandate.example.json)
+
 ## File structure
 
 ```text
@@ -76,7 +107,9 @@ js/grid.js
 vendor/three.webgpu.min.js
 vendor/three.core.min.js
 assets/
+contracts/
 docs/
+examples/
 README.md
 ```
 
@@ -114,7 +147,7 @@ Replace the corresponding `.asset-slot` fallback panels in `index.html` with `<i
 Protocol layer materials:
 
 - RFCs
-- normative schemas (planned)
+- normative schemas
 - message types
 - authority and risk semantics
 - receipt requirements
