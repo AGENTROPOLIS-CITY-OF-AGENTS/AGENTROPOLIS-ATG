@@ -16,7 +16,7 @@
     "mode": "x402",
     "network": "base",
     "asset": "USDC",
-    "adapter": "atralth.x402.provider-adapter",
+    "adapter": "atralith.x402.provider-adapter",
     "credential_class": "capability_handle"
   },
   "constraints": {
