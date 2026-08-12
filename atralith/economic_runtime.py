@@ -12,6 +12,7 @@ import json
 import time
 import uuid
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from typing import Any, Protocol
 
 from atralith.economic import verify_economic_mandate_hash
@@ -23,6 +24,15 @@ def _canonical(obj: Any) -> str:
 
 def _sha256(obj: Any) -> str:
     return f"sha256:{hashlib.sha256(_canonical(obj).encode('utf-8')).hexdigest()}"
+
+
+def _decimal(value: Any) -> Decimal:
+    if not isinstance(value, str):
+        raise InvalidOperation
+    amount = Decimal(value)
+    if not amount.is_finite():
+        raise InvalidOperation
+    return amount
 
 
 @dataclass(frozen=True)
@@ -65,11 +75,11 @@ class FailClosed54TPolicy:
             reasons.append("transaction asset outside mandate")
 
         try:
-            tx_amount = float(transaction.get("amount"))
-            max_amount = float(limit.get("amount"))
+            tx_amount = _decimal(transaction.get("amount"))
+            max_amount = _decimal(limit.get("amount"))
             if tx_amount < 0 or tx_amount > max_amount:
                 reasons.append("transaction amount outside mandate")
-        except (TypeError, ValueError):
+        except (InvalidOperation, ValueError):
             reasons.append("transaction amount invalid")
 
         scope = economic_mandate.get("counterparty_scope", {})
