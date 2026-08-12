@@ -1,42 +1,68 @@
-# ATG Profile — Governed x402 V2 Client
+# ATG Profile: Governed x402 V2 Settlement
 
-Status: reference implementation profile
+Status: reference profile
 
-## Purpose
+This profile maps x402 V2 client payments into ATG RFC-0003 economic authority.
+It does not turn a wallet into generalized agent authority. The transaction must
+first pass the ATG mandate compiler and the 54-T policy decision point, which
+issue a bounded capability handle to the x402 adapter.
 
-This profile maps x402 V2 machine payments into the ATG RFC-0003 economic-authority model.
+## Normative boundary
 
-AGENTROPOLIS does not treat a `402 Payment Required` response as transaction authority. The server may advertise payment requirements; 54-T decides whether any requirement fits the already-approved economic mandate.
+1. The x402 adapter MUST be treated as a live external settlement adapter.
+2. `execute_economic_action(..., allow_live=True)` MUST be an explicit governed decision.
+3. Private keys, seed phrases, raw wallet credentials, and unrestricted signer objects MUST NOT enter model context.
+4. Signing MUST occur through an injected sealed signer capability.
+5. HTTP transport MUST be injected as a scoped runtime capability.
+6. The protected resource URL and approved domain MUST remain stable between discovery and paid retry.
+7. A caller MUST provide an explicit `x402_policy`; the adapter MUST NOT infer a spend ceiling from the server's 402 response.
+8. x402 V2 `amount` values MUST be treated as integer strings in atomic asset units.
+9. Network identifiers MUST use CAIP-2 form.
+10. The selected scheme, network, asset, amount, recipient, and payment flow MUST fit the governed policy envelope.
+11. `authorization` is the default permitted payment flow. `upfront` and `escrow` require explicit policy opt-in.
+12. A successful HTTP response without a parseable `PAYMENT-RESPONSE` MUST NOT be labeled settled.
+13. Settlement evidence MUST bind the capability handle, economic mandate hash, policy decision hash, payment requirement hash, payment payload hash, and settlement response hash.
 
-## Runtime flow
+## V2 HTTP flow
 
 ```text
-resource request
-  -> 402 + PAYMENT-REQUIRED
-  -> parse x402 V2 requirements
-  -> 54-T policy-envelope match
+Agent intent
+  -> ATG mandate
+  -> RFC-0003 economic mandate
+  -> 54-T decision
+  -> capability handle
+  -> GET/POST protected resource
+  <- 402 + PAYMENT-REQUIRED
+  -> validate requirement against governed x402 policy
   -> sealed signer creates PaymentPayload
   -> retry same resource with PAYMENT-SIGNATURE
-  -> resource response + PAYMENT-RESPONSE
-  -> verification / receipt evidence
+  <- resource + PAYMENT-RESPONSE
+  -> verify settlement truth state
+  -> ATG receipt / WikiVault evidence
 ```
 
-## Normative controls
+## Reference transaction policy
 
-1. x402 version MUST be 2 for this profile.
-2. Networks MUST use explicit CAIP-2 identifiers in the policy envelope.
-3. Payment requirement amounts MUST be interpreted as atomic-unit integer strings.
-4. The selected requirement MUST remain within an explicit `max_amount_atomic` ceiling.
-5. Scheme, network, asset, payee, resource URL, and payment flow MUST be checked before signing.
-6. The default allowed payment flow is `authorization` only.
-7. `upfront` and `escrow` MUST be denied unless the governing policy explicitly allows them.
-8. The paid retry MUST target the same protected resource URL that produced the payment requirement.
-9. The caller MUST NOT inject a prebuilt `PAYMENT-SIGNATURE` header.
-10. Private keys, seed phrases, raw wallet credentials, or unrestricted signer access MUST NOT enter model context or ATG transaction objects.
-11. A runtime signer MUST expose a capability-scoped signing interface and return only the x402 PaymentPayload.
-12. A successful HTTP response without `PAYMENT-RESPONSE` MUST remain `pending_verification`; it MUST NOT be labeled settled.
-13. A settlement response claiming a network different from the selected payment requirement MUST fail verification.
-14. x402 execution remains subject to the parent ATG economic mandate, 54-T policy decision, capability handle, audit, and receipt requirements.
+```json
+{
+  "settlement_mode": "x402",
+  "resource_url": "https://compute.example/render/42",
+  "domain": "compute.example",
+  "x402_policy": {
+    "network": "eip155:8453",
+    "asset": "USDC",
+    "max_amount_atomic": "1500000",
+    "allowed_schemes": ["exact"],
+    "allowed_payment_flows": ["authorization"],
+    "pay_to": "0xabc"
+  }
+}
+```
+
+The human-readable economic mandate may express a decimal value such as `1.50`
+USDC, while the x402 network requirement expresses the same bounded payment in
+atomic token units. Production integration MUST obtain token-decimal metadata
+from a trusted chain/asset registry rather than prompt content.
 
 ## Truth labels
 
@@ -45,16 +71,42 @@ resource request
 - `payment_failed` — payment or paid resource execution did not satisfy success conditions.
 - `settled` — a parseable x402 SettlementResponse reports success, its network matches the selected requirement, and the paid resource request returned a success HTTP status.
 
-`settled` in this adapter means the x402 server/facilitator path reported settlement. Independent chain confirmation, finality depth, or asset-specific proof MAY require additional verification before an application calls the payment economically final.
+`settled` means the x402 server/facilitator path reported settlement. Independent chain confirmation, finality depth, or asset-specific proof may require additional verification before an application calls the payment economically final.
+
+## Threat model
+
+The adapter fails closed against:
+
+- malicious 402 responses asking for more than the approved budget
+- chain or asset substitution
+- merchant recipient substitution when `pay_to` is pinned
+- domain/resource drift after approval
+- caller-injected `PAYMENT-SIGNATURE`
+- signer payloads that change the selected PaymentRequirements
+- extension deletion or overwrite
+- unsupported x402 protocol versions
+- silent upfront payment when only authorization is approved
+- 2xx responses that omit settlement evidence
 
 ## Separation of authority
 
-The server owns discovery of acceptable payment options.
+The resource server may advertise acceptable payment options. 54-T owns whether
+the agent may spend. The sealed signer owns cryptographic payment authorization.
+The transport owns network I/O. ATRALITH binds these stages with capability
+handles, hashes, and receipts; no stage silently inherits another stage's power.
 
-54-T owns whether the agent may spend.
+## Not implemented here
 
-The sealed signer owns cryptographic payment authorization.
+The reference adapter does not itself provide:
 
-The transport owns network I/O.
+- a private key store
+- an EVM or Solana signer
+- facilitator hosting
+- token decimal discovery
+- retry/replay persistence across processes
+- durable nonce accounting
+- chain finality monitoring
+- refunds
+- treasury accounting
 
-ATRALITH binds these stages together with hashes, capability references, and receipts. No one stage may silently inherit the powers of another.
+Those belong behind separately attested provider/chain adapters and 54-T capability scopes.
