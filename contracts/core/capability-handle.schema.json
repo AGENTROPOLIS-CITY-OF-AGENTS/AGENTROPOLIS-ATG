@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/schemas/core/capability-handle.schema.json",
+  "title": "ATG Capability Handle",
+  "description": "Opaque, revocable reference to a scoped capability or credential. Agents receive the handle, not the underlying secret.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["handle", "capability", "issuer", "subject", "scope", "state"],
+  "properties": {
+    "handle": {"type": "string", "pattern": "^cap://[A-Za-z0-9._~:/?#@!$&'()*+,;=-]{1,512}$"},
+    "capability": {"type": "string", "minLength": 1, "maxLength": 256},
+    "issuer": {"type": "string", "minLength": 1, "maxLength": 256},
+    "subject": {"type": "string", "minLength": 1, "maxLength": 256},
+    "scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "resource_constraints": {"type": "array", "items": {"type": "string", "minLength": 1, "maxLength": 512}},
+    "credential_backend": {"type": "string", "enum": ["oauth", "passkey", "hsm", "hardware_signer", "sealed_secret", "ephemeral_token", "session_wallet", "none"]},
+    "secret_exportable": {"type": "boolean", "default": false},
+    "state": {"type": "string", "enum": ["active", "suspended", "revoked", "expired"]},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "policy_ref": {"type": "string", "minLength": 1, "maxLength": 512}
+  }
+}
