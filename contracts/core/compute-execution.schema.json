@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/compute-execution.schema.json",
+  "title": "ATG Compute Execution",
+  "description": "Implementation-neutral contract for governed compute execution targets.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "capability", "execution", "authority", "receipt"],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability": {
+      "type": "string",
+      "pattern": "^compute\\.[a-z0-9._-]+$"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target"],
+      "properties": {
+        "target": {"type": "string", "minLength": 1},
+        "runtime_version": {"type": "string"},
+        "accelerator_framework": {"type": "string"},
+        "accelerator_version": {"type": "string"},
+        "target_class": {
+          "type": "string",
+          "enum": ["cpu", "gpu", "npu", "wasm", "remote", "sandbox", "hybrid", "other"]
+        },
+        "portability": {
+          "type": "string",
+          "enum": ["required", "preferred", "not_required"]
+        },
+        "fallback_allowed": {"type": "boolean", "default": false},
+        "determinism": {
+          "type": "string",
+          "enum": ["required", "preferred", "best_effort", "unspecified"]
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu_ms_max": {"type": "integer", "minimum": 0},
+        "accelerator_ms_max": {"type": "integer", "minimum": 0},
+        "memory_mb_max": {"type": "integer", "minimum": 0},
+        "compile_ms_max": {"type": "integer", "minimum": 0},
+        "wall_ms_max": {"type": "integer", "minimum": 0},
+        "precision": {"type": "string"},
+        "device_constraints": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mandate_id", "capability_handle"],
+      "properties": {
+        "mandate_id": {"type": "string", "minLength": 1},
+        "capability_handle": {"type": "string", "minLength": 1},
+        "principal_id": {"type": "string"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "risk_policy_id": {"type": "string"},
+        "execution_policy_id": {"type": "string"},
+        "egress_allowed": {"type": "boolean"},
+        "remote_execution_allowed": {"type": "boolean"},
+        "sealed_credentials_required": {"type": "boolean"}
+      }
+    },
+    "accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "utility": {"type": "string", "const": "compute"},
+        "bill_to": {"type": "string"},
+        "district_id": {"type": "string"},
+        "settlement_asset": {"type": "string"},
+        "max_charge": {"type": "string"},
+        "metering_required": {"type": "boolean", "default": true}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "artifact_digest": {"type": "string"},
+        "result_digest_required": {"type": "boolean"},
+        "resource_metrics_required": {"type": "boolean"},
+        "provenance_required": {"type": "boolean"},
+        "requested_target_required": {"type": "boolean"},
+        "actual_target_required": {"type": "boolean"}
+      }
+    }
+  }
+}

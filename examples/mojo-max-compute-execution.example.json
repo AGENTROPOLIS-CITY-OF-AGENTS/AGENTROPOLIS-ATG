@@ -1,0 +1,51 @@
+{
+  "request_id": "compute_demo_mojo_max_001",
+  "capability": "compute.kernel",
+  "execution": {
+    "target": "mojo",
+    "runtime_version": "1.0.0",
+    "accelerator_framework": "max",
+    "accelerator_version": "26.5",
+    "target_class": "gpu",
+    "portability": "preferred",
+    "fallback_allowed": true,
+    "determinism": "preferred"
+  },
+  "resources": {
+    "accelerator_ms_max": 2500,
+    "memory_mb_max": 8192,
+    "compile_ms_max": 5000,
+    "wall_ms_max": 10000,
+    "precision": "fp16",
+    "device_constraints": ["verified-capability", "utility-grid-metered"]
+  },
+  "authority": {
+    "mandate_id": "mandate_demo_compute_001",
+    "capability_handle": "cap_compute_kernel_demo",
+    "principal_id": "agent_demo_001"
+  },
+  "policy": {
+    "risk_policy_id": "54T-default-compute",
+    "execution_policy_id": "utility-grid-compute-default",
+    "egress_allowed": false,
+    "remote_execution_allowed": false,
+    "sealed_credentials_required": true
+  },
+  "accounting": {
+    "utility": "compute",
+    "bill_to": "agent_demo_001",
+    "district_id": "infrastructure",
+    "settlement_asset": "XENTS",
+    "max_charge": "25",
+    "metering_required": true
+  },
+  "receipt": {
+    "required": true,
+    "artifact_digest": "sha256:REPLACE_WITH_REAL_ARTIFACT_DIGEST",
+    "result_digest_required": true,
+    "resource_metrics_required": true,
+    "provenance_required": true,
+    "requested_target_required": true,
+    "actual_target_required": true
+  }
+}

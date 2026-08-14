@@ -1,7 +1,0 @@
-{
-  "receipt_id": "rcpt_bad",
-  "mandate_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
-  "payload_hash": "sha256:not-a-valid-hash",
-  "authorization_class": "A2_BOUNDED",
-  "verification_state": "banana"
-}

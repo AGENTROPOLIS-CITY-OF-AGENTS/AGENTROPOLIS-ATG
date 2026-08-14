@@ -1,0 +1,59 @@
+version: 0.1.0
+status: draft
+purpose: "Descriptive registry of execution targets usable by ATG compute profiles. Local policy determines authorization."
+
+rules:
+  implementation_neutral: true
+  registry_is_not_authority: true
+  fallback_requires_explicit_permission: true
+  receipt_records_requested_and_actual_target: true
+
+targets:
+  - id: python
+    class: runtime
+    status: supported-profile
+    role: general-purpose execution and interoperability
+
+  - id: typescript
+    class: runtime
+    status: supported-profile
+    role: application and service execution
+
+  - id: rust
+    class: runtime
+    status: supported-profile
+    role: systems and safety-oriented native execution
+
+  - id: wasm
+    class: portable-runtime
+    status: supported-profile
+    role: sandboxed and portable execution
+
+  - id: mojo
+    class: compiled-runtime
+    status: adapter-target
+    role: high-performance CPU and accelerator-oriented execution
+    vendor: Modular
+    profile:
+      minimum_stable_version: "1.0.0"
+      constitutional_dependency: false
+
+  - id: max
+    class: accelerator-framework
+    status: adapter-target
+    role: CPU/GPU kernels, model serving, and accelerator execution
+    vendor: Modular
+    profile:
+      baseline_release: "26.5"
+      constitutional_dependency: false
+
+  - id: remote
+    class: delegated-runtime
+    status: policy-gated
+    role: provider- or worker-backed remote execution
+
+notes:
+  - "ATG and Atranic do not inherit syntax from execution targets."
+  - "ATRALITH or another conforming implementation performs translation and routing."
+  - "54-T and local policy determine effective capability, egress, credential, and execution scope."
+  - "Utility Grid metering may settle internal usage in $XENTS where enabled."
