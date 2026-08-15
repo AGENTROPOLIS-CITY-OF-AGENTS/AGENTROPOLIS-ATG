@@ -1,0 +1,74 @@
+version: "0.1.0"
+registry: atg-verify-profiles
+
+defaults:
+  authority_effect: none
+  raw_private_keys_exposed: false
+  raw_detector_secrets_exposed: false
+  auto_execute_verified_content: false
+
+profiles:
+  - id: atg.verify.provenance.v1
+    role: full provenance verification
+    evidence:
+      - signed_manifest
+      - detached_signature
+      - registered_signal
+    capabilities:
+      - verify.artifact
+      - verify.provenance
+    network_lookup_default: false
+
+  - id: atg.verify.signature.v1
+    role: cryptographic signature and digest verification
+    evidence:
+      - signed_manifest
+      - detached_signature
+    capabilities:
+      - verify.signature
+      - verify.manifest
+    network_lookup_default: false
+
+  - id: atg.verify.signal.v1
+    role: secondary registered signal verification
+    evidence:
+      - robust_media
+      - statistical_text
+    capabilities:
+      - verify.signal
+    authority_effect: none
+    network_lookup_default: false
+
+  - id: atg.verify.ingress.v1
+    role: provenance plus covert-channel risk screening at ingress
+    evidence:
+      - signed_manifest
+      - detached_signature
+      - registered_signal
+      - risk_checks
+    capabilities:
+      - verify.artifact
+      - verify.provenance
+      - verify.risk.covert-channel
+    quarantine_on:
+      - covert_channel_suspected
+      - identity_encoding_suspected
+      - secret_leak_suspected
+    network_lookup_default: false
+
+security_invariants:
+  - id: ATG-VERIFY-NO-AUTHORITY-001
+    rule: verification evidence never grants execution or mutation authority
+    action: deny
+  - id: ATG-VERIFY-KEY-ISOLATION-001
+    rule: private signing keys never leave sealed signing services
+    action: deny
+  - id: ATG-VERIFY-DETECTOR-ISOLATION-001
+    rule: detector secrets and private watermark keys never leave detector services
+    action: deny
+  - id: ATG-VERIFY-ARBITRARY-PAYLOAD-001
+    rule: signal encoders must not accept arbitrary hidden payloads
+    action: deny
+  - id: ATG-VERIFY-CODE-MUTATION-001
+    rule: executable artifacts must not be mutated solely to satisfy statistical watermarking
+    action: deny
