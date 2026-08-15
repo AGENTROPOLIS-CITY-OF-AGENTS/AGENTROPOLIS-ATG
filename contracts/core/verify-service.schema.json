@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/verify-service.schema.json",
+  "title": "ATG VERIFY Service Contract",
+  "description": "Governed request/response contract for provenance and authenticity verification without granting execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request", "result"],
+  "properties": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "artifact_ref", "verification_profile", "authority"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "artifact_ref": {"type": "string", "minLength": 1},
+        "artifact_digest": {"type": "string"},
+        "media_class": {"type": "string", "enum": ["text", "image", "video", "audio", "code", "document", "3d", "mixed", "other"]},
+        "verification_profile": {"type": "string", "pattern": "^atg\\.verify\\.[a-z0-9._-]+$"},
+        "signal_profile_hint": {"type": "string", "pattern": "^atg\\.signal\\.[a-z0-9._-]+$"},
+        "authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mandate_id", "capability_handle"],
+          "properties": {
+            "mandate_id": {"type": "string", "minLength": 1},
+            "capability_handle": {"type": "string", "minLength": 1},
+            "principal_id": {"type": "string"}
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "risk_policy_id": {"type": "string"},
+            "require_manifest": {"type": "boolean"},
+            "require_signature": {"type": "boolean"},
+            "allow_statistical_evidence": {"type": "boolean", "default": true},
+            "allow_network_lookup": {"type": "boolean", "default": false},
+            "auto_execute_verified_content": {"type": "boolean", "const": false}
+          }
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "state", "authority_effect", "receipt_id"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "state": {"type": "string", "enum": ["verified", "consistent", "inconsistent", "unknown", "tampered", "expired", "revoked", "denied", "error"]},
+        "authority_effect": {"type": "string", "const": "none"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "present": {"type": "boolean"},
+            "valid": {"type": "boolean"},
+            "digest_match": {"type": "boolean"},
+            "issuer": {"type": "string"}
+          }
+        },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "present": {"type": "boolean"},
+            "valid": {"type": "boolean"},
+            "key_epoch": {"type": "string"},
+            "key_status": {"type": "string", "enum": ["active", "retired", "revoked", "unknown"]}
+          }
+        },
+        "signal": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "checked": {"type": "boolean"},
+            "profile_id": {"type": "string"},
+            "detector_version": {"type": "string"},
+            "evidence_state": {"type": "string", "enum": ["consistent", "inconsistent", "unknown", "not_checked"]},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "risk": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "covert_channel_suspected": {"type": "boolean"},
+            "identity_encoding_suspected": {"type": "boolean"},
+            "secret_leak_suspected": {"type": "boolean"},
+            "quarantine_required": {"type": "boolean"},
+            "policy_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+          }
+        },
+        "receipt_id": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  }
+}
