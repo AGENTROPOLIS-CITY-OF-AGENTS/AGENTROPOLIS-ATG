@@ -1,0 +1,49 @@
+request:
+  request_id: verify-demo-001
+  artifact_ref: artifact://incoming/demo-001
+  artifact_digest: sha256:REPLACE_WITH_DIGEST
+  media_class: text
+  verification_profile: atg.verify.ingress.v1
+  signal_profile_hint: atg.signal.text-statistical.v1
+  authority:
+    mandate_id: mandate-demo-001
+    capability_handle: cap://verify/artifact/demo
+    principal_id: hermes
+  policy:
+    risk_policy_id: 54t.atg-signal-ingress.v1
+    require_manifest: false
+    require_signature: false
+    allow_statistical_evidence: true
+    allow_network_lookup: false
+    auto_execute_verified_content: false
+
+result:
+  request_id: verify-demo-001
+  state: consistent
+  authority_effect: none
+  confidence: 0.93
+  manifest:
+    present: false
+    valid: false
+    digest_match: false
+  signature:
+    present: false
+    valid: false
+    key_status: unknown
+  signal:
+    checked: true
+    profile_id: atg.signal.text-statistical.v1
+    detector_version: detector-adapter-0.1
+    evidence_state: consistent
+    confidence: 0.93
+  risk:
+    covert_channel_suspected: false
+    identity_encoding_suspected: false
+    secret_leak_suspected: false
+    quarantine_required: false
+    policy_refs:
+      - ATG-VERIFY-NO-AUTHORITY-001
+      - ATG-VERIFY-ARBITRARY-PAYLOAD-001
+  receipt_id: receipt://atg-verify/demo-001
+  evidence_refs:
+    - evidence://signal/demo-001
