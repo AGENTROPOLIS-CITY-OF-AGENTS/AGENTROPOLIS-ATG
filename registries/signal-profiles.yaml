@@ -1,0 +1,124 @@
+version: "0.1.0"
+registry: atg-signal-profiles
+status: draft
+
+principles:
+  provenance_authority: cryptographic
+  watermark_role: supporting_evidence
+  arbitrary_payloads: forbidden
+  identity_encoding: forbidden
+  executable_semantics: forbidden
+  raw_key_exposure: forbidden
+  verification_confers_execution_authority: false
+
+profiles:
+  - id: atg.signal.manifest.v1
+    class: signed_manifest
+    media:
+      - text
+      - image
+      - video
+      - audio
+      - code
+      - document
+      - 3d
+      - mixed
+    authority: primary
+    payload_mode: none
+    user_tracking: false
+    executable_semantics: false
+    required_capability: provenance.sign
+    verification_capability: provenance.verify
+
+  - id: atg.signal.detached-signature.v1
+    class: detached_signature
+    media:
+      - text
+      - image
+      - video
+      - audio
+      - code
+      - document
+      - 3d
+      - mixed
+    authority: primary
+    payload_mode: none
+    user_tracking: false
+    executable_semantics: false
+    required_capability: provenance.sign
+    verification_capability: provenance.verify
+
+  - id: atg.signal.text-statistical.v1
+    class: statistical_text
+    media:
+      - text
+      - document
+    authority: secondary
+    payload_mode: none
+    user_tracking: false
+    executable_semantics: false
+    required_capability: signal.embed.text
+    verification_capability: signal.detect.text
+    maximum_positive_state: consistent
+    notes:
+      - Must not be used to watermark source code.
+      - Must not encode arbitrary data, identity, prompts, secrets, URLs, commands, or capability handles.
+      - Detection confidence is evidence only and must remain separate from provenance verification.
+
+  - id: atg.signal.media-robust.v1
+    class: robust_media
+    media:
+      - image
+      - video
+      - audio
+      - 3d
+      - mixed
+    authority: secondary
+    payload_mode: none
+    user_tracking: false
+    executable_semantics: false
+    required_capability: signal.embed.media
+    verification_capability: signal.detect.media
+    maximum_positive_state: consistent
+    notes:
+      - Provider-specific watermark systems are adapters and are not ATG dependencies.
+      - Embedded signaling must not carry arbitrary application data.
+
+capabilities:
+  - provenance.sign
+  - provenance.verify
+  - signal.embed.text
+  - signal.embed.media
+  - signal.detect.text
+  - signal.detect.media
+
+security_checks:
+  - id: ATG-SIGNAL-COVERT-PAYLOAD-001
+    severity: critical
+    condition: signal encoder accepts arbitrary hidden payloads
+    action: deny
+
+  - id: ATG-SIGNAL-IDENTITY-ENCODING-001
+    severity: critical
+    condition: embedded signal includes user, account, device, IP, session, prompt, or conversation identity
+    action: deny
+
+  - id: ATG-SIGNAL-SECRET-LEAK-001
+    severity: critical
+    condition: encoder or receipt path exposes raw signing keys, credentials, prompts, or secret material
+    action: deny
+
+  - id: ATG-SIGNAL-EXECUTION-AUTHORITY-001
+    severity: critical
+    condition: watermark or provenance verification is treated as authority to execute artifact content
+    action: deny
+
+  - id: ATG-SIGNAL-CODE-MUTATION-001
+    severity: high
+    condition: source code is modified to preserve a statistical watermark
+    action: deny
+
+  - id: ATG-SIGNAL-UNREGISTERED-CHANNEL-001
+    severity: high
+    condition: unregistered generative token-selection or steganographic signaling is detected in agent traffic
+    action: quarantine
