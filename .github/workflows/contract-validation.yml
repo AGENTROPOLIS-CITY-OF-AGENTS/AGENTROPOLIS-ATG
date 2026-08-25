@@ -1,0 +1,25 @@
+name: ATG Contract Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependencies
+        run: pip install 'jsonschema[format]'
+      - name: Validate contract schemas
+        run: python3 tools/validate_contracts.py --check-schemas
+      - name: Confirm malformed RFC 3339 date-time values are rejected
+        run: |
+          if python3 tools/validate_contracts.py contracts/core/signal-provenance.schema.json tests/fixtures/invalid-signal-provenance-bad-date.json; then
+            echo 'Expected invalid date-time fixture to fail validation' >&2
+            exit 1
+          fi
