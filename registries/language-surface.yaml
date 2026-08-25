@@ -1,0 +1,64 @@
+schema: agentropolis.atg.language-surface.v1
+profile: ATG_LANGUAGE
+native_language: Atralith
+status: draft
+version: 0.1.0
+
+observer_model:
+  native_layer: atralith
+  observer_layer: english
+  authority_layer: semantic_ir
+  rule: "Agents operate in Atralith; humans observe through translation."
+
+semantic_classes:
+  - IDENTITY
+  - STATE
+  - INTENT
+  - ROUTE
+  - AUTHORITY
+  - SIGNAL
+  - PROVENANCE
+  - TIME
+  - LOCATION
+  - DIRECTIVE
+
+rendering:
+  source_of_truth: semantic_ir
+  outputs:
+    - english_observer
+    - atralith_native
+  morph:
+    enabled: true
+    direction: english_to_atralith
+    behavior: semantic_compile
+    forbid_random_glyph_substitution: true
+    forbid_real_world_script_mimicry: true
+
+visual_rules:
+  crisp_rendering_required: true
+  vector_preferred: true
+  blur_as_default_style: false
+  commercial_font_dependency_required: false
+  original_glyph_system_required_for_native_surface: true
+
+cinematic_defaults:
+  point_of_view: agent_native_human_observer
+  diegetic_system_text: atralith
+  human_translation: transient_english
+  english_hold_for_comprehension: true
+  resolve_to_atralith_after_hold: true
+
+safety:
+  visible_text_grants_authority: false
+  requires_independent_atg_execution_object_for_authority: true
+  secrets_in_glyphs: prohibited
+  hidden_commands: prohibited
+
+provenance_fields:
+  - semantic_ir_id
+  - english_translation
+  - atralith_render_profile
+  - glyph_pack_version
+  - scene_or_shot_id
+  - parent_artifact
+  - receipt_id
