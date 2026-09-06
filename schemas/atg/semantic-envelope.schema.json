@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/schemas/atg/semantic-envelope.schema.json",
+  "title": "ATG Semantic Envelope",
+  "description": "Canonical unit of meaning exchanged between Agentropolis agents. Agents route through this envelope instead of translating to one another directly whenever semantics matter.",
+  "type": "object",
+  "required": ["atg_version", "message_id", "intent", "provenance"],
+  "properties": {
+    "atg_version": { "type": "string" },
+    "message_id": { "type": "string" },
+    "source": { "$ref": "#/$defs/endpoint" },
+    "target": { "anyOf": [{ "$ref": "#/$defs/endpoint" }, { "type": "null" }] },
+    "intent": {
+      "type": "object",
+      "properties": {
+        "act": { "type": "string", "description": "state | request | instruct | question | define | assert" },
+        "predicate": { "type": "string" },
+        "arguments": { "type": "object" }
+      },
+      "required": ["act"]
+    },
+    "entities": { "type": "array", "items": { "$ref": "#/$defs/entity" } },
+    "relations": { "type": "array", "items": { "$ref": "#/$defs/relation" } },
+    "constraints": { "type": "array", "items": { "$ref": "#/$defs/constraint" } },
+    "contracts": { "type": "array", "items": { "$ref": "#/$defs/contract" } },
+    "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+    "unknowns": { "type": "array", "items": { "$ref": "#/$defs/unknown" } },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "semantic_equivalence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "roundtrip_score": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "requires_escalation": { "type": "boolean" },
+    "rendered": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "representation": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["human_text", "code", "schema", "api", "protocol", "document"] },
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "dialect": { "type": "string" }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "required": ["representation"],
+      "properties": {
+        "representation": { "$ref": "#/$defs/representation" },
+        "context": { "$ref": "https://agentropolis.dev/atg/schemas/atg/context-vector.schema.json" }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["id", "concept"],
+      "properties": {
+        "id": { "type": "string" },
+        "concept": { "type": "string", "description": "Canonical concept id, e.g. re.concept.escrow" },
+        "surface": { "type": "string" },
+        "type": { "type": "string" },
+        "attributes": { "type": "object" },
+        "confidence": { "type": "number" }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "required": ["id", "type", "source", "target"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "attributes": { "type": "object" }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "required": ["id", "kind", "expression"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "expression": { "type": "string" },
+        "severity": { "type": "string", "enum": ["must", "should", "may"] },
+        "origin": { "type": "string", "description": "Prefixed with region: when derived from execution region" }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": ["id", "kind", "name"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "description": "function | table | pipeline | endpoint" },
+        "name": { "type": "string" },
+        "signature": { "type": "object" },
+        "preconditions": { "type": "array", "items": { "type": "string" } },
+        "postconditions": { "type": "array", "items": { "type": "string" } },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "effects": { "type": "array", "items": { "type": "string" } },
+        "behavior": { "type": "object", "description": "Behavioural IR, not source tokens" }
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "required": ["id", "statement"],
+      "properties": {
+        "id": { "type": "string" },
+        "statement": { "type": "string" },
+        "basis": { "type": "string" },
+        "impact": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    },
+    "unknown": {
+      "type": "object",
+      "required": ["id", "question"],
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "kind": { "type": "string" },
+        "blocking": { "type": "boolean", "description": "A blocking unknown forces requires_escalation" },
+        "candidates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "reference"],
+            "properties": {
+              "id": { "type": "string" },
+              "kind": { "type": "string" },
+              "reference": { "type": "string" },
+              "version": { "type": "string" },
+              "digest": { "type": "string" }
+            }
+          }
+        },
+        "transformations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tool"],
+            "properties": {
+              "id": { "type": "string" },
+              "tool": { "type": "string" },
+              "at": { "type": "string" },
+              "source": { "type": "string" },
+              "target": { "type": "string" },
+              "rule_ids": { "type": "array", "items": { "type": "string" } },
+              "pack_versions": { "type": "object", "additionalProperties": { "type": "string" } },
+              "lossy": { "type": "boolean" },
+              "notes": { "type": "array", "items": { "type": "string" } },
+              "confidence": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

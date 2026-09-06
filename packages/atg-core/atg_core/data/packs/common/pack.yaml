@@ -1,0 +1,152 @@
+pack_id: COMMON
+version: 0.1.0
+title: Common cross-domain lexicon and regional dialect surfaces
+status: draft
+domains: [COMMON]
+description: >-
+  Baseline pack loaded for every ATG context. Carries dialect surfaces for
+  general English (and selected es/de/ar forms) so that US and UK inputs
+  normalise to identical canonical concepts while still rendering
+  locale-correct output.
+
+lexicon:
+  - concept: common.building.elevator
+    type: artifact
+    definition: Vertical transport device inside a building.
+    surfaces:
+      en-US: [elevator]
+      en-GB: [lift]
+      es-MX: [elevador]
+      de-DE: [Aufzug]
+  - concept: common.building.apartment
+    type: artifact
+    definition: Self-contained residential unit within a larger building.
+    surfaces:
+      en-US: [apartment, condo unit]
+      en-GB: [flat]
+      es-MX: [departamento]
+      de-DE: [Wohnung]
+  - concept: common.payment.cheque
+    type: instrument
+    definition: Written order directing a bank to pay a stated sum from an account.
+    surfaces:
+      en-US: [check]
+      en-GB: [cheque]
+      es-MX: [cheque]
+  - concept: common.address.postal_code
+    type: attribute
+    definition: Postal routing code for an address.
+    surfaces:
+      en-US: [zip code, zipcode, zip]
+      en-GB: [postcode, post code]
+      es-MX: ["codigo postal"]
+      de-DE: [Postleitzahl]
+  - concept: common.action.mail
+    type: action
+    definition: Send a physical item through the postal system.
+    surfaces:
+      en-US: [mail]
+      en-GB: [post]
+  - concept: common.org.attorney
+    type: role
+    definition: Legally qualified representative acting for a client.
+    surfaces:
+      en-US: [attorney, lawyer]
+      en-GB: [solicitor, barrister]
+  - concept: common.unit.floor_area
+    type: measure
+    definition: Interior floor area of a property or space.
+    surfaces:
+      en-US: [square feet, sq ft, sqft]
+      en-GB: [square metres, sq m, sqm]
+  - concept: common.doc.invoice
+    type: document
+    definition: Commercial document requesting payment for goods or services.
+    surfaces:
+      en-US: [invoice, bill]
+      en-GB: [invoice]
+  - concept: common.ambiguous.title
+    type: ambiguous_term
+    definition: >-
+      "Title" resolves to at least three unrelated concepts depending on domain:
+      legal ownership of property, a job title, or the name of a production.
+    surfaces:
+      en-US: [title]
+      en-GB: [title]
+    ambiguous: true
+    ambiguity_note: Requires domain disambiguation before any downstream transform.
+    attributes:
+      candidates:
+        - re.concept.title_ownership
+        - common.org.job_title
+        - film.concept.production_title
+
+entities:
+  - id: common.entity.person
+    concept: common.entity.person
+    description: A natural person.
+    attributes: [name, role, jurisdiction]
+  - id: common.entity.organization
+    concept: common.entity.organization
+    description: A legal or informal organisation.
+    attributes: [name, registration_id, jurisdiction]
+
+relationships:
+  - type: employs
+    source: common.entity.organization
+    target: common.entity.person
+    description: Employment relation.
+  - type: represents
+    source: common.org.attorney
+    target: common.entity.person
+    description: Professional representation relation.
+
+industry_codes: []
+
+standards:
+  - id: ISO-8601
+    scope: date-time representation
+  - id: ISO-4217
+    scope: currency codes
+  - id: ISO-3166
+    scope: country and subdivision codes
+  - id: BCP-47
+    scope: language tags
+
+authorities: []
+
+documents:
+  - id: common.doc.invoice
+    name: Invoice
+    required_fields: [issuer, recipient, amount, currency, issue_date]
+
+workflows:
+  - id: common.workflow.schedule
+    name: Schedule an activity
+    steps: [identify_subject, identify_time_window, confirm_participants, record_commitment]
+
+roles: [requester, approver, operator, observer]
+
+abbreviations:
+  sqft: common.unit.floor_area
+  po: common.doc.invoice
+
+synonyms:
+  zipcode: common.address.postal_code
+
+jurisdiction_rules:
+  - jurisdiction: "*"
+    rule_id: common.rule.iso_dates
+    kind: representation
+    expression: dates_in_canonical_form_use_iso_8601
+    severity: must
+    authority: ISO
+
+source_mappings: []
+
+translation_rules:
+  - id: common.tr.locale_surface
+    from: canonical_concept
+    to: locale_surface
+    kind: lexical
+    note: Render the concept using the first surface registered for the target locale.

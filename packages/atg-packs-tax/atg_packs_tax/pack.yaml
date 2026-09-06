@@ -1,0 +1,216 @@
+pack_id: TAX
+version: 0.1.0
+title: Taxation domain pack
+status: draft
+domains: [TAX, ACCOUNTING, FISCAL]
+description: >-
+  High-impact pack. Tax concepts are meaningless without an authority and a
+  jurisdiction attached, so every transform in this domain must carry them or
+  escalate.
+
+lexicon:
+  - concept: tax.concept.value_added_tax
+    type: tax_instrument
+    definition: Consumption tax charged on value added at each stage of supply.
+    surfaces:
+      en-GB: [VAT, value added tax]
+      en-IE: [VAT]
+      de-DE: [Umsatzsteuer, Mehrwertsteuer]
+      es-MX: [IVA]
+    abbreviations: [vat]
+  - concept: tax.concept.sales_tax
+    type: tax_instrument
+    definition: Consumption tax charged at final retail sale, US state and local.
+    surfaces:
+      en-US: [sales tax, use tax]
+  - concept: tax.concept.withholding
+    type: mechanism
+    definition: Tax deducted at source by the payer before remitting to the payee.
+    surfaces:
+      en-US: [withholding, backup withholding]
+      en-GB: [deduction at source]
+  - concept: tax.concept.taxable_event
+    type: event
+    definition: Event that gives rise to a tax liability.
+    surfaces:
+      en-US: [taxable event]
+      en-GB: [chargeable event]
+  - concept: tax.concept.tax_year
+    type: period
+    definition: Annual accounting period used for assessment.
+    surfaces:
+      en-US: [tax year, calendar tax year]
+      en-GB: [tax year, fiscal year]
+  - concept: tax.concept.taxpayer_identifier
+    type: identifier
+    definition: Identifier assigned to a taxpayer by a tax authority.
+    surfaces:
+      en-US: [EIN, TIN, SSN]
+      en-GB: [UTR, VAT registration number]
+      de-DE: [Steuernummer, USt-IdNr]
+      es-MX: [RFC]
+  - concept: tax.concept.transfer_tax
+    type: tax_instrument
+    definition: Tax charged on transfer of real property ownership.
+    surfaces:
+      en-US: [transfer tax, documentary stamp tax]
+      en-GB: [stamp duty land tax, SDLT]
+  - concept: tax.concept.reverse_charge
+    type: mechanism
+    definition: Recipient rather than supplier accounts for the consumption tax.
+    surfaces:
+      en-GB: [reverse charge]
+      de-DE: [Reverse-Charge-Verfahren]
+
+entities:
+  - id: tax.entity.taxpayer
+    concept: tax.entity.taxpayer
+    description: Person or entity subject to tax.
+    attributes: [identifier, residence, jurisdiction]
+  - id: tax.entity.filing
+    concept: tax.entity.filing
+    description: A return submitted to an authority for a period.
+    attributes: [authority, period, due_date, jurisdiction]
+
+relationships:
+  - type: assessed_by
+    source: tax.entity.taxpayer
+    target: tax.entity.authority
+    description: A taxpayer is assessed by an authority.
+  - type: triggers
+    source: tax.concept.taxable_event
+    target: tax.entity.filing
+    description: A taxable event triggers a filing obligation.
+
+industry_codes:
+  - system: NAICS
+    code: "541213"
+    label: Tax Preparation Services
+  - system: SIC
+    code: "7291"
+    label: Tax Return Preparation Services
+
+standards:
+  - id: OECD-BEPS
+    scope: base erosion and profit shifting framework
+  - id: EU-VAT-Directive-2006-112-EC
+    scope: EU VAT harmonisation
+  - id: US-IRC
+    scope: US Internal Revenue Code
+
+authorities:
+  - id: irs
+    name: Internal Revenue Service
+    jurisdiction: US
+    scope: federal taxation
+  - id: cdtfa
+    name: California Department of Tax and Fee Administration
+    jurisdiction: US-CA
+    scope: state sales and use tax
+  - id: hmrc
+    name: HM Revenue & Customs
+    jurisdiction: GB
+    scope: UK taxation including VAT
+  - id: bzst
+    name: Bundeszentralamt fuer Steuern
+    jurisdiction: DE
+    scope: German federal taxation
+  - id: sat
+    name: Servicio de Administracion Tributaria
+    jurisdiction: MX
+    scope: Mexican federal taxation
+
+documents:
+  - id: tax.doc.vat_return
+    name: VAT return
+    required_fields: [period, output_tax, input_tax, net_payable]
+    jurisdiction: GB
+  - id: tax.doc.form_1120
+    name: US corporation income tax return
+    required_fields: [ein, tax_year, taxable_income]
+    jurisdiction: US
+
+workflows:
+  - id: tax.workflow.vat_filing
+    name: Periodic VAT filing
+    steps: [collect_transactions, classify_supplies, compute_output_tax, compute_input_tax, submit, pay]
+    jurisdiction: GB
+  - id: tax.workflow.sales_tax_filing
+    name: US sales tax filing
+    steps: [determine_nexus, classify_taxability, compute_by_jurisdiction, submit, remit]
+    jurisdiction: US
+
+roles: [TAX_ADVISOR, CPA, CHARTERED_ACCOUNTANT, CONTROLLER]
+
+abbreviations:
+  vat: tax.concept.value_added_tax
+  sdlt: tax.concept.transfer_tax
+  iva: tax.concept.value_added_tax
+
+synonyms:
+  "chargeable event": tax.concept.taxable_event
+
+jurisdiction_rules:
+  - jurisdiction: GB
+    rule_id: tax.rule.gb.vat
+    kind: regulatory
+    expression: vat_charged_and_reported_to_hmrc_under_uk_vat_act
+    severity: must
+    authority: hmrc
+    applies_to: [tax.concept.value_added_tax]
+  - jurisdiction: DE
+    rule_id: tax.rule.de.ust
+    kind: regulatory
+    expression: umsatzsteuer_reported_under_ustg_with_reverse_charge_where_applicable
+    severity: must
+    authority: bzst
+    applies_to: [tax.concept.value_added_tax, tax.concept.reverse_charge]
+  - jurisdiction: EU
+    rule_id: tax.rule.eu.vat_directive
+    kind: regulatory
+    expression: vat_treatment_follows_directive_2006_112_ec_as_implemented_nationally
+    severity: must
+    authority: bzst
+    applies_to: [tax.concept.value_added_tax]
+  - jurisdiction: US
+    rule_id: tax.rule.us.no_vat
+    kind: regulatory
+    expression: no_federal_vat_exists_consumption_tax_is_state_and_local_sales_tax
+    severity: must
+    authority: irs
+    applies_to: [tax.concept.value_added_tax, tax.concept.sales_tax]
+  - jurisdiction: US-CA
+    rule_id: tax.rule.usca.sales_tax
+    kind: regulatory
+    expression: california_sales_and_use_tax_administered_by_cdtfa_with_district_rates
+    severity: must
+    authority: cdtfa
+    applies_to: [tax.concept.sales_tax]
+  - jurisdiction: MX
+    rule_id: tax.rule.mx.iva
+    kind: regulatory
+    expression: iva_reported_to_sat_with_cfdi_invoicing
+    severity: must
+    authority: sat
+    applies_to: [tax.concept.value_added_tax]
+
+source_mappings:
+  - concept: tax.concept.value_added_tax
+    target_pack: TAX
+    target_concept: tax.concept.sales_tax
+    equivalence: none
+    note: >-
+      VAT and US sales tax are not equivalent instruments; mapping between them
+      changes who bears and who remits the tax and must never be silent.
+
+translation_rules:
+  - id: tax.tr.authority_required
+    from: tax.*
+    to: any
+    kind: governance
+    note: A tax concept without authority + jurisdiction is incomplete and escalates.
+  - id: tax.tr.vat_to_sales_tax
+    from: tax.concept.value_added_tax
+    to: tax.concept.sales_tax
+    kind: domain
+    note: Lossy across regimes; emit an explicit unknown rather than an equivalence.

@@ -1,0 +1,10 @@
+atg_core
+atg_mcp
+atg_ontology_adapter
+atg_packs_film
+atg_packs_legal
+atg_packs_real_estate
+atg_packs_tax
+atg_packs_tech
+atg_router_adapter
+atg_utility_adapter
