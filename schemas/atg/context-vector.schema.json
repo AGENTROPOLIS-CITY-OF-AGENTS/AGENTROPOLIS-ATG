@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/schemas/atg/context-vector.schema.json",
+  "title": "ATG Context Vector",
+  "description": "Execution context for an ATG transform. Region is execution context, not UI decoration: it may change terminology, units, currency, formats, regulations, data residency, standards and available services.",
+  "type": "object",
+  "properties": {
+    "language": { "type": ["string", "null"], "description": "ISO 639-1 language code, e.g. en" },
+    "locale": { "type": ["string", "null"], "description": "BCP 47 locale, e.g. en-GB" },
+    "region": { "type": ["string", "null"], "description": "Execution region, e.g. US, US-CA, GB, EU, DE, MX, AE" },
+    "jurisdiction": { "type": ["string", "null"], "description": "Legal jurisdiction; never inferred for high-impact domains" },
+    "industry": { "type": ["string", "null"], "description": "Domain pack selector, e.g. TECH, TAX, REAL_ESTATE, LEGAL, FILM" },
+    "profession": { "type": ["string", "null"] },
+    "role": { "type": ["string", "null"] },
+    "programming_language": { "type": ["string", "null"] },
+    "programming_dialect": { "type": ["string", "null"], "description": "e.g. postgresql, sqlite, bash, powershell" },
+    "framework": { "type": ["string", "null"] },
+    "runtime": { "type": ["string", "null"] },
+    "platform": { "type": ["string", "null"] },
+    "architecture": { "type": ["string", "null"] },
+    "standards": { "type": "array", "items": { "type": "string" } },
+    "regulations": { "type": "array", "items": { "type": "string" } },
+    "units": { "type": ["string", "null"], "enum": ["metric", "imperial", "us-customary", "mixed", null] },
+    "currency": { "type": ["string", "null"], "description": "ISO 4217 code" },
+    "audience": { "type": ["string", "null"] },
+    "output_medium": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

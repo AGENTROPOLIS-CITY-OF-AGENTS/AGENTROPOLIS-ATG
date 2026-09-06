@@ -1,0 +1,231 @@
+pack_id: TECH
+version: 0.1.0
+title: Technology and software engineering domain pack
+status: draft
+domains: [TECH, SOFTWARE, ENGINEERING, IT]
+description: >-
+  Reference pack exercised end to end by the ATG kit. Covers software delivery
+  vocabulary, service contracts, data-protection standards and the terminology
+  differences between US and UK engineering organisations.
+
+lexicon:
+  - concept: tech.concept.service_level_agreement
+    type: contract
+    definition: Agreed and measurable service obligation between provider and consumer.
+    surfaces:
+      en-US: [service level agreement, SLA]
+      en-GB: [service level agreement, SLA]
+    abbreviations: [sla]
+  - concept: tech.concept.incident
+    type: event
+    definition: Unplanned interruption or reduction in quality of a service.
+    surfaces:
+      en-US: [incident, outage]
+      en-GB: [incident, outage]
+  - concept: tech.concept.rollback
+    type: action
+    definition: Reverting a deployed change to the previously known-good revision.
+    surfaces:
+      en-US: [rollback, roll back]
+      en-GB: [rollback, back out]
+  - concept: tech.concept.deployment
+    type: action
+    definition: Promoting a build artefact into a runtime environment.
+    surfaces:
+      en-US: [deployment, deploy, ship]
+      en-GB: [deployment, deploy, release]
+  - concept: tech.concept.environment
+    type: artifact
+    definition: An isolated runtime tier such as development, staging or production.
+    surfaces:
+      en-US: [environment, env]
+      en-GB: [environment, env]
+  - concept: tech.concept.personal_data
+    type: data_class
+    definition: Data relating to an identified or identifiable natural person.
+    surfaces:
+      en-US: [personal data, PII, personally identifiable information]
+      en-GB: [personal data]
+    abbreviations: [pii]
+  - concept: tech.concept.data_residency
+    type: constraint
+    definition: Requirement that data is stored and processed in a specific region.
+    surfaces:
+      en-US: [data residency, data localization]
+      en-GB: [data residency, data localisation]
+  - concept: tech.concept.idempotency
+    type: property
+    definition: Property whereby repeating an operation produces the same result.
+    surfaces:
+      en-US: [idempotency, idempotent]
+      en-GB: [idempotency, idempotent]
+  - concept: tech.concept.api_endpoint
+    type: artifact
+    definition: Addressable operation exposed by a service interface.
+    surfaces:
+      en-US: [endpoint, API endpoint, route]
+      en-GB: [endpoint, API endpoint, route]
+
+entities:
+  - id: tech.entity.service
+    concept: tech.entity.service
+    description: A deployable unit exposing an interface.
+    attributes: [name, owner, tier, runtime]
+  - id: tech.entity.dataset
+    concept: tech.entity.dataset
+    description: A governed collection of records.
+    attributes: [name, data_classes, residency]
+  - id: tech.entity.release
+    concept: tech.entity.release
+    description: A versioned change promoted to an environment.
+    attributes: [version, environment, approver]
+
+relationships:
+  - type: exposes
+    source: tech.entity.service
+    target: tech.concept.api_endpoint
+    description: A service exposes endpoints.
+  - type: processes
+    source: tech.entity.service
+    target: tech.concept.personal_data
+    description: A service processes a data class.
+  - type: governed_by
+    source: tech.entity.service
+    target: tech.concept.service_level_agreement
+    description: A service is governed by an SLA.
+  - type: reverts
+    source: tech.concept.rollback
+    target: tech.entity.release
+    description: A rollback reverts a release.
+
+industry_codes:
+  - system: NAICS
+    code: "541511"
+    label: Custom Computer Programming Services
+  - system: SIC
+    code: "7371"
+    label: Computer Programming Services
+  - system: ISCO-08
+    code: "2512"
+    label: Software developers
+
+standards:
+  - id: ISO-27001
+    scope: information security management
+  - id: SOC-2
+    scope: service organisation trust criteria
+  - id: OpenAPI-3.1
+    scope: HTTP API description
+  - id: SemVer-2.0.0
+    scope: version numbering
+  - id: RFC-7231
+    scope: HTTP semantics
+
+authorities:
+  - id: ico
+    name: Information Commissioner's Office
+    jurisdiction: GB
+    scope: data protection supervision
+  - id: edpb
+    name: European Data Protection Board
+    jurisdiction: EU
+    scope: GDPR consistency
+  - id: ftc
+    name: Federal Trade Commission
+    jurisdiction: US
+    scope: consumer protection and data practices
+  - id: cppa
+    name: California Privacy Protection Agency
+    jurisdiction: US-CA
+    scope: CCPA/CPRA enforcement
+
+documents:
+  - id: tech.doc.rfc
+    name: Design RFC
+    required_fields: [problem, proposal, alternatives, rollout, rollback]
+  - id: tech.doc.runbook
+    name: Operational runbook
+    required_fields: [trigger, steps, verification, escalation]
+  - id: tech.doc.dpia
+    name: Data Protection Impact Assessment
+    required_fields: [processing_purpose, data_classes, lawful_basis, risks, mitigations]
+
+workflows:
+  - id: tech.workflow.release
+    name: Release change to production
+    steps: [propose, review, test, approve, deploy, verify, rollback_if_failed]
+  - id: tech.workflow.incident
+    name: Incident response
+    steps: [detect, triage, mitigate, communicate, resolve, postmortem]
+
+roles: [ENGINEER, SRE, DATA_PROTECTION_OFFICER, PRODUCT_MANAGER, SECURITY_REVIEWER]
+
+abbreviations:
+  sla: tech.concept.service_level_agreement
+  pii: tech.concept.personal_data
+  api: tech.concept.api_endpoint
+
+synonyms:
+  outage: tech.concept.incident
+  "back out": tech.concept.rollback
+
+jurisdiction_rules:
+  - jurisdiction: EU
+    rule_id: tech.rule.eu.gdpr_residency
+    kind: regulatory
+    expression: personal_data_processing_requires_gdpr_lawful_basis_and_eu_residency
+    severity: must
+    authority: edpb
+    applies_to: [tech.concept.personal_data, tech.concept.data_residency]
+  - jurisdiction: DE
+    rule_id: tech.rule.de.bdsg
+    kind: regulatory
+    expression: personal_data_processing_subject_to_gdpr_and_bdsg_supplementary_rules
+    severity: must
+    authority: edpb
+    applies_to: [tech.concept.personal_data]
+  - jurisdiction: GB
+    rule_id: tech.rule.gb.ukgdpr
+    kind: regulatory
+    expression: personal_data_processing_requires_uk_gdpr_lawful_basis
+    severity: must
+    authority: ico
+    applies_to: [tech.concept.personal_data]
+  - jurisdiction: US-CA
+    rule_id: tech.rule.usca.ccpa
+    kind: regulatory
+    expression: consumer_personal_information_requires_ccpa_opt_out_and_disclosure
+    severity: must
+    authority: cppa
+    applies_to: [tech.concept.personal_data]
+  - jurisdiction: US
+    rule_id: tech.rule.us.sectoral
+    kind: regulatory
+    expression: personal_data_governed_by_sectoral_rules_not_a_single_federal_statute
+    severity: should
+    authority: ftc
+    applies_to: [tech.concept.personal_data]
+
+source_mappings:
+  - concept: tech.concept.service_level_agreement
+    target_pack: LEGAL
+    target_concept: legal.concept.contractual_obligation
+    equivalence: partial
+    note: An SLA is a contractual obligation with measurable service metrics.
+  - concept: tech.concept.personal_data
+    target_pack: LEGAL
+    target_concept: legal.concept.regulated_data_subject_matter
+    equivalence: partial
+    note: Legal framing adds data-subject rights that the tech framing omits.
+
+translation_rules:
+  - id: tech.tr.us_uk_spelling
+    from: en-US
+    to: en-GB
+    kind: lexical
+    note: localization/localisation style differences never change the concept id.
+  - id: tech.tr.sla_to_obligation
+    from: tech.concept.service_level_agreement
+    to: legal.concept.contractual_obligation
+    kind: domain
+    note: Preserve measurable thresholds when re-framing an SLA as an obligation.

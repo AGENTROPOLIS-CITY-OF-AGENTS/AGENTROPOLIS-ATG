@@ -1,0 +1,180 @@
+pack_id: LEGAL
+version: 0.1.0
+title: Legal domain pack
+status: draft
+domains: [LEGAL, COMPLIANCE, CONTRACTS]
+description: >-
+  High-impact pack. Legal meaning is jurisdiction-bound; the same surface term
+  can denote materially different instruments across common-law and civil-law
+  systems.
+
+lexicon:
+  - concept: legal.concept.contractual_obligation
+    type: obligation
+    definition: Duty owed by one party to another under an enforceable agreement.
+    surfaces:
+      en-US: [contractual obligation, covenant]
+      en-GB: [contractual obligation, covenant]
+  - concept: legal.concept.consideration
+    type: doctrine
+    definition: Bargained-for exchange required to form a contract in common law.
+    surfaces:
+      en-US: [consideration]
+      en-GB: [consideration]
+      de-DE: [Gegenleistung]
+  - concept: legal.concept.fiduciary_holding
+    type: relationship
+    definition: Holding assets for another under a duty of loyalty and care.
+    surfaces:
+      en-US: [fiduciary holding, trust account]
+      en-GB: [client account, stakeholder holding]
+  - concept: legal.concept.limitation_period
+    type: constraint
+    definition: Period within which a claim must be brought.
+    surfaces:
+      en-US: [statute of limitations]
+      en-GB: [limitation period]
+  - concept: legal.concept.regulated_data_subject_matter
+    type: subject_matter
+    definition: Subject matter regulated by data protection law.
+    surfaces:
+      en-US: [regulated personal information]
+      en-GB: [regulated personal data]
+  - concept: legal.concept.force_majeure
+    type: clause
+    definition: Clause excusing performance on defined extraordinary events.
+    surfaces:
+      en-US: [force majeure]
+      en-GB: [force majeure]
+  - concept: legal.concept.governing_law
+    type: clause
+    definition: Clause selecting the law that governs the agreement.
+    surfaces:
+      en-US: [governing law, choice of law]
+      en-GB: [governing law]
+
+entities:
+  - id: legal.entity.agreement
+    concept: legal.entity.agreement
+    description: A binding agreement between parties.
+    attributes: [parties, governing_law, effective_date, jurisdiction]
+  - id: legal.entity.party
+    concept: legal.entity.party
+    description: A party to an agreement or proceeding.
+    attributes: [name, capacity, jurisdiction]
+
+relationships:
+  - type: binds
+    source: legal.entity.agreement
+    target: legal.entity.party
+    description: An agreement binds parties.
+  - type: governed_by
+    source: legal.entity.agreement
+    target: legal.concept.governing_law
+    description: An agreement is governed by a chosen law.
+
+industry_codes:
+  - system: NAICS
+    code: "541110"
+    label: Offices of Lawyers
+  - system: SIC
+    code: "8111"
+    label: Legal Services
+
+standards:
+  - id: UNCITRAL-Model-Law
+    scope: international commercial arbitration
+  - id: Incoterms-2020
+    scope: delivery terms in trade contracts
+  - id: LEDES
+    scope: legal billing interchange
+
+authorities:
+  - id: sra
+    name: Solicitors Regulation Authority
+    jurisdiction: GB
+    scope: regulation of solicitors and client accounts
+  - id: state-bar
+    name: State Bar
+    jurisdiction: US
+    scope: regulation of attorneys
+  - id: eu-commission
+    name: European Commission
+    jurisdiction: EU
+    scope: EU-level legal instruments
+
+documents:
+  - id: legal.doc.msa
+    name: Master services agreement
+    required_fields: [parties, scope, term, governing_law, liability]
+  - id: legal.doc.dpa
+    name: Data processing agreement
+    required_fields: [controller, processor, purposes, transfers, sub_processors]
+
+workflows:
+  - id: legal.workflow.contract_review
+    name: Contract review
+    steps: [intake, jurisdiction_check, clause_review, risk_assessment, negotiation, execution]
+
+roles: [ATTORNEY, SOLICITOR, PARALEGAL, GENERAL_COUNSEL, COMPLIANCE_OFFICER]
+
+abbreviations:
+  msa: legal.doc.msa
+  dpa: legal.doc.dpa
+
+synonyms:
+  "statute of limitations": legal.concept.limitation_period
+
+jurisdiction_rules:
+  - jurisdiction: GB
+    rule_id: legal.rule.gb.client_account
+    kind: regulatory
+    expression: client_money_held_under_sra_accounts_rules
+    severity: must
+    authority: sra
+    applies_to: [legal.concept.fiduciary_holding]
+  - jurisdiction: US
+    rule_id: legal.rule.us.iolta
+    kind: regulatory
+    expression: client_funds_held_in_iolta_trust_account_under_state_bar_rules
+    severity: must
+    authority: state-bar
+    applies_to: [legal.concept.fiduciary_holding]
+  - jurisdiction: DE
+    rule_id: legal.rule.de.no_consideration
+    kind: doctrinal
+    expression: civil_law_contract_formation_does_not_require_common_law_consideration
+    severity: must
+    authority: eu-commission
+    applies_to: [legal.concept.consideration]
+  - jurisdiction: EU
+    rule_id: legal.rule.eu.gdpr_transfers
+    kind: regulatory
+    expression: international_personal_data_transfers_require_adequacy_or_safeguards
+    severity: must
+    authority: eu-commission
+    applies_to: [legal.concept.regulated_data_subject_matter]
+
+source_mappings:
+  - concept: legal.concept.fiduciary_holding
+    target_pack: REAL_ESTATE
+    target_concept: re.concept.escrow
+    equivalence: partial
+    note: Escrow is one fiduciary holding pattern; GB conveyancing uses client accounts.
+  - concept: legal.concept.consideration
+    target_pack: LEGAL
+    target_concept: legal.concept.contractual_obligation
+    equivalence: none
+    note: Consideration is a formation doctrine, not an obligation; do not conflate.
+
+translation_rules:
+  - id: legal.tr.jurisdiction_required
+    from: legal.*
+    to: any
+    kind: governance
+    note: Legal transforms require an explicit jurisdiction; otherwise escalate.
+  - id: legal.tr.common_to_civil
+    from: common_law
+    to: civil_law
+    kind: doctrinal
+    note: Doctrines such as consideration have no civil-law counterpart; flag as lossy.

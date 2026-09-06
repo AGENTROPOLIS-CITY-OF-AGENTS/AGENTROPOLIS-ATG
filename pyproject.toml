@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atg"
+version = "0.1.0"
+description = "ATG: canonical semantic language and MCP agent kit for Agentropolis"
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=5.4"]
+
+[tool.setuptools]
+package-dir = { "" = "packages" }
+
+[tool.setuptools.packages.find]
+where = [
+  "packages/atg-core",
+  "packages/atg-mcp",
+  "packages/atg-ontology-adapter",
+  "packages/atg-utility-adapter",
+  "packages/atg-router-adapter",
+  "packages/atg-packs-tech",
+  "packages/atg-packs-tax",
+  "packages/atg-packs-real-estate",
+  "packages/atg-packs-legal",
+  "packages/atg-packs-film",
+]
+
+[tool.setuptools.package-data]
+atg_core = ["data/packs/*/pack.yaml"]
+atg_packs_tech = ["pack.yaml"]
+atg_packs_tax = ["pack.yaml"]
+atg_packs_real_estate = ["pack.yaml"]
+atg_packs_legal = ["pack.yaml"]
+atg_packs_film = ["pack.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [
+  "packages/atg-core",
+  "packages/atg-mcp",
+  "packages/atg-ontology-adapter",
+  "packages/atg-utility-adapter",
+  "packages/atg-router-adapter",
+  "packages/atg-packs-tech",
+  "packages/atg-packs-tax",
+  "packages/atg-packs-real-estate",
+  "packages/atg-packs-legal",
+  "packages/atg-packs-film",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "SIM"]

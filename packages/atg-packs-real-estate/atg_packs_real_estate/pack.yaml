@@ -1,0 +1,233 @@
+pack_id: REAL_ESTATE
+version: 0.1.0
+title: Real estate transaction domain pack
+status: draft
+domains: [REAL_ESTATE, PROPERTY, CONVEYANCING]
+description: >-
+  Transaction-centric real estate vocabulary. US and UK practice differ in
+  process (escrow vs. exchange of contracts) so surfaces differ while the
+  transaction and contract concepts stay canonical.
+
+lexicon:
+  - concept: re.concept.escrow
+    type: process
+    definition: >-
+      Neutral third party holds funds and documents until conditions of the
+      transaction are satisfied.
+    surfaces:
+      en-US: [escrow, escrow account]
+      en-GB: [stakeholder account, client account]
+  - concept: re.concept.earnest_money
+    type: instrument
+    definition: Buyer funds committed to demonstrate good faith on an accepted offer.
+    surfaces:
+      en-US: [earnest money, good faith deposit]
+      en-GB: [deposit, contract deposit]
+  - concept: re.concept.closing
+    type: event
+    definition: >-
+      Event at which consideration is exchanged and legal ownership passes to
+      the buyer.
+    surfaces:
+      en-US: [closing, settlement]
+      en-GB: [completion]
+  - concept: re.concept.contract_exchange
+    type: event
+    definition: Point at which the sale contract becomes legally binding on both parties.
+    surfaces:
+      en-US: [contract acceptance, ratified contract]
+      en-GB: [exchange of contracts]
+  - concept: re.concept.title_ownership
+    type: legal_interest
+    definition: Legal ownership interest in real property.
+    surfaces:
+      en-US: [title, ownership interest]
+      en-GB: [title, legal estate]
+  - concept: re.concept.title_search
+    type: process
+    definition: Investigation of the ownership record and encumbrances of a property.
+    surfaces:
+      en-US: [title search, title report]
+      en-GB: [land registry search, official copies]
+  - concept: re.concept.contingency
+    type: constraint
+    definition: Condition that must be satisfied before the transaction becomes unconditional.
+    surfaces:
+      en-US: [contingency, contingent condition]
+      en-GB: [condition precedent, subject to survey]
+  - concept: re.concept.survey
+    type: process
+    definition: Professional inspection of the physical condition or boundaries of a property.
+    surfaces:
+      en-US: [inspection, boundary survey]
+      en-GB: [survey, homebuyer report]
+  - concept: re.concept.conveyancer
+    type: role
+    definition: Professional who executes the legal transfer of property.
+    surfaces:
+      en-US: [closing attorney, title agent]
+      en-GB: [conveyancer, licensed conveyancer]
+  - concept: re.concept.leasehold
+    type: legal_interest
+    definition: Time-limited possessory interest granted by a freeholder.
+    surfaces:
+      en-US: [ground lease interest]
+      en-GB: [leasehold]
+  - concept: re.concept.freehold
+    type: legal_interest
+    definition: Perpetual ownership interest in land.
+    surfaces:
+      en-US: [fee simple]
+      en-GB: [freehold]
+
+entities:
+  - id: re.entity.property
+    concept: re.entity.property
+    description: A parcel or unit of real property.
+    attributes: [address, parcel_id, interest_type, floor_area]
+  - id: re.entity.buyer
+    concept: re.entity.buyer
+    description: Acquiring party in a transaction.
+    attributes: [name, jurisdiction, financing]
+  - id: re.entity.seller
+    concept: re.entity.seller
+    description: Disposing party in a transaction.
+    attributes: [name, jurisdiction]
+  - id: re.entity.transaction
+    concept: re.entity.transaction
+    description: A purchase and sale of real property.
+    attributes: [price, currency, jurisdiction, stage]
+
+relationships:
+  - type: acquires
+    source: re.entity.buyer
+    target: re.entity.property
+    description: Buyer acquires the property interest.
+  - type: disposes
+    source: re.entity.seller
+    target: re.entity.property
+    description: Seller disposes of the property interest.
+  - type: holds_funds_for
+    source: re.concept.escrow
+    target: re.entity.transaction
+    description: Escrow/stakeholder holds funds for the transaction.
+  - type: conditions
+    source: re.concept.contingency
+    target: re.entity.transaction
+    description: Contingency conditions the transaction.
+  - type: transfers
+    source: re.concept.closing
+    target: re.concept.title_ownership
+    description: Closing/completion transfers title.
+
+industry_codes:
+  - system: NAICS
+    code: "531210"
+    label: Offices of Real Estate Agents and Brokers
+  - system: SIC
+    code: "6531"
+    label: Real Estate Agents and Managers
+
+standards:
+  - id: RESO-Data-Dictionary
+    scope: US listing data interchange
+  - id: HM-Land-Registry-Practice-Guides
+    scope: GB registered land practice
+  - id: RICS-Home-Survey-Standard
+    scope: GB survey reporting
+
+authorities:
+  - id: hm-land-registry
+    name: HM Land Registry
+    jurisdiction: GB
+    scope: registration of title
+  - id: county-recorder
+    name: County Recorder / Register of Deeds
+    jurisdiction: US
+    scope: recording of instruments
+  - id: cfpb
+    name: Consumer Financial Protection Bureau
+    jurisdiction: US
+    scope: settlement disclosure rules
+
+documents:
+  - id: re.doc.purchase_agreement
+    name: Purchase and sale agreement
+    required_fields: [parties, property, price, contingencies, closing_date]
+  - id: re.doc.closing_disclosure
+    name: Closing disclosure
+    required_fields: [loan_terms, costs, cash_to_close]
+    jurisdiction: US
+  - id: re.doc.ta6
+    name: Property information form (TA6)
+    required_fields: [boundaries, disputes, alterations, services]
+    jurisdiction: GB
+
+workflows:
+  - id: re.workflow.us_purchase
+    name: US residential purchase
+    steps: [offer, acceptance, escrow_open, inspection, financing, title_search, closing, recording]
+    jurisdiction: US
+  - id: re.workflow.gb_purchase
+    name: GB residential purchase
+    steps: [offer, memorandum_of_sale, searches, survey, exchange_of_contracts, completion, registration]
+    jurisdiction: GB
+
+roles: [BUYER, SELLER, BROKER, CONVEYANCER, LENDER, SURVEYOR]
+
+abbreviations:
+  psa: re.doc.purchase_agreement
+  cd: re.doc.closing_disclosure
+
+synonyms:
+  completion: re.concept.closing
+  settlement: re.concept.closing
+
+jurisdiction_rules:
+  - jurisdiction: US
+    rule_id: re.rule.us.escrow_required
+    kind: process
+    expression: funds_held_in_escrow_until_closing_conditions_met
+    severity: must
+    authority: cfpb
+    applies_to: [re.concept.escrow, re.concept.closing]
+  - jurisdiction: GB
+    rule_id: re.rule.gb.exchange_binds
+    kind: process
+    expression: contract_becomes_binding_at_exchange_not_at_offer_acceptance
+    severity: must
+    authority: hm-land-registry
+    applies_to: [re.concept.contract_exchange, re.concept.closing]
+  - jurisdiction: GB
+    rule_id: re.rule.gb.registration
+    kind: process
+    expression: legal_title_passes_on_registration_at_hm_land_registry
+    severity: must
+    authority: hm-land-registry
+    applies_to: [re.concept.title_ownership]
+
+source_mappings:
+  - concept: re.concept.escrow
+    target_pack: LEGAL
+    target_concept: legal.concept.fiduciary_holding
+    equivalence: partial
+    note: GB practice uses client/stakeholder accounts governed by solicitor regulation.
+  - concept: re.concept.closing
+    target_pack: TAX
+    target_concept: tax.concept.taxable_event
+    equivalence: partial
+    note: Completion/closing triggers transfer tax obligations in most jurisdictions.
+
+translation_rules:
+  - id: re.tr.us_gb_process
+    from: US
+    to: GB
+    kind: process
+    note: >-
+      escrow -> stakeholder/client account and closing -> completion are process
+      analogues, not identities; binding point differs (acceptance vs exchange).
+  - id: re.tr.preserve_binding_point
+    from: re.entity.transaction
+    to: re.entity.transaction
+    kind: contract
+    note: Binding point and title-transfer step must survive any translation.

@@ -1,0 +1,180 @@
+pack_id: FILM
+version: 0.1.0
+title: Film and production domain pack
+status: draft
+domains: [FILM, PRODUCTION, MEDIA, TV]
+description: >-
+  Production vocabulary across US and UK crews, where the same role or document
+  carries different names and sometimes different scope.
+
+lexicon:
+  - concept: film.concept.production_title
+    type: identifier
+    definition: The name of a production, working or final.
+    surfaces:
+      en-US: [title, working title]
+      en-GB: [title, working title]
+  - concept: film.concept.call_sheet
+    type: document
+    definition: Daily document stating call times, locations, scenes and cast.
+    surfaces:
+      en-US: [call sheet]
+      en-GB: [call sheet]
+  - concept: film.concept.principal_photography
+    type: phase
+    definition: Phase in which the main footage is shot.
+    surfaces:
+      en-US: [principal photography, production]
+      en-GB: [principal photography, the shoot]
+  - concept: film.concept.first_assistant_director
+    type: role
+    definition: Crew lead responsible for scheduling and running the set.
+    surfaces:
+      en-US: [first AD, 1st AD]
+      en-GB: [first AD, first assistant director]
+    abbreviations: ["1st ad"]
+  - concept: film.concept.line_producer
+    type: role
+    definition: Producer responsible for budget and day-to-day physical production.
+    surfaces:
+      en-US: [line producer, UPM]
+      en-GB: [line producer, production manager]
+  - concept: film.concept.gaffer
+    type: role
+    definition: Chief lighting technician.
+    surfaces:
+      en-US: [gaffer, chief lighting technician]
+      en-GB: [gaffer]
+  - concept: film.concept.clearance
+    type: process
+    definition: Rights clearance for material appearing in a production.
+    surfaces:
+      en-US: [clearance, E&O clearance]
+      en-GB: [clearance, rights clearance]
+  - concept: film.concept.chain_of_title
+    type: document_set
+    definition: Documentation proving ownership of underlying rights.
+    surfaces:
+      en-US: [chain of title]
+      en-GB: [chain of title]
+  - concept: film.concept.production_incentive
+    type: financial_instrument
+    definition: Jurisdictional rebate, credit or relief for qualifying production spend.
+    surfaces:
+      en-US: [film tax credit, production incentive]
+      en-GB: [audio-visual expenditure credit, AVEC, film tax relief]
+
+entities:
+  - id: film.entity.production
+    concept: film.entity.production
+    description: A single film, series or episode production.
+    attributes: [title, format, budget, currency, jurisdiction]
+  - id: film.entity.shooting_day
+    concept: film.entity.shooting_day
+    description: A scheduled day of principal photography.
+    attributes: [date, unit, location, scenes]
+
+relationships:
+  - type: schedules
+    source: film.concept.first_assistant_director
+    target: film.entity.shooting_day
+    description: The first AD schedules shooting days.
+  - type: qualifies_for
+    source: film.entity.production
+    target: film.concept.production_incentive
+    description: A production may qualify for an incentive in a jurisdiction.
+
+industry_codes:
+  - system: NAICS
+    code: "512110"
+    label: Motion Picture and Video Production
+  - system: SIC
+    code: "7812"
+    label: Motion Picture and Video Tape Production
+
+standards:
+  - id: SMPTE-ST-2067
+    scope: interoperable master format
+  - id: EIDR
+    scope: entertainment identifier registry
+  - id: DPP-AS-11
+    scope: UK broadcast delivery
+
+authorities:
+  - id: bfi
+    name: British Film Institute
+    jurisdiction: GB
+    scope: cultural test certification for incentives
+  - id: ca-film-commission
+    name: California Film Commission
+    jurisdiction: US-CA
+    scope: state production incentive administration
+  - id: mpa
+    name: Motion Picture Association
+    jurisdiction: US
+    scope: classification and industry standards
+
+documents:
+  - id: film.doc.call_sheet
+    name: Call sheet
+    required_fields: [date, unit, call_times, locations, scenes, cast]
+  - id: film.doc.chain_of_title
+    name: Chain of title bundle
+    required_fields: [underlying_rights, writer_agreements, option_agreements, releases]
+
+workflows:
+  - id: film.workflow.shoot_day
+    name: Execute shooting day
+    steps: [call_sheet_issued, crew_call, setup, shoot, wrap, dailies]
+  - id: film.workflow.incentive_claim
+    name: Claim production incentive
+    steps: [assess_eligibility, register, track_qualifying_spend, audit, claim]
+
+roles: [PRODUCER, LINE_PRODUCER, FIRST_AD, GAFFER, PRODUCTION_ACCOUNTANT]
+
+abbreviations:
+  ad: film.concept.first_assistant_director
+  avec: film.concept.production_incentive
+
+synonyms:
+  "the shoot": film.concept.principal_photography
+
+jurisdiction_rules:
+  - jurisdiction: GB
+    rule_id: film.rule.gb.avec
+    kind: regulatory
+    expression: incentive_claimed_as_audio_visual_expenditure_credit_subject_to_bfi_cultural_test
+    severity: must
+    authority: bfi
+    applies_to: [film.concept.production_incentive]
+  - jurisdiction: US-CA
+    rule_id: film.rule.usca.credit
+    kind: regulatory
+    expression: incentive_is_a_state_tax_credit_allocated_by_lottery_and_jobs_ratio
+    severity: must
+    authority: ca-film-commission
+    applies_to: [film.concept.production_incentive]
+
+source_mappings:
+  - concept: film.concept.production_incentive
+    target_pack: TAX
+    target_concept: tax.concept.taxable_event
+    equivalence: partial
+    note: Incentives interact with the tax regime and require jurisdiction and authority.
+  - concept: film.concept.chain_of_title
+    target_pack: LEGAL
+    target_concept: legal.entity.agreement
+    equivalence: partial
+    note: Chain of title is a bundle of agreements, not a single instrument.
+
+translation_rules:
+  - id: film.tr.role_scope
+    from: US
+    to: GB
+    kind: role
+    note: UPM and UK production manager scopes differ; do not treat as identical roles.
+  - id: film.tr.title_ambiguity
+    from: common.ambiguous.title
+    to: film.concept.production_title
+    kind: disambiguation
+    note: Only valid when the domain is already known to be FILM.
