@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/execution-envelope.schema.json",
+  "title": "AGENTROPOLIS Execution Envelope",
+  "description": "Portable, implementation-neutral governance and execution contract compiled by ATG/Atralith before Dispatch. Unknown optional fields are tolerated for forward compatibility; safety-critical extensions must be listed in must_understand.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "schema_version",
+    "envelope_id",
+    "created_at",
+    "compiler",
+    "principal",
+    "objective",
+    "mandate",
+    "capabilities",
+    "authority",
+    "risk",
+    "evidence",
+    "receipt",
+    "dispatch",
+    "must_understand"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "agentropolis.execution-envelope"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "envelope_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string", "const": "atg"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "principal": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "type"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {
+          "type": "string",
+          "enum": ["human", "agent", "service", "organization", "other"]
+        }
+      }
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["summary", "success_conditions"],
+      "properties": {
+        "summary": {"type": "string", "minLength": 1},
+        "success_conditions": {
+          "type": "array",
+          "items": {"type": ["string", "object"]}
+        }
+      }
+    },
+    "mandate": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["mandate_id", "scope"],
+      "properties": {
+        "mandate_id": {"type": "string", "minLength": 1},
+        "scope": {
+          "type": "array",
+          "items": {"type": ["string", "object"]}
+        },
+        "expires_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["required", "optional"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "optional": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["allowed", "denied", "approval_required", "delegation_depth_max"],
+      "properties": {
+        "allowed": {"type": "array", "items": {"type": ["string", "object"]}},
+        "denied": {"type": "array", "items": {"type": ["string", "object"]}},
+        "approval_required": {"type": "array", "items": {"type": ["string", "object"]}},
+        "budget": {"type": "object", "additionalProperties": true},
+        "delegation_depth_max": {"type": "integer", "minimum": 0}
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["tier", "assigned_by", "policy_id", "basis"],
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["R0", "R1", "R2", "R3", "R4", "R5"]
+        },
+        "assigned_by": {"type": "string", "const": "atg"},
+        "policy_id": {"type": "string", "minLength": 1},
+        "basis": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "capability": {"type": "string"},
+            "reversibility": {"type": "string"},
+            "blast_radius": {"type": "string"},
+            "data_sensitivity": {"type": "string"},
+            "economic_exposure": {"type": "string"},
+            "physical_effect": {"type": "string"}
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "preferences": {"type": "object", "additionalProperties": true},
+        "prohibitions": {"type": "array", "items": {"type": ["string", "object"]}}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["claims_required", "independent_verification"],
+      "properties": {
+        "claims_required": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "independent_verification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["claim", "required", "source_independence"],
+            "properties": {
+              "claim": {"type": "string", "minLength": 1},
+              "required": {"type": "boolean"},
+              "source_class": {"type": "string"},
+              "source_independence": {
+                "type": "string",
+                "enum": [
+                  "executor_self",
+                  "executor_separate_process",
+                  "executor_separate_identity",
+                  "executor_separate_host",
+                  "external_service",
+                  "hardware_sensor",
+                  "human_observation",
+                  "independent_verifier",
+                  "other"
+                ]
+              },
+              "minimum_observations": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["required", "provenance_required"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "provenance_required": {"type": "boolean"}
+      }
+    },
+    "dispatch": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "accepted", "refused", "running", "completed", "failed", "cancelled"]
+        }
+      }
+    },
+    "must_understand": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
