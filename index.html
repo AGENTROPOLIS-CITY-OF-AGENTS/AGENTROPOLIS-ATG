@@ -1,1 +1,132 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#05030a"><title>AGENTROPOLIS | ATG Intelligence Grid</title><style>:root{--bg:#05030a;--panel:#0c1020cc;--red:#ff2941;--cyan:#29e0ff;--violet:#a24bff;--mint:#3dff9e;--text:#eef4ff;--muted:#8e9ab2}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 50% 0,#251020 0,#07111b 32%,var(--bg) 70%);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:100vh}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(#29e0ff10 1px,transparent 1px),linear-gradient(90deg,#ff29410d 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(#000,transparent)}header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:18px max(22px,calc((100vw - 1180px)/2));background:#05030ade;border-bottom:1px solid #29e0ff35;backdrop-filter:blur(12px)}.brand{font-weight:900;letter-spacing:.12em}.brand b{color:var(--red)}header a{color:var(--cyan);text-decoration:none}.shell{width:min(1180px,calc(100% - 40px));margin:auto}.hero{min-height:72vh;display:grid;align-content:center;gap:24px;padding:76px 0}.eyebrow{color:var(--cyan);letter-spacing:.14em;font-size:.78rem}.hero h1{font-size:clamp(3rem,9vw,7.5rem);line-height:.86;margin:0;letter-spacing:-.055em}.hero h1 span{display:block;color:var(--red)}.lede{max-width:850px;color:#c7d5e8;font-size:clamp(1rem,2vw,1.35rem);line-height:1.7}.status{display:flex;flex-wrap:wrap;gap:10px}.pill{border:1px solid #29e0ff55;background:#07101acc;padding:9px 12px;font-size:.72rem;letter-spacing:.08em}.pill.ok{border-color:#3dff9e66;color:var(--mint)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-bottom:80px}.card{background:linear-gradient(145deg,#0c1020dd,#100812c9);border:1px solid #29e0ff35;padding:24px;min-height:190px;box-shadow:0 20px 60px #0007}.card:nth-child(2){border-color:#a24bff66}.card:nth-child(3){border-color:#ff294166}.card:nth-child(4){border-color:#3dff9e66}.card small{color:var(--muted);letter-spacing:.12em}.card h2{font-size:1.35rem;margin:34px 0 10px}.card p{color:#aebbd0;line-height:1.55;margin:0}.flow{border:1px solid #ff294144;background:#090b13dd;padding:28px;margin-bottom:80px}.flow h2{margin-top:0}.rail{display:flex;flex-wrap:wrap;align-items:center;gap:12px;color:var(--cyan)}.rail span{border:1px solid #29e0ff35;padding:10px 12px}.rail i{color:var(--red);font-style:normal}footer{border-top:1px solid #29e0ff25;padding:32px 20px 46px;color:var(--muted);text-align:center;font-size:.75rem}@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero{min-height:auto;padding:64px 0 54px}header{gap:14px;align-items:flex-start;flex-direction:column}}</style></head><body><header><div class="brand">AGENTROPOLIS <b>ATG</b></div><a href="https://github.com/AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG">SOURCE ↗</a></header><main class="shell"><section class="hero"><div class="eyebrow">THE INTELLIGENCE GRID · PUBLIC PROTOTYPE</div><h1>AGENT<span>TRANSACTION GRAMMAR</span></h1><p class="lede">ATG is the semantic protocol for accountable autonomous agents. ATRALITH is the governed execution layer that turns intent into constrained capability, execution evidence, receipts, and audit.</p><div class="status"><span class="pill ok">SITE RESTORED</span><span class="pill">ATG · SEMANTICS</span><span class="pill">ATRALITH · EXECUTION</span><span class="pill">RECEIPT-BACKED</span></div></section><section class="grid"><article class="card"><small>01 · IDENTITY</small><h2>Who is acting?</h2><p>Machine-verifiable identity, runtime context, delegation and provenance.</p></article><article class="card"><small>02 · MANDATE</small><h2>What is allowed?</h2><p>Explicit scope, authority, budget, deadlines and policy constraints before execution.</p></article><article class="card"><small>03 · EXECUTION</small><h2>What actually ran?</h2><p>ATRALITH routes governed work across implementation-neutral execution targets.</p></article><article class="card"><small>04 · RECEIPT</small><h2>What can be proven?</h2><p>Result, evidence, authorization path and economic accounting captured for audit.</p></article></section><section class="flow"><h2>Trusted execution corridor</h2><div class="rail"><span>IDENTITY</span><i>→</i><span>MANDATE</span><i>→</i><span>POLICY</span><i>→</i><span>EXECUTE</span><i>→</i><span>RECEIPT</span><i>→</i><span>AUDIT</span></div></section></main><footer>AGENTROPOLIS-ATG · IMPLEMENTATION-NEUTRAL · AUTHORITY IS A RUNTIME CONSTRAINT</footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05030a">
+<title>AGENTROPOLIS | ATG Spatial Intelligence Grid</title>
+<style>
+:root{--bg:#05030a;--glass:rgba(5,10,18,.48);--cyan:#29e0ff;--red:#ff2941;--violet:#a24bff;--mint:#3dff9e;--text:#eef4ff;--muted:#8e9ab2;--pink:#ff2d95}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#app{position:relative;width:100%;height:100%;isolation:isolate;background:radial-gradient(circle at 50% 30%,#151329 0,#07111b 36%,#05030a 78%)}
+.world-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62;filter:saturate(1.18) contrast(1.04) brightness(.9);z-index:0;pointer-events:none}
+.world-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(3,5,10,.06),rgba(3,5,10,.22)),radial-gradient(circle at 50% 50%,transparent 0 46%,rgba(3,5,10,.38) 100%)}
+#world{position:absolute;inset:0;z-index:2}
+#world canvas{display:block;width:100%!important;height:100%!important}
+.hud{position:absolute;z-index:5;inset:0;pointer-events:none}
+.topbar{position:absolute;top:14px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:auto}
+.brand,.nav,.statusbar,.drawer,.legend{background:var(--glass);backdrop-filter:blur(14px) saturate(135%);-webkit-backdrop-filter:blur(14px) saturate(135%);border:1px solid rgba(41,224,255,.34);box-shadow:0 0 24px rgba(41,224,255,.10),inset 0 0 18px rgba(255,45,149,.05);border-radius:12px}
+.brand{padding:10px 14px;font-weight:900;letter-spacing:.12em}.brand b{color:var(--red)}
+.nav{display:flex;gap:6px;padding:6px}.nav button{border:0;background:transparent;color:#b9c7db;font:inherit;font-size:.72rem;letter-spacing:.08em;padding:8px 10px;border-radius:8px;cursor:pointer}.nav button:hover,.nav button.active{color:var(--cyan);background:rgba(41,224,255,.08);box-shadow:inset 0 0 12px rgba(41,224,255,.08)}
+.statusbar{position:absolute;left:14px;bottom:14px;display:flex;gap:10px;padding:9px 12px;font-size:.68rem;color:var(--muted);pointer-events:auto}.statusbar b{color:var(--mint)}
+.legend{position:absolute;right:14px;bottom:14px;padding:10px 12px;font-size:.67rem;line-height:1.75;color:#b7c4d8;pointer-events:auto}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;box-shadow:0 0 9px currentColor}
+.drawer{position:absolute;top:72px;right:14px;width:min(380px,calc(100vw - 28px));max-height:calc(100vh - 150px);overflow:auto;padding:16px;transform:translateX(calc(100% + 24px));transition:transform .28s ease;pointer-events:auto;scrollbar-width:thin;scrollbar-color:var(--cyan) transparent}.drawer.open{transform:translateX(0)}
+.drawer::-webkit-scrollbar{width:8px}.drawer::-webkit-scrollbar-track{background:transparent}.drawer::-webkit-scrollbar-thumb{background:linear-gradient(var(--cyan),var(--pink));border-radius:8px}
+.drawer h2{margin:0 0 4px;font-size:1.08rem;color:var(--cyan)}.drawer .kicker{color:var(--pink);font-size:.66rem;letter-spacing:.12em}.drawer p{color:#b9c7d9;font-size:.78rem;line-height:1.55}.drawer .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.chip{border:1px solid rgba(41,224,255,.22);padding:8px;border-radius:9px;font-size:.66rem;color:#9fb2c7;background:rgba(5,8,14,.28)}.chip b{display:block;color:#eef4ff;margin-top:4px}.drawer a{display:inline-flex;margin-top:14px;color:var(--cyan);text-decoration:none;border:1px solid rgba(41,224,255,.35);padding:9px 11px;border-radius:9px}
+.hero-copy{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;text-align:center;width:min(760px,80vw);pointer-events:none;transition:opacity .4s}.hero-copy.fade{opacity:.16}.eyebrow{font-size:.66rem;letter-spacing:.16em;color:var(--cyan)}.hero-copy h1{margin:10px 0 8px;font-size:clamp(2.1rem,6vw,5rem);line-height:.92;letter-spacing:-.04em;text-shadow:0 0 20px rgba(41,224,255,.22)}.hero-copy h1 span{display:block;color:var(--red)}.hero-copy p{margin:auto;max-width:680px;color:#bac8da;font-size:clamp(.78rem,1.4vw,1rem);line-height:1.65}.hero-copy strong{color:var(--cyan)}
+.tour{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:6;pointer-events:auto;border:1px solid rgba(41,224,255,.46);background:rgba(5,10,18,.48);backdrop-filter:blur(12px);color:#dffaff;padding:10px 14px;border-radius:10px;font:inherit;font-size:.72rem;letter-spacing:.09em;cursor:pointer;box-shadow:0 0 20px rgba(41,224,255,.12)}
+.toast{position:absolute;left:50%;top:88px;transform:translateX(-50%);z-index:7;background:rgba(5,10,18,.72);border:1px solid rgba(255,41,65,.4);padding:9px 12px;border-radius:9px;font-size:.68rem;color:#dbe7f6;opacity:0;transition:opacity .2s;pointer-events:none}.toast.show{opacity:1}
+@media(max-width:760px){.nav{display:none}.hero-copy{top:43%}.legend{display:none}.drawer{top:66px;max-height:calc(100vh - 130px)}.statusbar{right:14px;justify-content:center}.brand{font-size:.72rem}}
+@media(prefers-reduced-motion:reduce){.world-video{display:none}.drawer{transition:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <video id="bgVideo" class="world-video" autoplay muted loop playsinline preload="metadata" poster="">
+    <source src="./assets/atg-cinematic.mp4" type="video/mp4">
+  </video>
+  <div class="world-shade"></div>
+  <div id="world"></div>
+  <div class="hero-copy" id="heroCopy">
+    <div class="eyebrow">ATG · AGENT TRANSACTION GRAMMAR</div>
+    <h1>ACCESS IS NOT <span>AUTHORITY.</span></h1>
+    <p><strong>MCP gives access.</strong> ATG gives that access meaning, limits, evidence, and proof. Enter the protocol world and follow the corridor from identity to audit.</p>
+  </div>
+  <div class="hud">
+    <div class="topbar">
+      <div class="brand">AGENTROPOLIS <b>ATG</b></div>
+      <div class="nav">
+        <button class="active" data-focus="core">WORLD</button>
+        <button data-focus="identity">IDENTITY</button>
+        <button data-focus="mandate">MANDATE</button>
+        <button data-focus="atranic">ATRANIC</button>
+        <button data-focus="atralith">ATRALITH</button>
+        <button data-focus="mcp">MCP</button>
+        <button data-focus="receipt">RECEIPTS</button>
+      </div>
+    </div>
+    <div class="drawer" id="drawer"></div>
+    <div class="statusbar"><span>SURFACE <b>LIVE</b></span><span>RUNTIME <b>DEMO</b></span><span>AUTHORITY IS A RUNTIME CONSTRAINT</span></div>
+    <div class="legend"><div><span class="dot" style="color:var(--cyan);background:var(--cyan)"></span>semantic flow</div><div><span class="dot" style="color:var(--red);background:var(--red)"></span>policy boundary</div><div><span class="dot" style="color:var(--violet);background:var(--violet)"></span>verification</div><div><span class="dot" style="color:var(--mint);background:var(--mint)"></span>receipt / proof</div></div>
+  </div>
+  <button class="tour" id="tourBtn">RUN THE CORRIDOR</button>
+  <div class="toast" id="toast">Cinematic video asset is not in the repository yet. Spatial fallback is active.</div>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/+esm';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.179.1/examples/jsm/controls/OrbitControls.js/+esm';
+
+const app=document.getElementById('world');
+const hero=document.getElementById('heroCopy');
+const drawer=document.getElementById('drawer');
+const toast=document.getElementById('toast');
+const video=document.getElementById('bgVideo');
+video.addEventListener('error',()=>{video.style.display='none';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),4200)});
+video.play().catch(()=>{});
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x05030a,.015);
+const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,.1,1000); camera.position.set(0,52,86);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15; renderer.setClearColor(0x000000,0); app.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.dampingFactor=.05; controls.target.set(0,4,0); controls.minDistance=42; controls.maxDistance=130; controls.maxPolarAngle=Math.PI*.46; controls.minPolarAngle=Math.PI*.20;
+scene.add(new THREE.HemisphereLight(0x84ddff,0x120817,2.15));
+const key=new THREE.DirectionalLight(0xff2d95,2.3);key.position.set(-35,50,30);scene.add(key);
+const fill=new THREE.PointLight(0x29e0ff,4.2,160);fill.position.set(35,30,25);scene.add(fill);
+
+const floor=new THREE.Mesh(new THREE.CircleGeometry(58,64),new THREE.MeshStandardMaterial({color:0x070a12,metalness:.75,roughness:.35,transparent:true,opacity:.68}));floor.rotation.x=-Math.PI/2;floor.position.y=-.3;scene.add(floor);
+const grid=new THREE.GridHelper(112,28,0x29e0ff,0x32152f);grid.position.y=-.26;grid.material.opacity=.18;grid.material.transparent=true;scene.add(grid);
+
+const DATA=[
+{id:'identity',name:'IDENTITY TOWER',role:'Who is acting?',x:-30,z:14,color:0x29e0ff,h:22,shape:'tower',href:'./docs/kernel-spec-v0.1.md'},
+{id:'mandate',name:'MANDATE FORGE',role:'What is allowed?',x:-16,z:-4,color:0xff2941,h:15,shape:'forge',href:'./contracts/core/execution-envelope.schema.json'},
+{id:'policy',name:'POLICY GATE',role:'What constraints apply?',x:0,z:-15,color:0xff2941,h:11,shape:'gate',href:'./docs/COGNITIVE_RUNTIME_NAMESPACE_GUARD.md'},
+{id:'capability',name:'CAPABILITY EXCHANGE',role:'What can the agent do?',x:20,z:-8,color:0x29e0ff,h:14,shape:'ring',href:'./contracts/core/capability-abi.md'},
+{id:'atranic',name:'ATRANIC HUB',role:'What does the message mean?',x:30,z:10,color:0xa24bff,h:18,shape:'spire',href:'./docs/ATG-PROFILE-LANGUAGE.md'},
+{id:'atralith',name:'ATRALITH CORE',role:'Reference implementation',x:18,z:28,color:0xff2d95,h:24,shape:'core',href:'./atralith/'},
+{id:'mcp',name:'MCP TERMINAL',role:'Governed tool execution',x:-2,z:31,color:0x29e0ff,h:16,shape:'terminal',href:'https://agentropolis-city-of-agents.github.io/AGENTROPOLIS-AGENT-MCP/'},
+{id:'verify',name:'VERIFY SPIRE',role:'What actually happened?',x:-22,z:28,color:0xa24bff,h:21,shape:'spire',href:'./docs/ATG-PROFILE-VERIFY.md'},
+{id:'receipt',name:'RECEIPT ARCHIVE',role:'What proof remains?',x:-34,z:-12,color:0x3dff9e,h:13,shape:'archive',href:'./examples/'},
+{id:'core',name:'ATG CORE',role:'Semantic contract layer',x:0,z:7,color:0xffffff,h:10,shape:'core',href:'https://github.com/AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG'}
+];
+const groups=new Map();
+function mat(c,intensity=.55){return new THREE.MeshStandardMaterial({color:0x080b12,metalness:.7,roughness:.24,emissive:c,emissiveIntensity:intensity})}
+function addNode(d){const g=new THREE.Group();g.position.set(d.x,0,d.z);let body;
+ if(d.shape==='tower'||d.shape==='spire'){body=new THREE.Mesh(new THREE.CylinderGeometry(4.2,5.8,d.h,8),mat(d.color,.45));body.position.y=d.h/2}
+ else if(d.shape==='ring'){body=new THREE.Mesh(new THREE.TorusGeometry(6,1.2,12,36),mat(d.color,.75));body.rotation.x=Math.PI/2;body.position.y=7}
+ else if(d.shape==='gate'){const left=new THREE.Mesh(new THREE.BoxGeometry(3,d.h,3),mat(d.color,.62));const right=left.clone();left.position.set(-5,d.h/2,0);right.position.set(5,d.h/2,0);const top=new THREE.Mesh(new THREE.BoxGeometry(13,2,3),mat(d.color,.72));top.position.y=d.h;g.add(left,right,top)}
+ else {body=new THREE.Mesh(new THREE.BoxGeometry(d.shape==='forge'?12:10,d.h,d.shape==='terminal'?9:10),mat(d.color,.5));body.position.y=d.h/2}
+ if(body){body.userData.node=d;g.add(body)}
+ const ring=new THREE.Mesh(new THREE.RingGeometry(5.8,6.2,48),new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:.38,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.04;g.add(ring);
+ const beacon=new THREE.Mesh(new THREE.OctahedronGeometry(.48),new THREE.MeshBasicMaterial({color:d.color}));beacon.position.y=d.h+2;g.add(beacon);g.userData={data:d,beacon};scene.add(g);groups.set(d.id,g)}
+DATA.forEach(addNode);
+
+const sequence=['identity','mandate','policy','capability','atranic','atralith','mcp','verify','receipt'];
+const lineMat=new THREE.LineBasicMaterial({color:0x29e0ff,transparent:true,opacity:.34});
+for(let i=0;i<sequence.length-1;i++){const a=DATA.find(x=>x.id===sequence[i]),b=DATA.find(x=>x.id===sequence[i+1]);const pts=[new THREE.Vector3(a.x,.45,a.z),new THREE.Vector3(b.x,.45,b.z)];scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),lineMat))}
+const pulse=new THREE.Mesh(new THREE.SphereGeometry(.65,14,14),new THREE.MeshBasicMaterial({color:0x29e0ff}));scene.add(pulse);
+let pulseIndex=0,pulseT=0;
+
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
+renderer.domElement.addEventListener('pointerdown',e=>{mouse.x=e.clientX/innerWidth*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects([...groups.values()].flatMap(g=>g.children),true);const hit=hits.find(h=>h.object.userData.node);if(hit)show(hit.object.userData.node)});
+function show(d){hero.classList.add('fade');drawer.classList.add('open');drawer.innerHTML=`<div class="kicker">ATG PROTOCOL DISTRICT</div><h2>${d.name}</h2><p>${d.role}</p><div class="meta"><div class="chip">SURFACE<b>AVAILABLE</b></div><div class="chip">RUNTIME<b>DEMO</b></div><div class="chip">FLOW<b>${sequence.includes(d.id)?'CORRIDOR':'SUPPORT'}</b></div><div class="chip">AUTHORITY<b>BOUNDED</b></div></div><a href="${d.href}">OPEN SOURCE ↗</a>`;focus(d.id)}
+function focus(id){const g=groups.get(id);if(!g)return;controls.target.copy(g.position).add(new THREE.Vector3(0,5,0));const dir=new THREE.Vector3(0,22,38);camera.position.copy(g.position).add(dir)}
+document.querySelectorAll('[data-focus]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-focus]').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.focus==='core'){drawer.classList.remove('open');hero.classList.remove('fade');controls.target.set(0,4,0);camera.position.set(0,52,86)}else{const d=DATA.find(x=>x.id===b.dataset.focus);if(d)show(d)}}));
+
+let touring=false,tourStep=0,lastStep=0;document.getElementById('tourBtn').addEventListener('click',()=>{touring=!touring;tourStep=0;lastStep=0;document.getElementById('tourBtn').textContent=touring?'STOP CORRIDOR':'RUN THE CORRIDOR'});
+const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const t=clock.getElapsedTime();groups.forEach((g,i)=>{g.userData.beacon.rotation.y=t*(.6+i*.03);g.userData.beacon.position.y=g.userData.data.h+2+Math.sin(t*1.4+i)*.4});pulseT=(pulseT+.008)%1;const ai=pulseIndex%(sequence.length-1),a=groups.get(sequence[ai]).position,b=groups.get(sequence[ai+1]).position;pulse.position.lerpVectors(a,b,pulseT);pulse.position.y=.9+Math.sin(t*5)*.2;if(pulseT>.99)pulseIndex++;
+ if(touring){if(!lastStep||t-lastStep>3.2){const id=sequence[tourStep%sequence.length];show(DATA.find(x=>x.id===id));tourStep++;lastStep=t;if(tourStep>sequence.length){touring=false;document.getElementById('tourBtn').textContent='RUN THE CORRIDOR'}}}
+ controls.update();renderer.render(scene,camera)}animate();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script>
+</body>
+</html>
