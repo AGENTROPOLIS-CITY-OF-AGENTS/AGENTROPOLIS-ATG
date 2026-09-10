@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.ai/atg/contracts/core/color-psychology.schema.json",
+  "title": "ATG Color Psychology Contract",
+  "description": "Defines color as meaning-bearing metadata in ATG. Psychology may guide attention and affect, but color never overrides governance, accessibility, or system truth.",
+  "type": "object",
+  "required": ["version", "semantic", "psych", "renderPolicy"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "semantic": {
+      "type": "string",
+      "enum": [
+        "STORY",
+        "POCKET",
+        "PLAY",
+        "HOLO",
+        "GTM",
+        "RIGHTS",
+        "VERIFY",
+        "READY",
+        "ACTIVE",
+        "SUCCESS",
+        "CAUTION",
+        "BLOCK",
+        "DANGER",
+        "DESTRUCTIVE",
+        "WORLD",
+        "RECEIPT",
+        "NEUTRAL"
+      ]
+    },
+    "psych": {
+      "type": "object",
+      "required": ["arousal", "valence", "urgency", "trust", "novelty", "reward"],
+      "properties": {
+        "arousal": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "valence": { "type": "string", "enum": ["NEGATIVE", "NEUTRAL", "POSITIVE"] },
+        "urgency": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "trust": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "novelty": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "reward": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] }
+      },
+      "additionalProperties": false
+    },
+    "affect": {
+      "type": "string",
+      "description": "Optional emotional/experiential intent. Affect is separate from operational truth."
+    },
+    "systemState": {
+      "type": "string",
+      "description": "Optional operational state such as VERIFIED, BLOCKED, READY, or RECEIPTED."
+    },
+    "renderPolicy": {
+      "type": "object",
+      "required": ["colorOnlySignal", "requireTextLabel", "criticalStateRequiresIcon", "accessibleContrast"],
+      "properties": {
+        "colorOnlySignal": { "type": "boolean", "const": false },
+        "requireTextLabel": { "type": "boolean", "const": true },
+        "criticalStateRequiresIcon": { "type": "boolean", "const": true },
+        "accessibleContrast": { "type": "boolean", "const": true },
+        "reservedMeaning": {
+          "type": "object",
+          "properties": {
+            "red": { "const": "BLOCK_DANGER_DESTRUCTIVE" },
+            "gold": { "const": "RARITY_OWNERSHIP_ACHIEVEMENT" },
+            "cyan": { "const": "VERIFY_TRUST_PROVENANCE" },
+            "lime": { "const": "READY_ACTIVE_SUCCESS" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "brandOverride": {
+      "type": "object",
+      "description": "White-label presentation may remap non-governance brand colors but cannot redefine reserved operational meanings.",
+      "properties": {
+        "allowed": { "type": "boolean", "default": true },
+        "mayOverrideReservedMeaning": { "type": "boolean", "const": false }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}
