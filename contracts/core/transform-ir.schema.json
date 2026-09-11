@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/transform-ir.schema.json",
+  "title": "ATG Transform IR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "transform_id", "mode", "domain", "corridor", "entities", "evidence", "constraints", "receipt_policy"],
+  "properties": {
+    "version": {"const": "atg.transform-ir.v1"},
+    "transform_id": {"type": "string", "minLength": 1},
+    "mode": {"enum": ["FORWARD", "INVERSE", "ROUND_TRIP"]},
+    "domain": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["RECON", "VIS", "FILM", "GEO", "MAT", "AUDIO", "MOTION", "SIM", "GEN", "CONSTRAINT", "VERIFY", "PACKAGE", "UI", "CODE", "DATA", "BEHAVIOR", "SYSTEM"]}
+    },
+    "corridor": {
+      "type": "array",
+      "items": {"enum": ["OBSERVE", "ASSESS", "DECOMPOSE", "RECOVER", "INFER", "SYNTHESIZE", "ALIGN", "CONSTRAIN", "SIMULATE", "VERIFY", "IDENTIFY", "PACKAGE", "RECEIPT"]}
+    },
+    "entities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entity"}
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "constraints": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/constraint"}
+    },
+    "target_adapters": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "receipt_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "preserve_epistemic_state", "preserve_raw_evidence"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "preserve_epistemic_state": {"type": "boolean"},
+        "preserve_raw_evidence": {"type": "boolean"}
+      }
+    }
+  },
+  "$defs": {
+    "epistemicValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value"],
+      "properties": {
+        "state": {"enum": ["OBSERVED", "RECOVERED", "INFERRED", "SYNTHESIZED"]},
+        "value": {},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "error_bounds": {},
+        "method": {"type": "string"},
+        "provider_or_model": {"type": "string"},
+        "provider_version": {"type": "string"},
+        "human_approval_state": {"enum": ["NOT_REQUIRED", "PENDING", "APPROVED", "REJECTED"]},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_id", "entity_type", "properties"],
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "entity_type": {"type": "string", "minLength": 1},
+        "properties": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/epistemicValue"}
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["predicate", "target"],
+            "properties": {
+              "predicate": {"type": "string"},
+              "target": {"type": "string"},
+              "state": {"enum": ["OBSERVED", "RECOVERED", "INFERRED", "SYNTHESIZED"]},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "kind", "provenance_status"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "uri": {"type": "string"},
+        "sha256": {"type": "string"},
+        "provenance_status": {"enum": ["VERIFIED", "REFERENCE_ONLY", "UNKNOWN", "DISPUTED"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_id", "kind", "expression", "failure_policy"],
+      "properties": {
+        "constraint_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["GEOMETRY", "CONTINUITY", "PHYSICS", "COMPATIBILITY", "POLICY", "RIGHTS", "ACCESSIBILITY", "GAME", "AUTHORITY", "CUSTOM"]},
+        "expression": {"type": "string", "minLength": 1},
+        "failure_policy": {"enum": ["BLOCK", "ESCALATE", "WARN"]},
+        "solver_hint": {"enum": ["DETERMINISTIC", "GRAPH", "SAT", "CSP", "PHYSICS", "PROBABILISTIC", "HUMAN"]}
+      }
+    }
+  }
+}
