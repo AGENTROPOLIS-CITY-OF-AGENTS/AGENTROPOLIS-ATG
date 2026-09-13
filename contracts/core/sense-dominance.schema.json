@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/sense-dominance.schema.json",
+  "title": "ATG SENSE Dominance Signal",
+  "description": "Agent Transaction Grammar contract for a citywide agent-token attention-dominance signal. SENSE measures qualified share of agentic attention; it is not a price target or investment recommendation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "signalId",
+    "asset",
+    "dominance",
+    "evidence",
+    "collective",
+    "messagePolicy",
+    "distribution",
+    "receiptRequired",
+    "correlationId"
+  ],
+  "properties": {
+    "type": { "const": "sense.dominance" },
+    "signalId": { "type": "string", "minLength": 1 },
+    "correlationId": { "type": "string", "minLength": 1 },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ticker", "assetId", "origin"],
+      "properties": {
+        "ticker": { "type": "string", "minLength": 1 },
+        "assetId": { "type": "string", "minLength": 1 },
+        "origin": { "enum": ["agentropolis-native", "docked-external"] },
+        "genesisReceipt": { "type": "string" }
+      }
+    },
+    "dominance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "direction", "status", "window"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "direction": { "enum": ["rising", "falling", "flat"] },
+        "delta": { "type": "number" },
+        "status": { "enum": ["quiet", "emerging", "active", "dominant"] },
+        "window": { "type": "string", "minLength": 1 },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "qualifiedAttention", "totalQualifiedAttention"],
+      "properties": {
+        "sources": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "qualifiedAttention": { "type": "number", "minimum": 0 },
+        "totalQualifiedAttention": { "type": "number", "exclusiveMinimum": 0 },
+        "socialVelocity": { "type": "number" },
+        "broadcastVelocity": { "type": "number" },
+        "ugcVelocity": { "type": "number" },
+        "communityVelocity": { "type": "number" },
+        "liquidityContext": { "type": "number" },
+        "riskFlags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "collective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collectiveId", "confidence", "dissentPresent"],
+      "properties": {
+        "collectiveId": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "dissentPresent": { "type": "boolean" },
+        "counterThesisRefs": { "type": "array", "items": { "type": "string" } },
+        "receiptRefs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "messagePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objective", "allowedFrames", "prohibitedClaims", "materialInterestDisclosureRequired"],
+      "properties": {
+        "objective": { "enum": ["attention", "explain", "debate", "risk-update", "market-update"] },
+        "allowedFrames": { "type": "array", "items": { "type": "string" } },
+        "prohibitedClaims": { "type": "array", "items": { "type": "string" } },
+        "materialInterestDisclosureRequired": { "type": "boolean", "const": true },
+        "investmentRecommendation": { "type": "boolean", "const": false }
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requestedSurfaces"],
+      "properties": {
+        "requestedSurfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["social-feed", "reels", "for-you", "spaces", "atvnetwork", "33.3fm", "ugc", "external-social"] }
+        },
+        "requestedRoles": { "type": "array", "items": { "type": "string" } },
+        "reactionWindow": { "type": "string" }
+      }
+    },
+    "receiptRequired": { "type": "boolean", "const": true }
+  }
+}
