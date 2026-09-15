@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "surface_id": "pi-desktop",
+  "surface_class": "desktop-engineering-workstation",
+  "actor_identity": "did:agentropolis:operator:example",
+  "mandate_id": "mandate:repo-maintenance",
+  "execution_envelope_id": "envelope:example-001",
+  "risk_tier": "T1",
+  "model": {
+    "provider_class": "local",
+    "provider": "ollama",
+    "model_id": "example-local-model",
+    "endpoint": "http://127.0.0.1:11434"
+  },
+  "data_path": "local-workspace-local-model",
+  "capabilities": [
+    "read-files",
+    "write-files",
+    "shell-exec",
+    "mcp-read",
+    "preview",
+    "session-import",
+    "model-switch"
+  ],
+  "continuity": {
+    "source_session_id": "codex:example-session",
+    "context_capsule_id": "capsule:example-001",
+    "provenance_preserved": true,
+    "imported_authority": false
+  },
+  "receipt_required": true,
+  "audit_degraded": false
+}
