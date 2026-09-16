@@ -86,6 +86,7 @@ Current and emerging profiles include:
 - **ATG:MARKET** — governed market evidence and market-action semantics
 - **ATG:AGENT-LINK** — agent linking and cross-runtime relationship semantics
 - **ATG:BROADCAST** — campaign, KOL, channel, broadcast and attribution semantics
+- **ATG:LIVING-GAME** — project-agnostic Living Game, NFC/physical-trigger, wearable live-session, public-broadcast, publishing, reward and ownership-transfer semantics carried as an extension of the single Execution Envelope (`docs/ATG-PROFILE-LIVING-GAME.md`)
 - **ATG:ARCANA54** — programmable-story-world domain vocabulary
 - **ATG LANGUAGE** — Atralith native visible language surface
 
