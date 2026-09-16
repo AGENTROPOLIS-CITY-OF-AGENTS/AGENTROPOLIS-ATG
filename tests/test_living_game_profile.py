@@ -73,6 +73,22 @@ class LivingGameProfileTest(unittest.TestCase):
         del env["extensions"]["living_game"]["rules_engine"]
         self.assertTrue(any("rules_engine" in m for m in validate(env)))
 
+    def test_object_lifecycle_requires_rules_engine_and_object_refs(self):
+        for action in ("object.mint", "object.retire"):
+            env = with_ext(action_class=action)
+            del env["extensions"]["living_game"]["rules_engine"]
+            self.assertTrue(any("rules_engine" in m for m in validate(env)), action)
+            empty = with_ext(action_class=action, object_refs=[])
+            self.assertTrue(any("non-empty" in m or "too short" in m for m in validate(empty)), action)
+
+    def test_public_broadcast_rejects_empty_lease_id(self):
+        env = with_ext(
+            action_class="publish.public_broadcast",
+            session_ref={"session_id": "s1", "mode": "public", "lease_id": ""},
+            privacy={"face_recognition": False, "public_broadcast_authorized": True},
+        )
+        self.assertTrue(any("too short" in m or "non-empty" in m for m in validate(env)))
+
     def test_public_broadcast_requires_lease_and_authorization(self):
         env = with_ext(
             action_class="publish.public_broadcast",
