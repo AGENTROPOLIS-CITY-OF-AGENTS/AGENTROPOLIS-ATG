@@ -1,75 +1,105 @@
-# ATG Economic Boundary
+# ATG / FISCALITH Economic Boundary
 
 Status: CANONICAL BOUNDARY
 
-ATG is the Atralith agentic language and semantic protocol surface for AGENTROPOLIS. It expresses economic meaning, intent, constraints, authority references, policy requirements, and receipt requirements. It does not own settlement routing and does not choose payment rails.
+**ATRALITH / ATG is the AGENTROPOLIS agent language.**
+
+ATG defines how agents communicate, negotiate, delegate, request, refuse, verify, report, reference mandates, reference proofs, and carry domain payloads. ATG does **not** own financial semantics.
+
+**FISCALITH is the financial language.** It defines economic meaning for payments, quotes, bids, jobs, invoices, treasury, FX, swaps, bridges, fees, credit, collateral, settlement, reconciliation and other agentic-commerce operations.
 
 ## Canonical rule
 
 ```text
-ATG expresses economic intent.
-Economic Fabric evaluates economic policy.
-PAYRAIL selects eligible settlement infrastructure.
-Settlement adapters execute.
-Receipts prove the result.
-AGENT-ENTITY state updates after verified settlement.
+AGENTENTITY
+  -> ATRALITH / ATG message envelope
+  -> FISCALITH financial payload when the interaction is economic
+  -> Execution Envelope
+  -> AEGIS authority / policy / risk decision
+  -> AQUADUCT when sandbox or certification is required
+  -> PAYRAIL for approved production routing
+  -> provider / rail / contract adapter
+  -> financial evidence + receipts
+  -> FISCALITH result
+  -> ATG.RECEIPT / ATG.DENY / ATG.ESCALATE
 ```
 
-## ATG may express
+## ATG owns
 
-- payer / payee entity references;
-- asset or unit constraints;
-- maximum charge or spend ceiling;
-- required finality;
-- required receipt class;
-- custody restrictions;
-- approval requirements;
-- jurisdiction or policy references;
-- deadline / expiry;
-- whether partial settlement is permitted;
-- semantic meaning of the transaction.
+- agent speech acts such as REQUEST, PROPOSE, OFFER, ACCEPT, DELEGATE, REFUSE, VERIFY, RECEIPT and ESCALATE;
+- sender / recipient AGENTENTITY references;
+- conversation and correlation identity;
+- mandate references;
+- delegation references;
+- capability references;
+- proof requirements and proof references;
+- Execution Envelope references;
+- result, refusal, escalation and receipt communication;
+- provider-neutral agent-to-agent and agent-to-system message structure.
 
-Example:
+## FISCALITH owns
 
-```text
-TRANSFER asset:X
-FROM entity:A
-TO entity:B
-MAX_COST 0.25
-REQUIRE settlement_finality
-REQUIRE signed_receipt
-DENY unapproved_custody
-```
-
-This is language-level intent. It is not a rail selection.
+- financial intent semantics;
+- asset and amount semantics;
+- quote / bid / offer;
+- invoice / payroll / royalty / split;
+- treasury and budget semantics;
+- escrow and job economics;
+- bridge / swap / FX / credit / collateral;
+- fee, slippage, expiry, finality and reconciliation semantics;
+- financial result semantics.
 
 ## ATG must not
 
-- choose Arc, Base, XRPL, bank rails, or any other settlement provider;
+- redefine financial instruments;
+- choose Arc, Base, XRPL, bank rails or another settlement provider;
 - hold raw signing credentials;
-- grant payment authority because a wallet or adapter is connected;
-- mutate ownership state before required settlement verification;
-- become the treasury, wallet, or settlement execution engine;
-- silently turn a semantic profile into runtime authority.
+- grant financial authority;
+- become the treasury or wallet;
+- infer permission from a connected wallet;
+- convert provider support into authority;
+- bypass AEGIS, 54T, AQUADUCT, PAYRAIL or receipt requirements.
 
-## Relationship to AGENT-ENTITY
+## FISCALITH bridge
 
-AGENT-ENTITY is the persistent entity layer. ATG may reference an AGENT-ENTITY's identity, mandate, rights, controller, ownership state, economic permissions, and receipt history, but the language does not become the entity record itself.
+ATG MAY carry a FISCALITH payload:
 
-A runtime, model, wallet, chain address, card, avatar, robot, or application representation is not the AGENT-ENTITY.
+```text
+ATG.REQUEST {
+  from: TREASURY-042
+  to: PAYRAIL
+  mandate_ref: M-881
+  payload: FISCALITH.PAY {
+    counterparty: VENDOR-12
+    asset: USDC
+    amount: 4200
+  }
+}
+```
 
-## Relationship to PAYRAIL
+A financial response returns through ATG:
 
-PAYRAIL owns AGENTROPOLIS payment and settlement control responsibilities, including policy-gated spend, eligible rail selection, settlement adapter invocation, custody/signing boundaries, replay protection, finality verification, and economic receipts.
-
-ATG should remain rail-agnostic so the same semantic request can survive provider changes.
+```text
+ATG.RECEIPT {
+  payload: FISCALITH.SETTLED {
+    amount: 4200
+    asset: USDC
+    settlement_ref: S-771
+  }
+  proofs: [
+    ProofOfExecution,
+    ProofOfSettlement,
+    ProofOfOutcome
+  ]
+}
+```
 
 ## Compatibility doctrine
 
-Any ATG settlement profile that pins a chain or rail is a bounded compatibility/adapter profile, not a claim that ATG owns settlement routing.
+Existing ATG economic code and profiles are compatibility surfaces while financial semantics migrate to FISCALITH. They MUST NOT be treated as canonical ownership of finance.
 
-Legacy or implementation-specific profiles may describe requirements for executing on a selected rail. Selection remains external to the language contract.
+The migration must preserve working consumers while moving canonical economic vocabulary, financial IR, fee semantics and financial state machines into AGENTROPOLIS-FISCALITH.
 
 ## Standing rule
 
-> **AGENT-ENTITY defines the actor. ATG defines the meaning. The Execution Envelope bounds the action. The Capability Fabric finds execution. The Economic Fabric and PAYRAIL decide how approved value moves. Settlement adapters execute. Receipts prove what happened.**
+> **ATRALITH tells agents how to speak. FISCALITH defines financial meaning. AEGIS decides whether an action is allowed. 54T protects the trust boundary. AQUADUCT proves safely. PAYRAIL routes approved production value. Receipts prove what happened.**
