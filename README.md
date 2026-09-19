@@ -10,6 +10,12 @@ ATG is implementation-neutral. No browser provider, model, runtime, chain, settl
 
 See [`docs/ATG-ECONOMIC-BOUNDARY.md`](docs/ATG-ECONOMIC-BOUNDARY.md) for the canonical economic separation.
 
+The executable ATRALITH↔FISCALITH bridge lives in
+[`atralith/fiscalith_bridge.py`](atralith/fiscalith_bridge.py) — see
+[`docs/ATRALITH-FISCALITH-BRIDGE-IMPLEMENTATION.md`](docs/ATRALITH-FISCALITH-BRIDGE-IMPLEMENTATION.md).
+Canonical naming migration requirements are in
+[`docs/AGENT-ENTITY-NAMING-MIGRATION.md`](docs/AGENT-ENTITY-NAMING-MIGRATION.md).
+
 ## Canonical relationship
 
 | Layer | Role |

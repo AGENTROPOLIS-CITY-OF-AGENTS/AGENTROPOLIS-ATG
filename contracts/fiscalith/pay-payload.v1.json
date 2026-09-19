@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/fiscalith/pay-payload.v1.json",
+  "title": "FISCALITH PAY payload (typed)",
+  "description": "Typed PAY payload that a FISCALITH-aware ATG bridge compiles from provider-neutral financial intent. This schema belongs to the ATRALITH/FISCALITH bridge contract; the canonical financial-intent document is referenced by $id and is owned by AGENTROPOLIS-FISCALITH. Strict integer-money invariants are enforced by the bridge validator, not only by JSON typing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "asset",
+    "amount",
+    "decimals",
+    "counterparty"
+  ],
+  "properties": {
+    "asset": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Provider-neutral asset symbol (e.g. USDC). Not a rail selection."
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Integer amount in the asset's minor unit. NO FLOAT MONEY. Non-negative for PAY/SEND.",
+      "examples": [4200000000]
+    },
+    "decimals": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 24,
+      "description": "Explicit decimal scale of the asset (USDC = 6)."
+    },
+    "counterparty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sponsor_gas": {
+      "type": "boolean",
+      "default": false,
+      "description": "Gas sponsorship preference. Never requires a native gas token."
+    },
+    "finality": {
+      "type": "string",
+      "enum": ["immediate", "final", "settled", "best_effort"]
+    },
+    "expiry": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Intent expiry. The validator rejects expired intents."
+    },
+    "required_proofs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "fee_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_fee_minor": { "type": "integer" },
+        "max_fee_decimals": { "type": "integer", "minimum": 0, "maximum": 24 },
+        "max_slippage_nominator": { "type": "integer" },
+        "max_slippage_denominator": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "budget_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "budget_ref": { "type": "string", "minLength": 1 },
+        "remaining_minor": { "type": "integer" },
+        "remaining_decimals": { "type": "integer", "minimum": 0, "maximum": 24 }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_principal_minor": { "type": "integer" },
+        "expected_total_minor": { "type": "integer" },
+        "decimals": { "type": "integer", "minimum": 0, "maximum": 24 }
+      }
+    }
+  }
+}
