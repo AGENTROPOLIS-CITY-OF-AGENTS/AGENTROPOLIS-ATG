@@ -388,6 +388,223 @@ class CompileAndMappingTests(unittest.TestCase):
             _decimal_string_to_minor("1." + "0" * 25)
 
 
+def _non_pay_kind(kind, **payload_overrides):
+    """Build an ATG message carrying a recognized-but-unsupported FISCALITH kind."""
+    payload = {"asset": "USDC", "amount": 100, "decimals": 6, "counterparty": "V-12"}
+    payload.update(payload_overrides)
+    return {
+        "from": "TREASURY-042",
+        "to": "PAYRAIL",
+        "mandateRef": "M-88",
+        "executionEnvelopeRef": "EE-102",
+        "correlationId": "C-1",
+        "payload": {
+            "kind": kind,
+            "intent_id": f"I-{kind}",
+            "actor_ref": "TREASURY-042",
+            "mandate_ref": "M-88",
+            "execution_envelope_ref": "EE-102",
+            "payload": payload,
+        },
+    }
+
+
+class UntypedCompileTests(unittest.TestCase):
+    """P1: no recognized FISCALITH kind may reach an untyped KeyError/TypeError."""
+
+    def setUp(self):
+        self.b = FiscalithBridge()
+
+    def _assert_typed_rejection(self, kind):
+        msg = _non_pay_kind(kind)
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError) as ctx:
+            self.b.compile(parsed)
+        self.assertIn(kind, str(ctx.exception))
+
+    def test_fx_missing_amount_typed_rejection(self):
+        self._assert_typed_rejection("FX")
+
+    def test_job_missing_amount_typed_rejection(self):
+        self._assert_typed_rejection("JOB")
+
+    def test_quote_missing_amount_typed_rejection(self):
+        self._assert_typed_rejection("QUOTE")
+
+    def test_every_recognized_unsupported_kind_typed_rejection(self):
+        # Every recognized kind outside the compilable set must reject with a
+        # typed error, never a raw KeyError/TypeError.
+        from atralith.fiscalith_bridge import KNOWN_KINDS, _COMPILABLE_KINDS
+        for kind in sorted(KNOWN_KINDS - _COMPILABLE_KINDS):
+            with self.subTest(kind=kind):
+                self._assert_typed_rejection(kind)
+
+    def test_no_raw_keyerror(self):
+        for kind in ("FX", "JOB", "QUOTE", "SWAP", "BRIDGE"):
+            msg = _non_pay_kind(kind)
+            parsed = self.b.parse(msg)
+            try:
+                self.b.compile(parsed)
+            except FatalFiscalithError:
+                pass
+            except KeyError:
+                self.fail(f"raw KeyError for kind {kind}")
+            except TypeError:
+                self.fail(f"raw TypeError for kind {kind}")
+
+    def test_no_raw_typeerror(self):
+        for kind in ("FX", "JOB", "QUOTE"):
+            msg = _non_pay_kind(kind)
+            parsed = self.b.parse(msg)
+            try:
+                self.b.compile(parsed)
+            except FatalFiscalithError:
+                pass
+            except TypeError:
+                self.fail(f"raw TypeError for kind {kind}")
+
+    def test_typed_rejection_contract(self):
+        # The rejection must be a FatalFiscalithError (bridge error), not a
+        # generic exception.
+        msg = _non_pay_kind("FX")
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+
+class InnerAuthorityFieldTests(unittest.TestCase):
+    """P2.1: authority-shaped inner fields fail closed across ALL kinds."""
+
+    def setUp(self):
+        self.b = FiscalithBridge()
+
+    def _assert_inner_rejected(self, kind, field, value=True):
+        msg = _non_pay_kind(kind)
+        msg["payload"]["payload"][field] = value
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_authority_inner_pay(self):
+        self._assert_inner_rejected("PAY", "approved")
+
+    def test_authority_inner_send(self):
+        self._assert_inner_rejected("SEND", "authorized")
+
+    def test_authority_inner_job(self):
+        self._assert_inner_rejected("JOB", "admin")
+
+    def test_authority_inner_fx(self):
+        self._assert_inner_rejected("FX", "owner")
+
+    def test_authority_inner_quote(self):
+        self._assert_inner_rejected("QUOTE", "unlimited")
+
+    def test_nested_approved(self):
+        msg = _non_pay_kind("JOB")
+        msg["payload"]["payload"]["nested"] = {"approved": True}
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_nested_bypass_policy(self):
+        msg = _non_pay_kind("FX")
+        msg["payload"]["payload"]["nested"] = {"bypassPolicy": True}
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_nested_self_promote(self):
+        msg = _non_pay_kind("QUOTE")
+        msg["payload"]["payload"]["nested"] = {"selfPromote": True}
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_authority_field_on_pay_envelope(self):
+        msg = _pay()
+        msg["payload"]["aegis"] = "grant"
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+
+class DelegationChainTests(unittest.TestCase):
+    """P2.2: delegationChain is bound deterministically, never silently dropped."""
+
+    def setUp(self):
+        self.b = FiscalithBridge()
+
+    def test_valid_placement_preserved(self):
+        msg = _pay()
+        msg["delegationChain"] = [{"delegator": "TREASURY-042", "scope": "PAY"}]
+        parsed = self.b.parse(msg)
+        self.assertEqual(parsed.atg_context["delegationChain"], [{"delegator": "TREASURY-042", "scope": "PAY"}])
+        ir = self.b.compile(parsed)
+        self.assertEqual(ir.atg_context["delegationChain"], [{"delegator": "TREASURY-042", "scope": "PAY"}])
+
+    def test_invalid_nesting_rejected(self):
+        # delegationChain inside the fiscal envelope is invalid nesting and must
+        # fail closed (it is not allow-listed in the fiscal envelope).
+        msg = _pay()
+        msg["payload"]["delegationChain"] = [{"delegator": "X"}]
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_malformed_delegation_chain_rejected(self):
+        msg = _pay()
+        msg["delegationChain"] = "not-a-list"
+        parsed = self.b.parse(msg)
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(parsed)
+
+    def test_delegation_chain_binding_if_supported(self):
+        msg = _pay()
+        msg["delegationChain"] = [{"delegator": "TREASURY-042", "scope": "PAY"}]
+        ir = self.b.compile(self.b.parse(msg))
+        self.assertIn("delegationChain", ir.atg_context)
+        self.assertEqual(ir.atg_context["delegationChain"][0]["delegator"], "TREASURY-042")
+
+
+class InvariantRegressionTests(unittest.TestCase):
+    """Guard against regressions of core invariants during remediation."""
+
+    def setUp(self):
+        self.b = FiscalithBridge()
+
+    def test_caller_mutation_isolated(self):
+        msg = _pay()
+        parsed = self.b.parse(msg)
+        ir = self.b.compile(parsed)
+        # Mutating the caller's message after compile must not affect the IR.
+        msg["payload"]["payload"]["amount"] = 1
+        self.assertEqual(ir.amount_minor, 4200000000)
+
+    def test_no_float_money_remains_enforced(self):
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(self.b.parse(_pay(amount=4.2)))
+
+    def test_replay_guard_remains_intact(self):
+        msg = _pay()
+        self.b.compile(self.b.parse(msg))
+        with self.assertRaises(FatalFiscalithError):
+            self.b.compile(self.b.parse(msg))
+
+    def test_intent_binding_remains_intact(self):
+        ir = self.b.compile(self.b.parse(_pay()))
+        self.assertEqual(ir.intent_id, "I-1")
+        self.assertEqual(ir.mandate_ref, "M-88")
+
+    def test_no_fake_execution_settlement_fields(self):
+        ir = self.b.compile(self.b.parse(_pay()))
+        d = ir.to_dict()
+        self.assertNotIn("settled", d)
+        self.assertNotIn("executed", d)
+        self.assertNotIn("tx_hash", d)
+        self.assertNotIn("provider_result", d)
+
+
 class _SharedGuard:
     """A replay guard shared across bridge instances (concurrent replay)."""
 

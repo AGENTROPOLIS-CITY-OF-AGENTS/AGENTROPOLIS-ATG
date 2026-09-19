@@ -59,10 +59,22 @@ _SCIENTIFIC_RE = re.compile(r"[eE]")
 MAX_DECIMALS = 24
 MAX_INTENT_FIELD_LEN = 4096
 
-# ATG roles: ATG defines the envelope; FISCALITH defines money. The bridge must
-# not silently mutate mandate / authority / envelope references.
-_IMMUTABLE_ATG_KEYS = frozenset({
-    "from", "to", "mandateRef", "executionEnvelopeRef", "delegationChain",
+# Kinds the bridge can actually compile into a typed FiscalithIR. Recognized
+# FISCALITH kinds outside this set are rejected with a typed error rather than
+# reaching an untyped KeyError/TypeError in compile().
+_COMPILABLE_KINDS = frozenset({"PAY", "SEND"})
+
+# Centralized forbidden-authority-field guard. Applied recursively to the
+# envelope AND the inner payload for EVERY FISCALITH kind, so a caller can never
+# smuggle authority-shaped fields into a financial payload merely because that
+# kind lacks a strict JSON schema. New FISCALITH kinds inherit this protection
+# automatically.
+_FORBIDDEN_AUTHORITY_FIELDS = frozenset({
+    "approved", "authorized", "admin", "owner", "unlimited", "bypassPolicy",
+    "skipApproval", "selfPromote", "aegis", "rail", "provider", "signingKey",
+    "privateKey", "secret", "token", "promote", "budget_increase",
+    "raise_transaction_cap", "new_beneficiary", "add_counterparty",
+    "policy_mutation", "access_credentials", "fallback_rail", "bypass_freeze",
 })
 
 # Strict allow-list for the FISCALITH envelope carried inside an ATG message.
@@ -72,11 +84,31 @@ _ALLOWED_ENVELOPE_KEYS = frozenset({
     "kind", "action", "intent_id", "actor_ref", "mandate_ref",
     "execution_envelope_ref", "payload", "schema", "$ref", "version",
     "required_proofs", "counterparty_ref", "signature", "correlationId",
-    "from", "to", "delegationChain", "mandateRef", "executionEnvelopeRef",
+    "from", "to", "mandateRef", "executionEnvelopeRef",
     "fiscalith", "fiscalith_version",
 })
 
 _HEX_SIGNATURE_RE = re.compile(r"^0x[0-9a-fA-F]{64,}$")
+
+
+def _find_forbidden_authority_fields(obj: Any, path: str = "") -> list[str]:
+    """Recursively scan an object for forbidden authority-shaped field names.
+
+    Returns a list of dotted paths where a forbidden field was found. Applied to
+    the envelope AND the inner payload for every FISCALITH kind so authority
+    smuggling fails closed regardless of whether the kind has a strict schema.
+    """
+    hits: list[str] = []
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            here = f"{path}.{key}" if path else str(key)
+            if isinstance(key, str) and key in _FORBIDDEN_AUTHORITY_FIELDS:
+                hits.append(here)
+            hits.extend(_find_forbidden_authority_fields(value, here))
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            hits.extend(_find_forbidden_authority_fields(item, f"{path}[{i}]"))
+    return hits
 
 
 class FiscalithBridgeError(Exception):
@@ -290,9 +322,12 @@ class FiscalithBridge:
                 errors.append(f"{key}: field exceeds max length")
 
         # Reject attempts to smuggle authority / rail / credential semantics.
-        for banned in ("rail", "provider", "signingKey", "privateKey", "secret", "token"):
-            if parsed.raw.get(banned) is not None or parsed.payload.get(banned) is not None:
-                errors.append(f"forbidden authority/credential field: {banned}")
+        # Centralized recursive guard applies to envelope AND inner payload for
+        # EVERY kind, so new FISCALITH kinds inherit the protection automatically.
+        for hit in _find_forbidden_authority_fields(parsed.raw):
+            errors.append(f"forbidden authority/credential field: {hit}")
+        for hit in _find_forbidden_authority_fields(parsed.payload):
+            errors.append(f"forbidden authority/credential field: {hit}")
 
         # Malformed SignedIntent: a signature, if present, must be a well-formed
         # hex digest. Anything else fails closed.
@@ -300,6 +335,13 @@ class FiscalithBridge:
         if sig is not None:
             if not isinstance(sig, str) or _HEX_SIGNATURE_RE.fullmatch(sig) is None:
                 errors.append("signature: malformed SignedIntent signature")
+
+        # delegationChain is a security-relevant ATG context field. It must be a
+        # list of delegation entries; anything else fails closed. It is bound
+        # into the IR via atg_context (see compile), never silently dropped.
+        dc = parsed.atg_context.get("delegationChain")
+        if dc is not None and not isinstance(dc, list):
+            errors.append("delegationChain: must be a list of delegation entries")
 
         # c) Validate typed payload (PAY and SEND share the money payload shape;
         #    other intents carry a payload or are quote/negotiation shaped).
@@ -384,6 +426,16 @@ class FiscalithBridge:
         outcome = self.validate(parsed)
         if not outcome.valid:
             raise FatalFiscalithError("; ".join(outcome.errors))
+
+        # P1: kind-aware compilation. Only kinds with a typed money payload are
+        # compilable here. Recognized-but-unsupported kinds are rejected with a
+        # typed error BEFORE any payload field access, so no supported kind can
+        # reach an untyped KeyError/TypeError through the public API.
+        if parsed.kind not in _COMPILABLE_KINDS:
+            raise FatalFiscalithError(
+                f"FISCALITH kind {parsed.kind} is recognized but not compilable "
+                "in this bridge version (no typed money payload)"
+            )
 
         p = parsed.payload
         amount = int(p["amount"])
