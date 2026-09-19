@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+  "classification": "application-or-infrastructure",
+  "mode": "consumer",
+  "agentropolisDesignSystem": {
+    "source": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-DESIGN-SYSTEM",
+    "districtTemplate": "agentropolis-district-system/v1",
+    "financeContract": "institutional-finance/v1",
+    "quantizationContract": "design-quantization/v1",
+    "globeContract": "globe-first/v1"
+  },
+  "requiredProfiles": [
+    "orientation",
+    "governance",
+    "finance",
+    "operations",
+    "security",
+    "data-evidence",
+    "quantization",
+    "receipts-audit"
+  ],
+  "invariants": {
+    "minimumTierRequired": true,
+    "heavyModulesIntentGated": true,
+    "financeProfileRequiredEvenWhenInactive": true,
+    "navigationDoesNotGrantAuthority": true,
+    "balanceDoesNotGrantAuthority": true,
+    "quoteDoesNotGrantAuthority": true,
+    "submittedDoesNotMeanFinalized": true
+  }
+}
