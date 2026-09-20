@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/profiles/cognition-profile.schema.json",
+  "title": "ATG:COGNITION Presentation Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "version",
+    "presentation_mode",
+    "text_verbosity",
+    "selection_source"
+  ],
+  "properties": {
+    "profile": { "const": "ATG:COGNITION" },
+    "version": { "const": "0.1.0" },
+    "presentation_mode": {
+      "type": "string",
+      "enum": ["MAIN_STREET", "BUILDER", "DEVELOPER"]
+    },
+    "text_verbosity": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "jargon": {
+      "type": "string",
+      "enum": ["AVOID", "DEFINE", "NATIVE"],
+      "default": "DEFINE"
+    },
+    "step_density": {
+      "type": "string",
+      "enum": ["ONE_AT_A_TIME", "GROUPED", "DENSE"],
+      "default": "GROUPED"
+    },
+    "progressive_disclosure": { "type": "boolean", "default": true },
+    "low_stimulus": { "type": "boolean", "default": false },
+    "locked_by_user": { "type": "boolean", "default": false },
+    "selection_source": {
+      "type": "string",
+      "enum": ["USER", "SESSION", "ACCEPTED_SUGGESTION", "DEFAULT"]
+    },
+    "supports": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "PROGRESSIVE_DISCLOSURE",
+          "ONE_ACTION_AT_A_TIME",
+          "RECAP_AFTER_BRANCH",
+          "SHOW_PROGRESS",
+          "REDUCED_VISUAL_LOAD",
+          "LOW_STIMULUS",
+          "EXAMPLES_FIRST",
+          "CHECKLIST_MODE",
+          "PRESERVE_CONTEXT",
+          "AVOID_UNNECESSARY_INTERRUPTION"
+        ]
+      }
+    },
+    "adaptive_guidance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "requires_acceptance", "max_tier_delta"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "requires_acceptance": { "const": true },
+        "max_tier_delta": { "type": "integer", "const": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "type": "string", "format": "date-time" },
+        "runtime": { "type": "string" },
+        "previous_mode": {
+          "type": "string",
+          "enum": ["MAIN_STREET", "BUILDER", "DEVELOPER"]
+        }
+      }
+    }
+  }
+}
