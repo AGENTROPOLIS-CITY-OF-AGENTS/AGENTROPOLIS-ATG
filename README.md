@@ -65,6 +65,7 @@ Authority is never implied by presentation, model confidence, connectivity, a di
 - receipt requirements and verification states
 - economic intent and settlement-requirement semantics
 - compatibility tests and language/protocol governance
+- user-selected communication profiles and bounded cognitive-delivery semantics
 - Atral Script mappings and visible language profiles
 - domain-profile registration and namespace rules
 
@@ -91,6 +92,7 @@ Current and emerging profiles include:
 - **ATG:MARKET** — governed market evidence and market-action semantics
 - **ATG:AGENT-LINK** — agent linking and cross-runtime relationship semantics
 - **ATG:BROADCAST** — campaign, KOL, channel, broadcast and attribution semantics
+- **ATG:COMMUNICATION** — user-selected cognitive delivery, verbosity, terminology and bounded adaptation semantics
 - **ATG:ARCANA54** — programmable-story-world domain vocabulary
 - **ATG LANGUAGE** — native visible language surface
 
@@ -100,7 +102,7 @@ A domain profile may add vocabulary and constraints. It may not silently weaken 
 
 The persistent campaign, KOL/influencer, distribution, attribution, Social Systems, ATV Network, BotBae, Pixelshop, Chaos Mira and BUZZ integration remains valid functionality, but it is a **consumer/profile of ATG**, not the definition of ATG itself.
 
-See `docs/ATG-PROFILE-BROADCAST.md`.
+See `docs/ATG-PROFILE-BROADCAST.md` and `docs/ATG-PROFILE-COMMUNICATION.md`.
 
 ## Web Action Fabric
 
