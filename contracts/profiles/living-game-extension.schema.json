@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/profiles/living-game-extension.schema.json",
+  "title": "ATG:LIVING-GAME Execution Envelope extension",
+  "description": "Domain-profile vocabulary carried under `extensions.living_game` of the ONE canonical AGENTROPOLIS Execution Envelope (contracts/core/execution-envelope.schema.json). This is not an envelope. It adds project-, franchise-, chain-, device-, and platform-agnostic Living Game semantics and may never weaken identity, mandate, policy, authority, receipt, provenance, or verification rules of the core envelope. Envelopes carrying this extension must list 'living_game' in must_understand.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "profile_version", "action_class", "evidence_refs", "invariants"],
+  "properties": {
+    "profile": {"type": "string", "const": "atg.living-game"},
+    "profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "action_class": {
+      "type": "string",
+      "description": "Consequential Living Game action this envelope authorizes. Non-consequential play (discovery, lore reveal, preview, private vision) never needs an envelope.",
+      "enum": [
+        "reward.value",
+        "access.grant",
+        "access.revoke",
+        "ownership.transfer",
+        "publish.public_broadcast",
+        "publish.clip",
+        "publish.social",
+        "settlement.optional_commerce",
+        "object.mint",
+        "object.retire",
+        "tournament.result_finalize"
+      ]
+    },
+    "canonical_schemas": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "living_game_object": {
+          "type": "string",
+          "const": "https://agentropolis.dev/schemas/living-game-object-v1.schema.json"
+        },
+        "live_reality_session": {
+          "type": "string",
+          "const": "https://agentropolis.dev/schemas/live-reality-session-v1.schema.json"
+        }
+      }
+    },
+    "object_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["object_id", "source_system", "registry_receipt_id"],
+        "properties": {
+          "object_id": {"type": "string", "minLength": 1},
+          "source_system": {"type": "string", "minLength": 1},
+          "registry_receipt_id": {"type": "string", "minLength": 1},
+          "assurance_tier": {"type": "string", "enum": ["discovery", "verified", "high_assurance", "managed_installation"]}
+        }
+      }
+    },
+    "session_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session_id", "mode"],
+      "properties": {
+        "session_id": {"type": "string", "minLength": 1},
+        "mode": {"type": "string", "enum": ["private_vision", "preview", "party", "public", "director", "evidence", "replay"]},
+        "lease_id": {"type": "string", "minLength": 1, "description": "Utility Grid renewable lease id when the action is a public broadcast."}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "description": "Observations that motivated the mandate. Evidence is never authority; the envelope authority block is.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "evidence_id", "grants_authority"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "nfc_tap", "qr_scan", "location", "image", "object", "gesture", "audio", "card_play", "game_result",
+              "social_event", "broadcast_event", "agent_interaction", "wallet_proof", "ar_anchor", "vr_location",
+              "model_observation", "neuro_advisory", "rules_engine_verification", "utility_grid_receipt"
+            ]
+          },
+          "evidence_id": {"type": "string", "minLength": 1},
+          "assurance_tier": {"type": "string", "enum": ["discovery", "verified", "high_assurance", "managed_installation"]},
+          "replay_protected": {"type": "boolean"},
+          "grants_authority": {"type": "boolean", "const": false}
+        }
+      }
+    },
+    "rules_engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "verification_receipt_id"],
+      "properties": {
+        "system": {"type": "string", "minLength": 1},
+        "verification_receipt_id": {"type": "string", "minLength": 1}
+      },
+      "description": "Required for reward.value, ownership.transfer, tournament.result_finalize, object.mint, object.retire: the game's authoritative rules engine verified the proposed transition."
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["face_recognition", "public_broadcast_authorized"],
+      "properties": {
+        "face_recognition": {"type": "boolean", "const": false},
+        "public_broadcast_authorized": {"type": "boolean"},
+        "raw_frame_retention": {"type": "string", "enum": ["ephemeral", "receipt_only", "user_saved"]},
+        "location_mode": {"type": "string", "enum": ["hidden", "approximate", "delayed", "precise_private"]}
+      }
+    },
+    "human_signal_entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_id", "dock_consent_receipt_id", "publishing_scopes"],
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "dock_consent_receipt_id": {"type": "string", "minLength": 1},
+        "publishing_scopes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "signal_magnet": {"type": "boolean"}
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alternatives_available"],
+      "properties": {
+        "alternatives_available": {"type": "boolean", "const": true},
+        "wallet_required_every_step": {"type": "boolean", "const": false}
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_is_not_authority",
+        "tap_to_spend",
+        "automatic_ownership_transfer",
+        "face_recognition",
+        "silent_public_broadcast",
+        "single_execution_envelope"
+      ],
+      "properties": {
+        "evidence_is_not_authority": {"type": "boolean", "const": true},
+        "tap_to_spend": {"type": "boolean", "const": false},
+        "automatic_ownership_transfer": {"type": "boolean", "const": false},
+        "face_recognition": {"type": "boolean", "const": false},
+        "silent_public_broadcast": {"type": "boolean", "const": false},
+        "single_execution_envelope": {"type": "boolean", "const": true}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action_class": {"enum": ["reward.value", "ownership.transfer", "tournament.result_finalize", "object.mint", "object.retire"]}}},
+      "then": {"required": ["rules_engine", "object_refs"]}
+    },
+    {
+      "if": {"properties": {"action_class": {"const": "publish.public_broadcast"}}},
+      "then": {
+        "required": ["session_ref", "privacy"],
+        "properties": {
+          "privacy": {"properties": {"public_broadcast_authorized": {"const": true}}, "required": ["public_broadcast_authorized"]},
+          "session_ref": {"required": ["lease_id"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"action_class": {"enum": ["publish.social", "publish.clip"]}}},
+      "then": {"required": ["human_signal_entity"]}
+    }
+  ]
+}
