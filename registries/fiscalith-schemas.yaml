@@ -1,0 +1,24 @@
+version: "0.1.0"
+registry: atg-fiscalith-schemas
+
+# FISCALITH schemas referenced by ATG envelopes. ATG pins and references; it never forks.
+
+schemas:
+  - id: https://agentropolis.dev/fiscalith/financial-intent.v1.json
+    version: "1"
+    repo: AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-FISCALITH
+    path: schemas/financial-intent.v1.json
+    branch: feat/arc-financial-language-core
+    commit: 860be4a
+    sha256: e96f9dfe91a5b231adfe81c0e905fe6afac6b1647fb5f1af90ef8706f3ab7f94
+    referenced_by:
+      - contracts/core/atralith-financial-message.schema.json#/properties/fiscalith_payload
+      - contracts/core/atralith-financial-message.schema.json#/properties/schema_ref
+
+invariants:
+  - id: ATG-FISCALITH-NO-FORK-001
+    rule: ATG references FISCALITH schemas by id and pinned digest; it never copies or redefines their body
+    action: deny
+  - id: ATG-FISCALITH-NO-SEMANTICS-001
+    rule: ATG validates only that fiscalith_payload is an object; financial validation is injected from FISCALITH
+    action: deny

@@ -16,10 +16,11 @@ AGENTENTITY
   -> FISCALITH financial payload when the interaction is economic
   -> Execution Envelope
   -> AEGIS authority / policy / risk decision
+  -> 54T trust boundary (signer isolation, intent integrity, replay / idempotency)
   -> AQUADUCT when sandbox or certification is required
-  -> PAYRAIL for approved production routing
+  -> PAYRAIL only when the FISCALITH operation moves approved production value
   -> provider / rail / contract adapter
-  -> financial evidence + receipts
+  -> financial evidence + receipts (SETTLED only after verified finality)
   -> FISCALITH result
   -> ATG.RECEIPT / ATG.DENY / ATG.ESCALATE
 ```
@@ -77,7 +78,9 @@ ATG.REQUEST {
 }
 ```
 
-A financial response returns through ATG:
+The correlation id is stable across retries; 54T rejects replays and enforces idempotency before any adapter executes. Retry the state, not the money.
+
+A financial response returns through ATG only after the result is verified. Inclusion without required finality is `FISCALITH.PENDING` and maps to `ATG.VERIFY`; verified finality maps to `ATG.RECEIPT`:
 
 ```text
 ATG.RECEIPT {
@@ -93,6 +96,8 @@ ATG.RECEIPT {
   ]
 }
 ```
+
+Settlement does not mutate AGENTENTITY ownership or state on its own; downstream state follows the verified receipt.
 
 ## Compatibility doctrine
 

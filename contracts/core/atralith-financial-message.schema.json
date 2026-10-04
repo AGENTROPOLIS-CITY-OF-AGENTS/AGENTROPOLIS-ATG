@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/atralith-financial-message.schema.json",
+  "title": "ATRALITH Financial Message Envelope",
+  "description": "ATG-owned agent-language envelope that transports an opaque FISCALITH payload. ATG owns speech act, identity, correlation, mandate, delegation, capability and proof references. FISCALITH owns the payload's financial meaning. The envelope carries no rail, provider, chain, wallet or signer fields and grants no authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "speech_act",
+    "from_agent_entity_ref",
+    "to_agent_entity_ref",
+    "correlation_id",
+    "mandate_ref",
+    "delegation_chain",
+    "capability_refs",
+    "execution_envelope_ref",
+    "requested_proof_classes",
+    "fiscalith_payload",
+    "schema_ref"
+  ],
+  "properties": {
+    "speech_act": {
+      "type": "string",
+      "enum": ["REQUEST", "PROPOSE", "OFFER", "ACCEPT", "DELEGATE", "REFUSE", "VERIFY", "RECEIPT", "ESCALATE"]
+    },
+    "from_agent_entity_ref": {"type": "string", "minLength": 1},
+    "to_agent_entity_ref": {"type": "string", "minLength": 1},
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable conversation identifier. Replay rejection and idempotency of the financial action are enforced by 54T, not by ATG."
+    },
+    "mandate_ref": {"type": ["string", "null"], "minLength": 1},
+    "delegation_chain": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "capability_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "execution_envelope_ref": {"type": ["string", "null"], "minLength": 1},
+    "requested_proof_classes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "fiscalith_payload": {
+      "type": "object",
+      "description": "Opaque FISCALITH object. ATG does not interpret or validate its financial semantics; validation is delegated to FISCALITH.",
+      "$comment": "Validated externally against https://agentropolis.dev/fiscalith/financial-intent.v1.json (AGENTROPOLIS-FISCALITH schemas/financial-intent.v1.json). ATG MUST NOT fork that schema."
+    },
+    "schema_ref": {
+      "type": "string",
+      "const": "https://agentropolis.dev/fiscalith/financial-intent.v1.json"
+    }
+  }
+}

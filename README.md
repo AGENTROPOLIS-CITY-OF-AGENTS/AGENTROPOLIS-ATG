@@ -2,7 +2,7 @@
 
 **ATG is the Atralith agentic language and canonical semantic contract for AGENTROPOLIS.**
 
-ATG defines how autonomous agents express and exchange identity references, intent, capabilities, mandates, authority references, policy constraints, routing intent, state, evidence, provenance, receipts, reputation, and economic meaning across runtimes, tools, districts, applications, and external systems.
+ATG defines how autonomous agents express and exchange identity references, intent, capabilities, mandates, authority references, policy constraints, routing intent, state, evidence, provenance, receipts, reputation, and domain payloads (including FISCALITH financial payloads, whose economic meaning FISCALITH owns) across runtimes, tools, districts, applications, and external systems.
 
 > **ATG tells agents how to communicate, negotiate, express execution meaning, and prove. It does not choose settlement rails, grant itself authority, or become the economic execution engine.**
 
@@ -57,7 +57,7 @@ Authority is never implied by presentation, model confidence, connectivity, a di
 - state and status semantics
 - evidence and provenance requirements
 - receipt requirements and verification states
-- economic intent and settlement-requirement semantics
+- transport of FISCALITH financial payloads (see docs/ATG-ECONOMIC-BOUNDARY.md; financial semantics are owned by AGENTROPOLIS-FISCALITH)
 - compatibility tests and language/protocol governance
 - Atral Script mappings and visible language profiles
 - domain-profile registration and namespace rules
@@ -71,7 +71,7 @@ Authority is never implied by presentation, model confidence, connectivity, a di
 - AGENT-ENTITY persistent state
 - runtime authority merely because an adapter is connected
 
-Economic intent expressed in ATG crosses into the AGENTROPOLIS Economic Fabric. PAYRAIL evaluates eligible settlement routes after policy and authority checks. Arc, Base, XRPL, bank rails, and future providers remain replaceable settlement adapters.
+Financial meaning is expressed as a FISCALITH payload carried inside an ATG envelope and crosses into the Execution Envelope, AEGIS and 54T. PAYRAIL evaluates eligible settlement routes only for approved production value after policy and authority checks. Arc, Base, XRPL, bank rails, and future providers remain replaceable settlement adapters.
 
 ## Domain profiles
 
@@ -136,4 +136,4 @@ See `docs/ATG-WEB-ACTION-FABRIC.md`.
 
 ## Standing rule
 
-> **AGENT-ENTITY defines the actor. ATG defines the meaning. The Execution Envelope bounds the action. Capability infrastructure executes. The Economic Fabric and PAYRAIL decide how approved value moves. Settlement adapters execute. Receipts prove what happened.**
+> **AGENT-ENTITY defines the actor. ATG defines how agents speak. FISCALITH defines financial meaning. The Execution Envelope bounds the action. AEGIS decides whether an action is allowed. 54T protects the trust boundary. Capability infrastructure executes. PAYRAIL routes approved production value. Settlement adapters execute. Receipts prove what happened.**
