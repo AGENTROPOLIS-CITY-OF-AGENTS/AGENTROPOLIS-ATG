@@ -42,48 +42,94 @@
     "compiler": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "version"],
+      "required": [
+        "id",
+        "version"
+      ],
       "properties": {
-        "id": {"type": "string", "const": "atg"},
-        "version": {"type": "string", "minLength": 1}
+        "id": {
+          "type": "string",
+          "const": "atg"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "principal": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
         "type": {
           "type": "string",
-          "enum": ["human", "agent", "service", "organization", "other"]
+          "enum": [
+            "human",
+            "agent",
+            "service",
+            "organization",
+            "other"
+          ]
         }
       }
     },
     "objective": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["summary", "success_conditions"],
+      "required": [
+        "summary",
+        "success_conditions"
+      ],
       "properties": {
-        "summary": {"type": "string", "minLength": 1},
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
         "success_conditions": {
           "type": "array",
-          "items": {"type": ["string", "object"]}
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
         }
       }
     },
     "mandate": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["mandate_id", "scope"],
+      "required": [
+        "mandate_id",
+        "scope"
+      ],
       "properties": {
-        "mandate_id": {"type": "string", "minLength": 1},
+        "mandate_id": {
+          "type": "string",
+          "minLength": 1
+        },
         "scope": {
           "type": "array",
-          "items": {"type": ["string", "object"]}
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
         },
         "expires_at": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         }
       }
@@ -91,16 +137,25 @@
     "capabilities": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["required", "optional"],
+      "required": [
+        "required",
+        "optional"
+      ],
       "properties": {
         "required": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1},
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
           "uniqueItems": true
         },
         "optional": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1},
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
           "uniqueItems": true
         }
       }
@@ -108,36 +163,101 @@
     "authority": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["allowed", "denied", "approval_required", "delegation_depth_max"],
+      "required": [
+        "allowed",
+        "denied",
+        "approval_required",
+        "delegation_depth_max"
+      ],
       "properties": {
-        "allowed": {"type": "array", "items": {"type": ["string", "object"]}},
-        "denied": {"type": "array", "items": {"type": ["string", "object"]}},
-        "approval_required": {"type": "array", "items": {"type": ["string", "object"]}},
-        "budget": {"type": "object", "additionalProperties": true},
-        "delegation_depth_max": {"type": "integer", "minimum": 0}
+        "allowed": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        },
+        "denied": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        },
+        "approval_required": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "delegation_depth_max": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
     "risk": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["tier", "assigned_by", "policy_id", "basis"],
+      "required": [
+        "tier",
+        "assigned_by",
+        "policy_id",
+        "basis"
+      ],
       "properties": {
         "tier": {
           "type": "string",
-          "enum": ["R0", "R1", "R2", "R3", "R4", "R5"]
+          "enum": [
+            "R0",
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5"
+          ]
         },
-        "assigned_by": {"type": "string", "const": "atg"},
-        "policy_id": {"type": "string", "minLength": 1},
+        "assigned_by": {
+          "type": "string",
+          "const": "atg"
+        },
+        "policy_id": {
+          "type": "string",
+          "minLength": 1
+        },
         "basis": {
           "type": "object",
           "additionalProperties": true,
           "properties": {
-            "capability": {"type": "string"},
-            "reversibility": {"type": "string"},
-            "blast_radius": {"type": "string"},
-            "data_sensitivity": {"type": "string"},
-            "economic_exposure": {"type": "string"},
-            "physical_effect": {"type": "string"}
+            "capability": {
+              "type": "string"
+            },
+            "reversibility": {
+              "type": "string"
+            },
+            "blast_radius": {
+              "type": "string"
+            },
+            "data_sensitivity": {
+              "type": "string"
+            },
+            "economic_exposure": {
+              "type": "string"
+            },
+            "physical_effect": {
+              "type": "string"
+            }
           }
         }
       }
@@ -150,29 +270,57 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "preferences": {"type": "object", "additionalProperties": true},
-        "prohibitions": {"type": "array", "items": {"type": ["string", "object"]}}
+        "preferences": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "prohibitions": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        }
       }
     },
     "evidence": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["claims_required", "independent_verification"],
+      "required": [
+        "claims_required",
+        "independent_verification"
+      ],
       "properties": {
         "claims_required": {
           "type": "array",
-          "items": {"type": "string", "minLength": 1}
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "independent_verification": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": true,
-            "required": ["claim", "required", "source_independence"],
+            "required": [
+              "claim",
+              "required",
+              "source_independence"
+            ],
             "properties": {
-              "claim": {"type": "string", "minLength": 1},
-              "required": {"type": "boolean"},
-              "source_class": {"type": "string"},
+              "claim": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "source_class": {
+                "type": "string"
+              },
               "source_independence": {
                 "type": "string",
                 "enum": [
@@ -187,7 +335,10 @@
                   "other"
                 ]
               },
-              "minimum_observations": {"type": "integer", "minimum": 1}
+              "minimum_observations": {
+                "type": "integer",
+                "minimum": 1
+              }
             }
           }
         }
@@ -196,31 +347,81 @@
     "receipt": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["required", "provenance_required"],
+      "required": [
+        "required",
+        "provenance_required"
+      ],
       "properties": {
-        "required": {"type": "boolean"},
-        "provenance_required": {"type": "boolean"}
+        "required": {
+          "type": "boolean"
+        },
+        "provenance_required": {
+          "type": "boolean"
+        }
       }
     },
     "dispatch": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["status"],
+      "required": [
+        "status"
+      ],
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["pending", "accepted", "refused", "running", "completed", "failed", "cancelled"]
+          "enum": [
+            "pending",
+            "accepted",
+            "refused",
+            "running",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
         }
       }
     },
     "must_understand": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "uniqueItems": true
     },
     "extensions": {
       "type": "object",
       "additionalProperties": true
+    },
+    "actor_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agent_entity_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agent_did": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_binding_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "continuity_passport_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dock_session_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
     }
   }
 }
