@@ -184,3 +184,19 @@ Recommended semantic classes:
 ## Canonical principle
 
 > Pair once. Govern every surface. Carry the agent, not the credentials.
+
+
+## Relationship to AGENT-ENTITY continuity
+
+A LINK may attach an already-existing AGENT-ENTITY to a new runtime or surface. In that case the link MUST reference the existing entity and the resulting runtime/surface binding rather than treating the pairing event as new identity creation.
+
+```text
+existing AGENT-ENTITY
+  -> LINK request
+  -> identity/control/continuity verification
+  -> new bounded binding
+  -> same AGENT-ENTITY
+```
+
+`LINK` establishes the relationship. `ATG.CONTINUITY` carries the same-actor semantics. Neither grants authority by itself.
+
