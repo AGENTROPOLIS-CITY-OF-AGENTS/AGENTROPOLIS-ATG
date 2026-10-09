@@ -1,0 +1,34 @@
+{
+  "profile": "ATG:WEB_ACTION:BROWSER_FLEET",
+  "version": "1.0.0",
+  "action_id": "example_readonly_001",
+  "principal_ref": "AGENT-ENTITY:example-researcher",
+  "mandate_ref": "example-mandate-read-only",
+  "intent": "read",
+  "target_origin": "https://example.org",
+  "risk_tier": "observe",
+  "adapter": {
+    "family": "chromium",
+    "session_id": "example-isolated-session",
+    "profile_type": "ephemeral-agent",
+    "website_skill_ref": null,
+    "skill_assurance_receipt_ref": null,
+    "plugin_sha": null
+  },
+  "sandbox": {
+    "whole_process": true,
+    "isolation_profile": "container",
+    "attestation_ref": "example-required-live-attestation",
+    "egress_policy_ref": "example-default-deny-egress-policy"
+  },
+  "authorization": {
+    "mode": "read_only",
+    "decision_ref": "example-required-policy-decision",
+    "execution_envelope_ref": "example-required-atg-envelope",
+    "approval_ref": null
+  },
+  "receipt": {
+    "required": true,
+    "correlation_id": "example-audit-correlation"
+  }
+}
