@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/contracts/core/operator-surface.schema.json",
+  "title": "AGENTROPOLIS Operator Surface Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "surface_id",
+    "surface_class",
+    "actor_identity",
+    "mandate_id",
+    "execution_envelope_id",
+    "risk_tier",
+    "data_path",
+    "capabilities",
+    "receipt_required"
+  ],
+  "properties": {
+    "version": {"type": "string", "const": "1.0.0"},
+    "surface_id": {"type": "string", "minLength": 1},
+    "surface_class": {
+      "type": "string",
+      "enum": [
+        "desktop-engineering-workstation",
+        "persistent-agent-surface",
+        "cli-engineering-worker",
+        "browser-operator-surface",
+        "mobile-operator-surface",
+        "other"
+      ]
+    },
+    "actor_identity": {"type": "string", "minLength": 1},
+    "mandate_id": {"type": "string", "minLength": 1},
+    "execution_envelope_id": {"type": "string", "minLength": 1},
+    "risk_tier": {"type": "string", "enum": ["T0", "T1", "T2", "T3", "T4"]},
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_class", "model_id"],
+      "properties": {
+        "provider_class": {"type": "string", "enum": ["local", "hosted", "hybrid", "unknown"]},
+        "provider": {"type": "string"},
+        "model_id": {"type": "string", "minLength": 1},
+        "endpoint": {"type": "string"}
+      }
+    },
+    "data_path": {
+      "type": "string",
+      "enum": [
+        "local-workspace-local-model",
+        "local-workspace-hosted-model",
+        "local-workspace-remote-mcp",
+        "local-workspace-remote-tool",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "read-files",
+          "write-files",
+          "shell-read",
+          "shell-exec",
+          "mcp-read",
+          "mcp-write",
+          "network",
+          "preview",
+          "plugins",
+          "skills",
+          "subagents",
+          "session-import",
+          "model-switch"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "continuity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_session_id": {"type": "string"},
+        "context_capsule_id": {"type": "string"},
+        "provenance_preserved": {"type": "boolean", "const": true},
+        "imported_authority": {"type": "boolean", "const": false}
+      }
+    },
+    "receipt_required": {"type": "boolean", "const": true},
+    "audit_degraded": {"type": "boolean", "default": false}
+  }
+}
