@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/core/communication-profile.schema.json",
+  "title": "ATG Communication Profile",
+  "description": "Provider-neutral contract for user-selected cognitive delivery, response verbosity, and bounded behavioral adaptation. It expresses communication intent only and never grants execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "audience", "verbosity", "adaptation"],
+  "properties": {
+    "type": { "const": "atg.communication.profile" },
+    "version": { "type": "string", "const": "1.0.0" },
+    "audience": {
+      "type": "string",
+      "enum": ["main_street", "builder", "engineer", "architect", "adaptive"]
+    },
+    "verbosity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "inherit"]
+    },
+    "reasoning": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "xhigh", "inherit"],
+      "default": "inherit"
+    },
+    "terminology": {
+      "type": "string",
+      "enum": ["explain", "mixed", "native", "adaptive"],
+      "default": "adaptive"
+    },
+    "examples": {
+      "type": "string",
+      "enum": ["none", "simple", "technical", "adaptive"],
+      "default": "adaptive"
+    },
+    "code": {
+      "type": "string",
+      "enum": ["never", "when_helpful", "preferred"],
+      "default": "when_helpful"
+    },
+    "domain_familiarity": {
+      "type": "object",
+      "description": "Per-domain familiarity, never a global intelligence score.",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["unfamiliar", "learning", "working", "advanced"]
+      }
+    },
+    "adaptation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "user_controlled"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "user_controlled": { "const": true },
+        "may_adjust": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["chunking", "pace", "terminology", "examples", "detail", "repetition", "visual_density"]
+          },
+          "uniqueItems": true
+        },
+        "signals": {
+          "type": "array",
+          "description": "Non-sensitive interaction signals used for temporary communication support.",
+          "items": {
+            "type": "string",
+            "enum": ["explicit_request", "repeated_clarification", "repeated_error", "response_length_pattern", "task_success", "topic_mastery", "navigation_friction"]
+          },
+          "uniqueItems": true
+        },
+        "never_infer": {
+          "type": "array",
+          "default": ["intelligence", "medical_diagnosis", "disability", "protected_trait"],
+          "items": { "type": "string" }
+        },
+        "selected_mode_locked": {
+          "type": "boolean",
+          "description": "When true, behavioral adaptation cannot change the user's selected audience mode.",
+          "default": true
+        }
+      }
+    },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "instruction": { "type": "string" },
+        "scope": { "type": "string", "enum": ["turn", "session", "persistent"] }
+      }
+    }
+  }
+}
