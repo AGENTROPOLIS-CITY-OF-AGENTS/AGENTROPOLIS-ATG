@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/media/photo-edit-receipt.v1.schema.json",
+  "title": "ATG Identity-Preserving Photo Edit Receipt",
+  "description": "Minimum receipt for profile atg.media.photo_edit.identity_preserving. Verification is attributable to an independent verifier; approval is attributable to a human bound to the exact preview digest when the request required human approval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "profile_version",
+    "request_id",
+    "source_asset_hash",
+    "output_asset_hash",
+    "preview_digest",
+    "intent",
+    "subject_lock",
+    "attempt",
+    "max_attempts",
+    "verification",
+    "approval",
+    "adapter",
+    "timestamp"
+  ],
+  "properties": {
+    "profile": { "type": "string", "const": "atg.media.photo_edit.identity_preserving" },
+    "profile_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "source_asset_hash": { "$ref": "#/$defs/sha256" },
+    "output_asset_hash": { "$ref": "#/$defs/sha256" },
+    "preview_digest": { "$ref": "#/$defs/sha256" },
+    "intent": {
+      "type": "string",
+      "enum": ["CAMERA_UPGRADE", "LIGHTING_REPAIR", "CINEMATIC_GRADE", "PROFESSIONAL_HEADSHOT"]
+    },
+    "subject_lock": { "type": "boolean", "const": true },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "max_attempts": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result", "verifier_id", "independence", "evidence_digest", "edit_applied", "applied_domains"],
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL_IDENTITY_DRIFT",
+            "FAIL_UNREQUESTED_RESHAPE",
+            "FAIL_UNREQUESTED_BEAUTIFICATION",
+            "FAIL_OUT_OF_SCOPE_MUTATION",
+            "FAIL_EDIT_NOT_APPLIED"
+          ]
+        },
+        "verifier_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "independence": {
+          "type": "string",
+          "enum": ["independent_service", "independent_agent", "human_reviewer"]
+        },
+        "evidence_digest": { "$ref": "#/$defs/sha256" },
+        "edit_applied": { "type": "boolean" },
+        "applied_domains": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved_by", "approval_digest"],
+      "properties": {
+        "approved_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1, "maxLength": 256 },
+            "type": { "type": "string", "enum": ["human", "policy-authorized-principal"] }
+          }
+        },
+        "approval_digest": {
+          "$ref": "#/$defs/sha256",
+          "description": "sha256(request_id + ':' + preview_digest + ':' + approved_by.id)"
+        }
+      }
+    },
+    "adapter": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "timestamp": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}
