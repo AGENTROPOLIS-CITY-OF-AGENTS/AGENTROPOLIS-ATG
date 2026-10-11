@@ -1,0 +1,71 @@
+{
+  "schema": "agentropolis.execution-envelope",
+  "schema_version": "1.0.0",
+  "envelope_id": "env_living_game_reward_001",
+  "created_at": "2026-09-16T18:00:00Z",
+  "compiler": {"id": "atg", "version": "0.1.0"},
+  "principal": {"id": "human_player_001", "type": "human"},
+  "objective": {
+    "summary": "Grant non-transferable progression reward after a rules-engine-verified quest completion.",
+    "success_conditions": ["progression written by the game's rules engine", "receipt emitted"]
+  },
+  "mandate": {
+    "mandate_id": "mandate_quest_reward_001",
+    "scope": ["game.living.reward.progression"],
+    "expires_at": "2026-09-16T19:00:00Z"
+  },
+  "capabilities": {
+    "required": ["game.living.reward.progression"],
+    "optional": []
+  },
+  "authority": {
+    "allowed": ["game.living.reward.progression"],
+    "denied": ["ownership.transfer", "settlement.*", "publish.public_broadcast"],
+    "approval_required": [],
+    "budget": {"reward_value_minor_units_max": 0},
+    "delegation_depth_max": 0
+  },
+  "risk": {
+    "tier": "R2",
+    "assigned_by": "atg",
+    "policy_id": "54T-living-game-default",
+    "basis": {"capability": "game.living.reward.progression", "reversibility": "reversible", "economic_exposure": "none"}
+  },
+  "evidence": {
+    "claims_required": ["quest_transition_verified"],
+    "independent_verification": [
+      {"claim": "quest_transition_verified", "required": true, "source_class": "rules_engine", "source_independence": "independent_verifier"}
+    ]
+  },
+  "receipt": {"required": true, "provenance_required": true},
+  "dispatch": {"status": "pending"},
+  "must_understand": ["living_game"],
+  "extensions": {
+    "living_game": {
+      "profile": "atg.living-game",
+      "profile_version": "1.0.0",
+      "action_class": "reward.value",
+      "canonical_schemas": {
+        "living_game_object": "https://agentropolis.dev/schemas/living-game-object-v1.schema.json",
+        "live_reality_session": "https://agentropolis.dev/schemas/live-reality-session-v1.schema.json"
+      },
+      "object_refs": [
+        {"object_id": "obj_card_001", "source_system": "example-tcg", "registry_receipt_id": "rcpt_registry_001", "assurance_tier": "high_assurance"}
+      ],
+      "evidence_refs": [
+        {"kind": "nfc_tap", "evidence_id": "ev_nfc_001", "assurance_tier": "high_assurance", "replay_protected": true, "grants_authority": false},
+        {"kind": "rules_engine_verification", "evidence_id": "ev_rules_001", "grants_authority": false}
+      ],
+      "rules_engine": {"system": "example-tcg", "verification_receipt_id": "ev_rules_001"},
+      "accessibility": {"alternatives_available": true, "wallet_required_every_step": false},
+      "invariants": {
+        "evidence_is_not_authority": true,
+        "tap_to_spend": false,
+        "automatic_ownership_transfer": false,
+        "face_recognition": false,
+        "silent_public_broadcast": false,
+        "single_execution_envelope": true
+      }
+    }
+  }
+}
