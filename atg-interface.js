@@ -10,9 +10,15 @@
     receipt:{id:'receipt',title:'Receipt',label:'05 · Receipt',question:'What proof remains?',intro:'Retain the result, provenance, and evidence references. A receipt makes the work inspectable and links the outcome to the mission that requested it.',note:'The examples are reference material. This demo does not produce signed or verified receipts.',path:'examples/',tree:true},
     audit:{id:'verify',title:'Audit',label:'06 · Audit',question:'What actually happened?',intro:'Compare the claimed result with its supporting evidence. Verification and audit make gaps, conflicts, and unresolved claims visible for review.',note:'A verification claim requires evidence. An animation or success badge cannot establish it.',path:'docs/ATG-PROFILE-VERIFY.md'},
     policy:{id:'policy',title:'Policy gate',label:'Constraints',question:'What boundaries apply?',intro:'Policy and authority references constrain the execution envelope. Enforcement belongs to the authorized runtime, outside the language presentation.',note:'Access is not authority. Presentation, connectivity, and discovered tools do not grant permission.',path:'docs/COGNITIVE_RUNTIME_NAMESPACE_GUARD.md'},
-    language:{id:'atranic',title:'Language profile',label:'Language',question:'How is structured meaning expressed?',intro:'The ATG language surface renders structured semantic meaning for humans and agents. Domain profiles extend the language within defined boundaries.',note:'ATG is the Atralith agentic language. The language profile defines how native expressions and human-readable translations relate to structured meaning.',path:'docs/ATG-PROFILE-LANGUAGE.md'},
+    language:{id:'atranic',title:'ATG / Atralith language',label:'Language',question:'How is structured meaning expressed?',intro:'The ATG language surface renders structured semantic meaning for humans and agents. Domain profiles extend the language within defined boundaries.',note:'ATG is the Atralith agentic language. The language profile defines how native expressions and human-readable translations relate to structured meaning.',path:'docs/ATG-PROFILE-LANGUAGE.md'},
     atralith:{id:'atralith',title:'Atralith implementation',label:'Implementation',question:'Where can builders inspect the code?',intro:'Explore the repository’s Atralith implementation and bridge modules. Implementation code consumes the language contracts without owning their semantics.',note:'Repository code and this concept demo do not establish production readiness.',path:'atralith/',tree:true}
   };
+  let glyphCache=null;
+  function renderGlyphs(){
+    const holder=document.getElementById('glyphAtlas');if(!holder)return;
+    const ready=glyphCache?Promise.resolve(glyphCache):fetch('./atg-glyphs.json').then(r=>{if(!r.ok)throw Error('unavailable');return r.json()}).then(g=>glyphCache=g);
+    ready.then(g=>{if(current()!=='language'||!holder.isConnected)return;holder.replaceChildren();g.forEach(item=>{const card=document.createElement('div');card.className='glyph-card';const image=document.createElement('img');image.src=item.src;image.alt=item.n+' glyph';const name=document.createElement('b');name.textContent=item.n;const meaning=document.createElement('small');meaning.textContent=item.m;card.append(image,name,meaning);holder.append(card)});}).catch(()=>{holder.textContent='Glyph assets could not load. Read the language profile source.'});
+  }
   const flow=['identity','mandate','plan','execute','receipt','audit'];
   const panel=document.getElementById('contentPanel');
   const tourButton=document.getElementById('tourBtn');
@@ -34,7 +40,9 @@
       html+=`<div class="definition">${escape(p.note)}</div><div class="actions"><a href="${sourceLink(p)}">Read source material ↗</a><a href="#overview">Back to overview</a></div>`;
       const i=flow.indexOf(key);if(i>=0)html+=`<nav class="step-controls" aria-label="Mission steps"><a href="#${i?flow[i-1]:'overview'}">← ${i?pages[flow[i-1]].title:'Overview'}</a><a href="#${i<5?flow[i+1]:'overview'}">${i<5?pages[flow[i+1]].title:'Overview'} →</a></nav>`;
     }
+    if(key==='language')html+=`<h2>The 24-glyph alphabet</h2><p class="detail-note">Candidate vocabulary from NEURO’s supplied ATG / Atralith explainer. The supplied chart presents 24 entries after merging duplicate QEL; these visual glyphs do not confer authority.</p><div id="glyphAtlas" class="glyph-grid">Loading glyph artwork…</div><h2>Atral Script</h2><div class="language-examples"><span>AR + BEL = AR-BEL / CREATE CONNECTION</span><span>DOR + ESH = DOR-ESH / DATA EVIDENCE</span><span>NAR + KOR = NAR-KOR / NETWORK KNOWLEDGE</span></div>`;
     panel.innerHTML=html;
+    if(key==='language')renderGlyphs();
     document.getElementById('beginFlow')?.addEventListener('click',()=>{location.hash='identity'});
     window.dispatchEvent(new CustomEvent('atg:focus',{detail:{id:p.id}}));
   }
