@@ -1,0 +1,19 @@
+/* NEUROBUILDS-inspired ATG surface; presentation only, no authority changes. */
+:root{--bg:#05070a;--glass:rgba(5,7,10,.84);--cyan:#19e6e6;--red:#ff2a2a;--violet:#7a8a9a;--mint:#a8ff60;--text:#eaf4f6;--muted:#a2b0b8;--pink:#ff2a2a}
+html,body,#app{background:#05070a;color:var(--text)}
+#app{background:radial-gradient(ellipse at 50% 35%,#0d1d24 0%,#05070a 70%)}
+.world-video{opacity:.28;filter:saturate(.85) contrast(1.08)}
+.world-shade{background:linear-gradient(180deg,rgba(5,7,10,.38),rgba(5,7,10,.72))}
+.brand,.nav,.statusbar,.drawer,.legend,.tour{background:rgba(5,7,10,.84);border:1px solid rgba(25,230,230,.22);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.3);backdrop-filter:blur(20px)}
+.brand{letter-spacing:.065em;font-family:system-ui,sans-serif;font-size:.86rem}
+.nav button{font-family:system-ui,sans-serif;font-weight:700;letter-spacing:.035em}
+.nav button:hover,.nav button.active{background:rgba(25,230,230,.13)}
+.hero-copy h1{font-family:system-ui,sans-serif;font-weight:900;letter-spacing:-.065em;text-shadow:none}
+.hero-copy p{font-family:system-ui,sans-serif;font-size:clamp(.95rem,1.4vw,1.1rem);color:#d0dce1}
+.eyebrow{font-family:system-ui,sans-serif;font-weight:800}
+.drawer{box-shadow:-14px 12px 60px rgba(0,0,0,.55)}
+.drawer h2{font-family:system-ui,sans-serif}
+.drawer p,.chip,.statusbar,.legend{font-family:system-ui,sans-serif}
+button:focus-visible,a:focus-visible{outline:3px solid #19e6e6;outline-offset:3px}
+@media(max-width:760px){.topbar{top:10px;left:10px;right:10px}.nav{display:flex;position:absolute;top:51px;left:0;right:0;overflow-x:auto;max-width:100%;scrollbar-width:thin;scrollbar-color:#19e6e6 transparent}.nav button{flex:none;min-height:42px}.hero-copy{top:48%;width:calc(100vw - 32px)}.hero-copy h1{font-size:clamp(2rem,10vw,3.5rem)}.drawer{top:118px;max-height:calc(100dvh - 188px)}.statusbar{bottom:8px;left:8px;right:8px;flex-wrap:wrap;font-size:.6rem}.tour{bottom:74px;min-height:44px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
