@@ -75,19 +75,27 @@ function addNode(d){
    const skybridge=new THREE.Mesh(new THREE.TorusGeometry(5.3,.22,8,48),accent);
    skybridge.rotation.x=Math.PI/2;skybridge.position.y=h*.85;g.add(skybridge);
  }
- // Four facade sides with individually visible window strips and mullions.
+ // Instanced facade geometry: two draw calls per building rather than hundreds.
  const rows=Math.max(lite?3:5,Math.floor(h/(lite?4.5:2.25)));
+ const lit=[],regular=[];
  for(let level=0;level<rows;level++){
    const y=2.6+level*(h*.70/rows);
    for(let col=-2;col<=2;col++){
      const x=col*w/6;
-     const front=block(g,.55,.72,.09,x,y,depth/2+.07,(level+col)%7===0?accent:glass);
-     front.userData.node=d;
-     block(g,.55,.72,.09,x,y,-depth/2-.07,glass);
-     block(g,.09,.72,.55,w/2+.07,y,col*depth/6,glass);
-     block(g,.09,.72,.55,-w/2-.07,y,col*depth/6,glass);
+     for(const side of [-1,1]){
+       (side===1&&(level+col)%7===0?lit:regular).push([x,y,side*(depth/2+.07),.55,.72,.09]);
+       regular.push([side*(w/2+.07),y,col*depth/6,.09,.72,.55]);
+     }
    }
  }
+ const dummy=new THREE.Object3D();
+ function windows(items,material){
+   if(!items.length)return;
+   const mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),material,items.length);
+   items.forEach((v,i)=>{dummy.position.set(v[0],v[1],v[2]);dummy.scale.set(v[3],v[4],v[5]);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix)});
+   mesh.instanceMatrix.needsUpdate=true;mesh.userData.node=d;g.add(mesh);
+ }
+ windows(regular,glass);windows(lit,accent);
  // Plinth, illuminated entry portal, and a visible building footprint.
  block(g,2.3,3,.18,0,2,depth/2+.18,accent);
  const perimeter=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w+3,1.2,depth+3)),new THREE.LineBasicMaterial({color:d.color,transparent:true,opacity:.8}));
@@ -108,7 +116,7 @@ let pulseIndex=0,pulseT=0;
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
 renderer.domElement.addEventListener('pointerdown',e=>{mouse.x=e.clientX/innerWidth*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects([...groups.values()].flatMap(g=>g.children),true);const hit=hits.find(h=>h.object.userData.node);if(hit)show(hit.object.userData.node)});
 function show(d){hero.classList.add('fade');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');drawerContent.innerHTML=`<div class="kicker">ATG PROTOCOL DISTRICT</div><h2>${d.name}</h2><p>${d.role}</p><div class="meta"><div class="chip">SURFACE<b>AVAILABLE</b></div><div class="chip">RUNTIME<b>DEMO</b></div><div class="chip">FLOW<b>${sequence.includes(d.id)?'CORRIDOR':'SUPPORT'}</b></div><div class="chip">AUTHORITY<b>BOUNDED</b></div></div><a href="${d.href}">OPEN SOURCE ↗</a>`;focus(d.id)}
-function focus(id){const g=groups.get(id);if(!g)return;controls.target.copy(g.position).add(new THREE.Vector3(0,5,0));const dir=mobileView()?new THREE.Vector3(0,40,75):new THREE.Vector3(0,22,38);camera.position.copy(g.position).add(dir)}
+function focus(id){const g=groups.get(id);if(!g)return;const h=g.userData.data.h+9;controls.target.copy(g.position).add(new THREE.Vector3(0,h*.48,0));const dir=mobileView()?new THREE.Vector3(0,h*1.7,h*3.2):new THREE.Vector3(0,h*.9,h*2.0);camera.position.copy(g.position).add(dir)}
 document.querySelectorAll('[data-focus]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-focus]').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.focus==='core'){closeDrawer();controls.target.set(0,4,0);camera.position.set(0,mobileView()?88:52,mobileView()?142:86)}else{const d=DATA.find(x=>x.id===b.dataset.focus);if(d)show(d)}}));
 
 let touring=false,tourStep=0,lastStep=0;document.getElementById('tourBtn').addEventListener('click',()=>{touring=!touring;tourStep=0;lastStep=0;document.getElementById('tourBtn').textContent=touring?'STOP CORRIDOR':'RUN THE CORRIDOR'});
