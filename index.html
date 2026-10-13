@@ -89,7 +89,7 @@ function mat(c,intensity=.55){return new THREE.MeshStandardMaterial({color:0x080
 function addNode(d){const g=new THREE.Group();g.position.set(d.x,0,d.z);let body;
  if(d.shape==='tower'||d.shape==='spire'){body=new THREE.Mesh(new THREE.CylinderGeometry(4.2,5.8,d.h,8),mat(d.color,.45));body.position.y=d.h/2}
  else if(d.shape==='ring'){body=new THREE.Mesh(new THREE.TorusGeometry(6,1.2,12,36),mat(d.color,.75));body.rotation.x=Math.PI/2;body.position.y=7}
- else if(d.shape==='gate'){const left=new THREE.Mesh(new THREE.BoxGeometry(3,d.h,3),mat(d.color,.62));const right=left.clone();left.position.set(-5,d.h/2,0);right.position.set(5,d.h/2,0);const top=new THREE.Mesh(new THREE.BoxGeometry(13,2,3),mat(d.color,.72));top.position.y=d.h;g.add(left,right,top)}
+ else if(d.shape==='gate'){const left=new THREE.Mesh(new THREE.BoxGeometry(3,d.h,3),mat(d.color,.62));const right=left.clone();left.position.set(-5,d.h/2,0);right.position.set(5,d.h/2,0);const top=new THREE.Mesh(new THREE.BoxGeometry(13,2,3),mat(d.color,.72));top.position.y=d.h;[left,right,top].forEach(mesh=>{mesh.userData.node=d});g.add(left,right,top)}
  else {body=new THREE.Mesh(new THREE.BoxGeometry(d.shape==='forge'?12:10,d.h,d.shape==='terminal'?9:10),mat(d.color,.5));body.position.y=d.h/2}
  if(body){body.userData.node=d;g.add(body)}
  const ring=new THREE.Mesh(new THREE.RingGeometry(5.8,6.2,48),new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:.38,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.04;g.add(ring);

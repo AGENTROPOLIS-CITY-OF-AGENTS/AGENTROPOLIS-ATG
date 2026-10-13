@@ -18,7 +18,7 @@
   const tourButton=document.getElementById('tourBtn');
   const motionButton=document.getElementById('motionToggle');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  let paused=reduced.matches,timer=null,tourIndex=0,touring=false,sceneReady=false;
+  let paused=reduced.matches,timer=null,tourIndex=0,touring=false,sceneReady=false,tourHash=null;
   const escape=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function current(){return Object.hasOwn(pages,location.hash.slice(1))?location.hash.slice(1):'overview'}
   function sourceLink(p){return source+(p.tree?'tree/':'blob/')+'main/'+p.path}
@@ -39,9 +39,9 @@
     window.dispatchEvent(new CustomEvent('atg:focus',{detail:{id:p.id}}));
   }
   function stopTour(message='Explore at your own pace.'){
-    touring=false;clearInterval(timer);timer=null;tourButton.textContent='Start guided tour';tourButton.setAttribute('aria-pressed','false');document.getElementById('tourStatus').textContent=message;
+    touring=false;tourHash=null;clearInterval(timer);timer=null;tourButton.textContent='Start guided tour';tourButton.setAttribute('aria-pressed','false');document.getElementById('tourStatus').textContent=message;
   }
-  function tourStep(){if(tourIndex>=flow.length){stopTour('Tour complete. Review the source or revisit any step.');return}location.hash=flow[tourIndex];document.getElementById('tourStatus').textContent=`Step ${tourIndex+1} of 6 · ${pages[flow[tourIndex]].title}`;tourIndex++}
+  function tourStep(){if(tourIndex>=flow.length){stopTour('Tour complete. Review the source or revisit any step.');return}tourHash='#'+flow[tourIndex];if(location.hash!==tourHash){location.hash=tourHash}else{tourHash=null;revealContent()}document.getElementById('tourStatus').textContent=`Step ${tourIndex+1} of 6 · ${pages[flow[tourIndex]].title}`;tourIndex++}
   tourButton.addEventListener('click',()=>{if(touring){stopTour();return}touring=true;tourIndex=0;tourButton.textContent='Stop guided tour';tourButton.setAttribute('aria-pressed','true');tourStep();timer=setInterval(tourStep,10000)});
   document.querySelector('.nav').addEventListener('click',e=>{if(e.target.closest('a'))stopTour()});
   panel.addEventListener('click',e=>{if(e.target.closest('a,button'))stopTour()});
@@ -51,7 +51,9 @@
   addEventListener('atg:select',e=>{stopTour();const entry=Object.entries(pages).find(([,p])=>p.id===e.detail.id);if(entry){location.hash=entry[0];document.getElementById('content').focus({preventScroll:true})}});
   addEventListener('atg:ready',()=>{sceneReady=true;render();motion()});
   setTimeout(()=>{if(!sceneReady)document.getElementById('sceneStatus').textContent='3D view unavailable. Explore every step using the navigation.'},8000);
-  addEventListener('hashchange',render);
+  function revealContent(){const content=document.getElementById('content');content.focus({preventScroll:true});content.scrollIntoView({block:'start',behavior:'instant'})}
+  addEventListener('hashchange',()=>{if(tourHash===location.hash){tourHash=null}else{stopTour()}render();revealContent()});
+  document.querySelector('.brand').addEventListener('click',()=>{stopTour();if(location.hash==='#overview')revealContent()});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour('Tour paused while the page was hidden.')});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){stopTour();location.hash='overview'}});
   render();motion();
