@@ -3,6 +3,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/+esm';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.179.1/examples/jsm/controls/OrbitControls.js/+esm';
 
 const app=document.getElementById('world');
+const tier=document.getElementById('qualityTier')?.value||'ADAPTIVE';
+const lite=tier==='LITE';
 const hero=document.getElementById('heroCopy');
 const drawer=document.getElementById('drawer');
 const drawerContent=document.getElementById('drawerContent');
@@ -13,13 +15,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
 const toast=document.getElementById('toast');
 const video=document.getElementById('bgVideo');
 video.addEventListener('error',()=>{video.style.display='none';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),4200)});
-video.play().catch(()=>{});
+// Cinematic media is disabled in the public shell and never auto-loaded.
 
 const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x05030a,.015);
+scene.fog=new THREE.FogExp2(0x05030a,lite?.012:.015);
 const mobileView=()=>innerWidth<=760;
 const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,.1,1000); camera.position.set(0,52,86);
-const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15; renderer.setClearColor(0x000000,0); app.appendChild(renderer.domElement);
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,lite?1:tier==='FULL'?2:1.5)); renderer.setSize(innerWidth,innerHeight); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15; renderer.setClearColor(0x000000,0); app.appendChild(renderer.domElement);
 const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.dampingFactor=.05; controls.target.set(0,4,0); controls.minDistance=42; controls.maxDistance=180; controls.maxPolarAngle=Math.PI*.46; controls.minPolarAngle=Math.PI*.20;
 scene.add(new THREE.HemisphereLight(0x84ddff,0x120817,2.15));
 const key=new THREE.DirectionalLight(0xff2a2a,2.3);key.position.set(-35,50,30);scene.add(key);
@@ -74,7 +76,7 @@ function addNode(d){
    skybridge.rotation.x=Math.PI/2;skybridge.position.y=h*.85;g.add(skybridge);
  }
  // Four facade sides with individually visible window strips and mullions.
- const rows=Math.max(5,Math.floor(h/2.25));
+ const rows=Math.max(lite?3:5,Math.floor(h/(lite?4.5:2.25)));
  for(let level=0;level<rows;level++){
    const y=2.6+level*(h*.70/rows);
    for(let col=-2;col<=2;col++){
