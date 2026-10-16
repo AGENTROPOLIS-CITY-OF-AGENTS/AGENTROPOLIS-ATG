@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/profiles/browser-fleet-action-v1.schema.json",
+  "title": "ATG:WEB_ACTION Browser Fleet Execution Binding v1",
+  "description": "Supplemental provider-neutral binding; not an authorization artifact. Critical fields MUST be referenced in Execution Envelope must_understand.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "version",
+    "action_id",
+    "principal_ref",
+    "mandate_ref",
+    "intent",
+    "target_origin",
+    "risk_tier",
+    "adapter",
+    "sandbox",
+    "authorization",
+    "receipt"
+  ],
+  "properties": {
+    "profile": {
+      "const": "ATG:WEB_ACTION:BROWSER_FLEET"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "action_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "principal_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mandate_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "enum": [
+        "navigate",
+        "read",
+        "search",
+        "screenshot",
+        "click",
+        "type",
+        "upload",
+        "download",
+        "submit",
+        "publish",
+        "purchase",
+        "authenticate",
+        "sign",
+        "delete"
+      ]
+    },
+    "target_origin": {
+      "type": "string",
+      "pattern": "^https://[^\\s/]+(?::[0-9]+)?$"
+    },
+    "risk_tier": {
+      "enum": [
+        "observe",
+        "low",
+        "material",
+        "high"
+      ]
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "session_id",
+        "profile_type"
+      ],
+      "properties": {
+        "family": {
+          "enum": [
+            "chromium",
+            "chrome",
+            "brave",
+            "edge",
+            "firefox",
+            "browser-harness",
+            "browser-use",
+            "webmcp",
+            "computer-use",
+            "other"
+          ]
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_type": {
+          "const": "ephemeral-agent"
+        },
+        "website_skill_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skill_assurance_receipt_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "plugin_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "sandbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "whole_process",
+        "isolation_profile",
+        "attestation_ref",
+        "egress_policy_ref"
+      ],
+      "properties": {
+        "whole_process": {
+          "const": true
+        },
+        "isolation_profile": {
+          "enum": [
+            "container",
+            "microvm",
+            "sealed-runtime"
+          ]
+        },
+        "attestation_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "egress_policy_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "decision_ref",
+        "execution_envelope_ref"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "read_only",
+            "bounded_write",
+            "approval_required"
+          ]
+        },
+        "decision_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_envelope_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approval_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "correlation_id"
+      ],
+      "properties": {
+        "required": {
+          "const": true
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
