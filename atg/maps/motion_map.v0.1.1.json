@@ -1,0 +1,934 @@
+{
+  "schema": "agentropolis.atg.motion_map.v0",
+  "map_version": "0.1.1",
+  "status": "PROPOSED — local draft by GROK-07; not published; pending ATG-owner review and Neuro approval",
+  "derived_from": "m002/grok-07/atg-expression-map.v0.1.0.json",
+  "grammar_ref": {
+    "repo": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+    "path": "atg-glyphs.json",
+    "commit": "f6e9cbfa8e1d4ddd2e85bdcc0a6ad45153800dcb",
+    "blob": "4be8ac02c6802eb4e968d9a4abac69bcdedf2aa9",
+    "sha256": "264209fa6e9ef34c8bbfb74c9b1ab659e5d84e155e857284be1372d90590d1f7",
+    "glyph_count": 24,
+    "status": "ATG grammar defines SEMANTIC glyphs only (n=name, m=meaning). It defines NO canonical affect or gesture alphabet. signal_ids below are canonical glyph names verbatim; every clip/preset/affect binding is PROPOSED pending ATG-owner review."
+  },
+  "signal_id_format": "SPEC §2.2 signal_id is an opaque string from this map; GROK-07 uses the ATG glyph name `n` verbatim (e.g. \"AR\"). No prefix, no transformation.",
+  "category_note": "SPEC §2.2 envelope requires category ∈ {affect, body_language, gesture, viseme_hint}; ATG defines no meaning groups, so category = envelope enum by layer and the glyph meaning `m` is carried verbatim in glyph_meaning.",
+  "combined_form": "Each glyph emits two entries sharing one signal_id: one L1_gesture + one L3_facial. Host resolves both on one signal (layer_hint selects one if set).",
+  "priority": {
+    "order": [
+      "facial",
+      "gesture",
+      "gaze"
+    ],
+    "rule": "Envelope `priority` first; on tie for the same channel, facial > gesture > gaze (SPEC §2.2, unchanged). Visemes override mouth shapes while speaking (SPEC §3.4).",
+    "deviation_from_spec": false
+  },
+  "expression_constraints": {
+    "max_concurrent_presets": 2,
+    "max_weight_sum": 1.2,
+    "blendshape_set": "ARKit52"
+  },
+  "entries": [
+    {
+      "signal_id": "AR",
+      "glyph_meaning": "ORIGIN",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.point.fwd",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:AR (ORIGIN)"
+      }
+    },
+    {
+      "signal_id": "AR",
+      "glyph_meaning": "ORIGIN",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.1,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:AR (ORIGIN)"
+      }
+    },
+    {
+      "signal_id": "BEL",
+      "glyph_meaning": "LINK",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:BEL (LINK)"
+      }
+    },
+    {
+      "signal_id": "BEL",
+      "glyph_meaning": "LINK",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.smile_soft",
+      "preset_weights": {
+        "mouthSmileLeft": 0.35,
+        "mouthSmileRight": 0.35,
+        "cheekSquintLeft": 0.1,
+        "cheekSquintRight": 0.1
+      },
+      "affect": {
+        "valence": 0.4,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:BEL (LINK)"
+      }
+    },
+    {
+      "signal_id": "DOR",
+      "glyph_meaning": "DATA",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:DOR (DATA)"
+      }
+    },
+    {
+      "signal_id": "DOR",
+      "glyph_meaning": "DATA",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.think",
+      "preset_weights": {
+        "browInnerUp": 0.3,
+        "eyeLookUpLeft": 0.15,
+        "eyeLookUpRight": 0.15,
+        "mouthPressLeft": 0.1,
+        "mouthPressRight": 0.1
+      },
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:DOR (DATA)"
+      }
+    },
+    {
+      "signal_id": "ESH",
+      "glyph_meaning": "EVIDENCE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.point.fwd",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:ESH (EVIDENCE)"
+      }
+    },
+    {
+      "signal_id": "ESH",
+      "glyph_meaning": "EVIDENCE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.1,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:ESH (EVIDENCE)"
+      }
+    },
+    {
+      "signal_id": "FEN",
+      "glyph_meaning": "FLOW",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:FEN (FLOW)"
+      }
+    },
+    {
+      "signal_id": "FEN",
+      "glyph_meaning": "FLOW",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.2,
+        "arousal": 0.5
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:FEN (FLOW)"
+      }
+    },
+    {
+      "signal_id": "GHAR",
+      "glyph_meaning": "GOVERN",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "GHAR",
+      "glyph_meaning": "GOVERN",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:GHAR (GOVERN)"
+      }
+    },
+    {
+      "signal_id": "HEL",
+      "glyph_meaning": "HELPER",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.wave.right",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:HEL (HELPER)"
+      }
+    },
+    {
+      "signal_id": "HEL",
+      "glyph_meaning": "HELPER",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.smile_soft",
+      "preset_weights": {
+        "mouthSmileLeft": 0.35,
+        "mouthSmileRight": 0.35,
+        "cheekSquintLeft": 0.1,
+        "cheekSquintRight": 0.1
+      },
+      "affect": {
+        "valence": 0.5,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:HEL (HELPER)"
+      }
+    },
+    {
+      "signal_id": "IR",
+      "glyph_meaning": "IDENTITY",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "IR",
+      "glyph_meaning": "IDENTITY",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.1,
+        "arousal": 0.2
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:IR (IDENTITY)"
+      }
+    },
+    {
+      "signal_id": "KOR",
+      "glyph_meaning": "KNOWLEDGE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:KOR (KNOWLEDGE)"
+      }
+    },
+    {
+      "signal_id": "KOR",
+      "glyph_meaning": "KNOWLEDGE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.think",
+      "preset_weights": {
+        "browInnerUp": 0.3,
+        "eyeLookUpLeft": 0.15,
+        "eyeLookUpRight": 0.15,
+        "mouthPressLeft": 0.1,
+        "mouthPressRight": 0.1
+      },
+      "affect": {
+        "valence": 0.2,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:KOR (KNOWLEDGE)"
+      }
+    },
+    {
+      "signal_id": "LUN",
+      "glyph_meaning": "LIFECYCLE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:LUN (LIFECYCLE)"
+      }
+    },
+    {
+      "signal_id": "LUN",
+      "glyph_meaning": "LIFECYCLE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.2
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:LUN (LIFECYCLE)"
+      }
+    },
+    {
+      "signal_id": "MOR",
+      "glyph_meaning": "MANDATE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.point.fwd",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:MOR (MANDATE)"
+      }
+    },
+    {
+      "signal_id": "MOR",
+      "glyph_meaning": "MANDATE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:MOR (MANDATE)"
+      }
+    },
+    {
+      "signal_id": "NAR",
+      "glyph_meaning": "NETWORK",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:NAR (NETWORK)"
+      }
+    },
+    {
+      "signal_id": "NAR",
+      "glyph_meaning": "NETWORK",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.1,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:NAR (NETWORK)"
+      }
+    },
+    {
+      "signal_id": "OR",
+      "glyph_meaning": "OBSERVE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "OR",
+      "glyph_meaning": "OBSERVE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.think",
+      "preset_weights": {
+        "browInnerUp": 0.3,
+        "eyeLookUpLeft": 0.15,
+        "eyeLookUpRight": 0.15,
+        "mouthPressLeft": 0.1,
+        "mouthPressRight": 0.1
+      },
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.2
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:OR (OBSERVE)"
+      }
+    },
+    {
+      "signal_id": "PRA",
+      "glyph_meaning": "PERMISSION",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "PRA",
+      "glyph_meaning": "PERMISSION",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.2,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:PRA (PERMISSION)"
+      }
+    },
+    {
+      "signal_id": "RHE",
+      "glyph_meaning": "RESOURCE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:RHE (RESOURCE)"
+      }
+    },
+    {
+      "signal_id": "RHE",
+      "glyph_meaning": "RESOURCE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.1,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:RHE (RESOURCE)"
+      }
+    },
+    {
+      "signal_id": "SYN",
+      "glyph_meaning": "SYSTEM",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:SYN (SYSTEM)"
+      }
+    },
+    {
+      "signal_id": "SYN",
+      "glyph_meaning": "SYSTEM",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:SYN (SYSTEM)"
+      }
+    },
+    {
+      "signal_id": "TOR",
+      "glyph_meaning": "TRANSFORM",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:TOR (TRANSFORM)"
+      }
+    },
+    {
+      "signal_id": "TOR",
+      "glyph_meaning": "TRANSFORM",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.think",
+      "preset_weights": {
+        "browInnerUp": 0.3,
+        "eyeLookUpLeft": 0.15,
+        "eyeLookUpRight": 0.15,
+        "mouthPressLeft": 0.1,
+        "mouthPressRight": 0.1
+      },
+      "affect": {
+        "valence": 0.2,
+        "arousal": 0.6
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:TOR (TRANSFORM)"
+      }
+    },
+    {
+      "signal_id": "UR",
+      "glyph_meaning": "USER",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.wave.right",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:UR (USER)"
+      }
+    },
+    {
+      "signal_id": "UR",
+      "glyph_meaning": "USER",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.smile_soft",
+      "preset_weights": {
+        "mouthSmileLeft": 0.35,
+        "mouthSmileRight": 0.35,
+        "cheekSquintLeft": 0.1,
+        "cheekSquintRight": 0.1
+      },
+      "affect": {
+        "valence": 0.5,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:UR (USER)"
+      }
+    },
+    {
+      "signal_id": "VAEL",
+      "glyph_meaning": "VALUE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "VAEL",
+      "glyph_meaning": "VALUE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.smile_soft",
+      "preset_weights": {
+        "mouthSmileLeft": 0.35,
+        "mouthSmileRight": 0.35,
+        "cheekSquintLeft": 0.1,
+        "cheekSquintRight": 0.1
+      },
+      "affect": {
+        "valence": 0.5,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:VAEL (VALUE)"
+      }
+    },
+    {
+      "signal_id": "XEN",
+      "glyph_meaning": "EXECUTE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.point.fwd",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:XEN (EXECUTE)"
+      }
+    },
+    {
+      "signal_id": "XEN",
+      "glyph_meaning": "EXECUTE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.2,
+        "arousal": 0.7
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:XEN (EXECUTE)"
+      }
+    },
+    {
+      "signal_id": "YRA",
+      "glyph_meaning": "YIELD",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.nod.small",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": true,
+        "substitute_clip_id": null,
+        "non_motion_cue": null
+      }
+    },
+    {
+      "signal_id": "YRA",
+      "glyph_meaning": "YIELD",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.smile_soft",
+      "preset_weights": {
+        "mouthSmileLeft": 0.35,
+        "mouthSmileRight": 0.35,
+        "cheekSquintLeft": 0.1,
+        "cheekSquintRight": 0.1
+      },
+      "affect": {
+        "valence": 0.5,
+        "arousal": 0.5
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:YRA (YIELD)"
+      }
+    },
+    {
+      "signal_id": "ZOR",
+      "glyph_meaning": "PROTECT",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.shrug",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:ZOR (PROTECT)"
+      }
+    },
+    {
+      "signal_id": "ZOR",
+      "glyph_meaning": "PROTECT",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.frown_soft",
+      "preset_weights": {
+        "mouthFrownLeft": 0.3,
+        "mouthFrownRight": 0.3,
+        "browDownLeft": 0.2,
+        "browDownRight": 0.2
+      },
+      "affect": {
+        "valence": -0.3,
+        "arousal": 0.6
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:ZOR (PROTECT)"
+      }
+    },
+    {
+      "signal_id": "QEL",
+      "glyph_meaning": "QUERY",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.shrug",
+      "loop": false,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:QEL (QUERY)"
+      }
+    },
+    {
+      "signal_id": "QEL",
+      "glyph_meaning": "QUERY",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.think",
+      "preset_weights": {
+        "browInnerUp": 0.3,
+        "eyeLookUpLeft": 0.15,
+        "eyeLookUpRight": 0.15,
+        "mouthPressLeft": 0.1,
+        "mouthPressRight": 0.1
+      },
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.4
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:QEL (QUERY)"
+      }
+    },
+    {
+      "signal_id": "CYR",
+      "glyph_meaning": "CYCLE",
+      "category": "gesture",
+      "layer": "L1_gesture",
+      "clip_id": "gesture.talk.idle",
+      "loop": true,
+      "default_intensity": 0.6,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:CYR (CYCLE)"
+      }
+    },
+    {
+      "signal_id": "CYR",
+      "glyph_meaning": "CYCLE",
+      "category": "affect",
+      "layer": "L3_facial",
+      "expression_preset": "facial.express.neutral",
+      "preset_weights": {},
+      "affect": {
+        "valence": 0.0,
+        "arousal": 0.3
+      },
+      "default_intensity": 0.5,
+      "binding_status": "PROPOSED",
+      "reduced_motion": {
+        "allowed": false,
+        "fallback": "static_neutral",
+        "substitute_clip_id": null,
+        "non_motion_cue": "caption:CYR (CYCLE)"
+      }
+    }
+  ]
+}
