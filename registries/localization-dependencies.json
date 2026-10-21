@@ -1,0 +1,31 @@
+{
+  "profile": "ATG:LOCALIZATION",
+  "version": "0.1.0-draft.2",
+  "status": "proposed-offline-only",
+  "dependencies": [
+    {
+      "repository": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+      "commit": "4c9bec3c8ed928d1c6e34c50e092c53aea0b08f7",
+      "path": "docs/ATG-PROFILE-LANGUAGE.md",
+      "sha256": "097b8c59e755a7881b71f6848d4354cf030734322d3a496aaf2cee73e487acef"
+    },
+    {
+      "repository": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+      "commit": "4c9bec3c8ed928d1c6e34c50e092c53aea0b08f7",
+      "path": "registries/language-surface.yaml",
+      "sha256": "e2e059dfb387834b8b79ca099d0afbd9a5f28e9df8bc292c4bf2a07246258f6a"
+    },
+    {
+      "repository": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+      "commit": "4c9bec3c8ed928d1c6e34c50e092c53aea0b08f7",
+      "path": "docs/ATG-VOICE-PROFILE.md",
+      "sha256": "0e9cdefaeb85b244b9822906cd4d0e5118889ddae04f54f37391cb64c30c472f"
+    },
+    {
+      "repository": "AGENTROPOLIS-CITY-OF-AGENTS/AGENTROPOLIS-ATG",
+      "commit": "4c9bec3c8ed928d1c6e34c50e092c53aea0b08f7",
+      "path": "contracts/core/execution-envelope.schema.json",
+      "sha256": "2e83830104afc76581816a86236df4aee7d6cc64169e4b078946ab6219f69973"
+    }
+  ]
+}

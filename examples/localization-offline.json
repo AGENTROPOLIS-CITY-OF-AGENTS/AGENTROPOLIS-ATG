@@ -1,0 +1,100 @@
+{
+  "profile": "ATG:LOCALIZATION",
+  "profile_version": "0.1.0-draft.2",
+  "contract": {
+    "repository": "fixture",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "fixture",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "provider": {
+    "repository": "fixture",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path": "fixture",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "source": {
+    "content_id": "fixture",
+    "repository": "fixture",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "locale": "en-US",
+    "semantic_ir": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "exposure_approval": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  },
+  "target": {
+    "locale": "pt-BR",
+    "region": "BR",
+    "audience_evidence": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  },
+  "transform": {
+    "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "source_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "locale": "pt-BR",
+    "transform_revision": 1,
+    "previous_transform": null,
+    "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "mode": "literal_translation",
+    "declared_changes": [],
+    "claims_ledger": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "rights": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "quality_state": "REVIEW",
+    "quality": {
+      "producer": "fixture-translator",
+      "model_revision": "3333333333333333333333333333333333333333333333333333333333333333",
+      "method": {
+        "uri": "https://example.invalid/evidence",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "score": 0.95,
+      "threshold": 0.9,
+      "native_reviewer": "fixture-reviewer",
+      "native_review": {
+        "uri": "https://example.invalid/evidence",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "blocking_failures": []
+    }
+  },
+  "destination": {
+    "platform": "offline",
+    "account_id": "fixture",
+    "channel_id": "fixture",
+    "region": "BR"
+  },
+  "release": null,
+  "receipt": {
+    "status": "simulation",
+    "record": {
+      "uri": "https://example.invalid/evidence",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "transform_revision": 1,
+    "contract_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "destination": {
+      "platform": "offline",
+      "account_id": "fixture",
+      "channel_id": "fixture",
+      "region": "BR"
+    },
+    "execution_evidence": null,
+    "observed_outcomes": null
+  }
+}
