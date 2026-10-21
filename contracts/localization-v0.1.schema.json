@@ -1,0 +1,1297 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "profile": {
+      "const": "ATG:LOCALIZATION"
+    },
+    "profile_version": {
+      "const": "0.1.0-draft.2"
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "path",
+        "sha256"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "semantic_ir": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        },
+        "exposure_approval": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        }
+      },
+      "required": [
+        "content_id",
+        "repository",
+        "commit",
+        "sha256",
+        "locale",
+        "semantic_ir",
+        "exposure_approval"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "region": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        }
+      },
+      "required": [
+        "locale",
+        "region",
+        "audience_evidence"
+      ]
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "repository",
+        "commit",
+        "path",
+        "sha256"
+      ]
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "transform_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "previous_transform": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "mode": {
+          "enum": [
+            "literal_translation",
+            "cultural_adaptation",
+            "subtitle",
+            "dub",
+            "graphic"
+          ]
+        },
+        "declared_changes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "claims_ledger": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        },
+        "quality_state": {
+          "enum": [
+            "REVIEW",
+            "VERIFIED",
+            "BLOCKED"
+          ]
+        },
+        "quality": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "producer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "model_revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "method": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "threshold": {
+              "const": 0.9
+            },
+            "native_reviewer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "native_review": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            },
+            "blocking_failures": {
+              "type": "array",
+              "maxItems": 0
+            }
+          },
+          "required": [
+            "producer",
+            "model_revision",
+            "method",
+            "score",
+            "threshold",
+            "native_reviewer",
+            "native_review",
+            "blocking_failures"
+          ]
+        },
+        "voice": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "performer_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "consent_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            },
+            "grant": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "uri": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "sha256"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "key_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "artifact_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "transform_revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "locale": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "destination": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "platform": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "channel_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "region": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "platform",
+                        "account_id",
+                        "channel_id",
+                        "region"
+                      ]
+                    },
+                    "action": {
+                      "enum": [
+                        "publish",
+                        "dub"
+                      ]
+                    },
+                    "voice_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "performer_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "usage": {
+                      "const": "dub"
+                    }
+                  },
+                  "required": [
+                    "source_sha256",
+                    "artifact_sha256",
+                    "transform_revision",
+                    "locale",
+                    "destination",
+                    "action",
+                    "voice_id",
+                    "performer_id",
+                    "usage"
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "issuer",
+                "key_id",
+                "signature",
+                "expires_at",
+                "scope"
+              ]
+            },
+            "usage": {
+              "const": "dub"
+            }
+          },
+          "required": [
+            "id",
+            "performer_id",
+            "consent_ref",
+            "grant",
+            "usage"
+          ]
+        },
+        "captions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        }
+      },
+      "required": [
+        "source_sha256",
+        "source_commit",
+        "locale",
+        "transform_revision",
+        "previous_transform",
+        "artifact_sha256",
+        "mode",
+        "declared_changes",
+        "claims_ledger",
+        "rights",
+        "quality_state",
+        "quality"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "dub"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "voice"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "subtitle"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "captions"
+            ]
+          }
+        }
+      ]
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "account_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channel_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "region": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "platform",
+        "account_id",
+        "channel_id",
+        "region"
+      ]
+    },
+    "release": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "artifact_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "transform_revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "locale": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "destination": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "platform": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "account_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "channel_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "region": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "platform",
+                    "account_id",
+                    "channel_id",
+                    "region"
+                  ]
+                },
+                "action": {
+                  "enum": [
+                    "publish",
+                    "dub"
+                  ]
+                }
+              },
+              "required": [
+                "source_sha256",
+                "artifact_sha256",
+                "transform_revision",
+                "locale",
+                "destination",
+                "action"
+              ]
+            },
+            "human_approval": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "uri": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "sha256"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "key_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "artifact_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "transform_revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "locale": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "destination": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "platform": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "channel_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "region": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "platform",
+                        "account_id",
+                        "channel_id",
+                        "region"
+                      ]
+                    },
+                    "action": {
+                      "enum": [
+                        "publish",
+                        "dub"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "source_sha256",
+                    "artifact_sha256",
+                    "transform_revision",
+                    "locale",
+                    "destination",
+                    "action"
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "issuer",
+                "key_id",
+                "signature",
+                "expires_at",
+                "scope"
+              ]
+            },
+            "destination_permission": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "uri": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "sha256"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "key_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "artifact_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "transform_revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "locale": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "destination": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "platform": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "channel_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "region": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "platform",
+                        "account_id",
+                        "channel_id",
+                        "region"
+                      ]
+                    },
+                    "action": {
+                      "enum": [
+                        "publish",
+                        "dub"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "source_sha256",
+                    "artifact_sha256",
+                    "transform_revision",
+                    "locale",
+                    "destination",
+                    "action"
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "issuer",
+                "key_id",
+                "signature",
+                "expires_at",
+                "scope"
+              ]
+            },
+            "execution_envelope": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            },
+            "aegis_decision": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "uri": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "sha256"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "key_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "artifact_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "transform_revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "locale": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "destination": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "platform": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "channel_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "region": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "platform",
+                        "account_id",
+                        "channel_id",
+                        "region"
+                      ]
+                    },
+                    "action": {
+                      "enum": [
+                        "publish",
+                        "dub"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "source_sha256",
+                    "artifact_sha256",
+                    "transform_revision",
+                    "locale",
+                    "destination",
+                    "action"
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "issuer",
+                "key_id",
+                "signature",
+                "expires_at",
+                "scope"
+              ]
+            },
+            "isolation_54t": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "uri": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "sha256"
+                  ]
+                },
+                "issuer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "key_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "signature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "scope": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "source_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "artifact_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "transform_revision": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "locale": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "destination": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "platform": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "account_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "channel_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "region": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "platform",
+                        "account_id",
+                        "channel_id",
+                        "region"
+                      ]
+                    },
+                    "action": {
+                      "enum": [
+                        "publish",
+                        "dub"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "source_sha256",
+                    "artifact_sha256",
+                    "transform_revision",
+                    "locale",
+                    "destination",
+                    "action"
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "issuer",
+                "key_id",
+                "signature",
+                "expires_at",
+                "scope"
+              ]
+            },
+            "verity_receipt": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "uri",
+                "sha256"
+              ]
+            }
+          },
+          "required": [
+            "scope",
+            "human_approval",
+            "destination_permission",
+            "execution_envelope",
+            "aegis_decision",
+            "isolation_54t",
+            "verity_receipt"
+          ]
+        }
+      ]
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "review",
+            "blocked",
+            "simulation"
+          ]
+        },
+        "record": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "uri",
+            "sha256"
+          ]
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "transform_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "contract_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "destination": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "platform": {
+              "type": "string",
+              "minLength": 1
+            },
+            "account_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "channel_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "region": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "platform",
+            "account_id",
+            "channel_id",
+            "region"
+          ]
+        },
+        "execution_evidence": {
+          "type": "null"
+        },
+        "observed_outcomes": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "status",
+        "record",
+        "source_sha256",
+        "artifact_sha256",
+        "transform_revision",
+        "contract_commit",
+        "destination",
+        "execution_evidence",
+        "observed_outcomes"
+      ]
+    }
+  },
+  "required": [
+    "profile",
+    "profile_version",
+    "contract",
+    "source",
+    "target",
+    "provider",
+    "transform",
+    "destination",
+    "release",
+    "receipt"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/atg/contracts/localization-v0.1.schema.json",
+  "description": "Offline record validation only. No publication capability."
+}
