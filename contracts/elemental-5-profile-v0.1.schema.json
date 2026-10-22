@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ATG ELEMENTAL-5 Task Contract (draft)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "goal_id",
+    "task_id",
+    "element",
+    "capability",
+    "mandate_ref",
+    "policy_ref",
+    "tool",
+    "input_refs",
+    "execution"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "ATG-ELEMENTAL-5/0.1"
+    },
+    "goal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "element": {
+      "enum": [
+        "AIR",
+        "EARTH",
+        "WATER",
+        "FIRE",
+        "LIFE"
+      ]
+    },
+    "capability": {
+      "enum": [
+        "PERCEIVE",
+        "MATERIALIZE",
+        "TRANSFORM",
+        "ACTIVATE",
+        "EVOLVE"
+      ]
+    },
+    "mandate_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "max_spend_usd",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "read_only",
+            "sandbox",
+            "approval_required"
+          ]
+        },
+        "max_spend_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "network": {
+          "enum": [
+            "deny",
+            "allowlisted"
+          ]
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        }
+      }
+    },
+    "receipt_ref": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "element": {
+            "const": "AIR"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capability": {
+            "const": "PERCEIVE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "element": {
+            "const": "EARTH"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capability": {
+            "const": "MATERIALIZE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "element": {
+            "const": "WATER"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capability": {
+            "const": "TRANSFORM"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "element": {
+            "const": "FIRE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capability": {
+            "const": "ACTIVATE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "element": {
+            "const": "LIFE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capability": {
+            "const": "EVOLVE"
+          }
+        }
+      }
+    }
+  ]
+}
