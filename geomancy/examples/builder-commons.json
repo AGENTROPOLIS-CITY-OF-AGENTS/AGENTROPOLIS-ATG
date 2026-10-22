@@ -1,0 +1,42 @@
+{
+  "profile": "ATG:GEOMANCY",
+  "profile_version": "0.1.0",
+  "scene": {
+    "id": "builder-commons-demo",
+    "seed": 54021,
+    "units": "m",
+    "coordinate_system": "right-handed-y-up",
+    "objects": [
+      {
+        "id": "atrium",
+        "kind": "building",
+        "generator": "parametric-box",
+        "dimensions": [
+          20,
+          12,
+          20
+        ],
+        "material": {
+          "base_color": "#12141A"
+        }
+      },
+      {
+        "id": "workshop",
+        "kind": "building",
+        "generator": "parametric-box",
+        "dimensions": [
+          10,
+          7,
+          12
+        ],
+        "material": {
+          "base_color": "#00D2E6"
+        }
+      }
+    ]
+  },
+  "execution": {
+    "mode": "preview-only",
+    "authority_ref": null
+  }
+}
