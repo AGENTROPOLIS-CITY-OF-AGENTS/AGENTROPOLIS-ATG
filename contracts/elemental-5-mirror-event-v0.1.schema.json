@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ATG ELEMENTAL-5 Mirror Event (draft)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "event_type",
+    "timestamp",
+    "district_id",
+    "task_id",
+    "actor_id",
+    "sequence",
+    "authority_ref",
+    "receipt_ref"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ATG-MIRROR-EVENT/0.1"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "enum": [
+        "goal.accepted",
+        "task.queued",
+        "task.started",
+        "tool.invoked",
+        "artifact.created",
+        "validation.passed",
+        "validation.failed",
+        "task.completed",
+        "approval.requested",
+        "release.approved",
+        "deployment.verified",
+        "drift.detected"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "district_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "authority_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "state_before": {
+      "type": "string"
+    },
+    "state_after": {
+      "type": "string"
+    }
+  }
+}
