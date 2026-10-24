@@ -1,0 +1,9 @@
+{
+  "version": "ATG/COMM/1.0",
+  "type": "RESOURCE_UPDATE",
+  "origin": "COMMUNITY_NODE_07",
+  "priority": "HIGH",
+  "payload": "WATER AVAILABLE AT STATION 3",
+  "authority": "UNVERIFIED",
+  "ttl_minutes": 120
+}

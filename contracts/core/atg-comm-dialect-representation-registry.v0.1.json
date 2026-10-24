@@ -1,0 +1,58 @@
+{
+  "version": "0.1",
+  "status": "PROPOSED",
+  "dialects": [
+    "COMM",
+    "SIGNAL",
+    "VERIFY",
+    "IP",
+    "MARKET",
+    "AGENT-LINK",
+    "BROADCAST",
+    "ARCANA54",
+    "LANGUAGE",
+    "COMPUTE-EXECUTION",
+    "CONNECTOME",
+    "CONTINUITY",
+    "EVM-ERC20",
+    "EVM-NATIVE",
+    "SOLANA-NATIVE",
+    "VOICE"
+  ],
+  "representations": [
+    {
+      "id": "canonical-json",
+      "lossless": true,
+      "status": "baseline"
+    },
+    {
+      "id": "utf8-framed",
+      "lossless": true,
+      "status": "requires-framing"
+    },
+    {
+      "id": "international-morse",
+      "lossless": null,
+      "status": "requires-framing-and-escape-grammar"
+    },
+    {
+      "id": "atralith-glyphs",
+      "lossless": false,
+      "status": "semantic-only-24-canonical-assets"
+    },
+    {
+      "id": "human-summary",
+      "lossless": false,
+      "status": "lossy"
+    }
+  ],
+  "map54": {
+    "status": "UNRESOLVED_CANONICAL_IMPLEMENTATION",
+    "contract": "validated-envelope-plus-consented-routing-intent",
+    "prohibit": [
+      "infer-peer-coordinates",
+      "treat-surveillance-overlay-as-relay",
+      "self-grant-authority"
+    ]
+  }
+}
