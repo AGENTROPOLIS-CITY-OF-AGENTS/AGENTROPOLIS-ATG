@@ -1,0 +1,21 @@
+name: Living Game profile
+on:
+  pull_request:
+    paths:
+      - 'contracts/**'
+      - 'examples/living-game-*'
+      - 'tests/test_living_game_profile.py'
+      - '.github/workflows/living-game-profile.yml'
+  push:
+    branches: [main]
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install 'jsonschema>=4.18'
+      - run: python -m unittest tests/test_living_game_profile.py
