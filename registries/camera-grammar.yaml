@@ -1,0 +1,111 @@
+schema: agentropolis.atg.camera-grammar.v1
+profile: ATG_CAMERA_GRAMMAR
+native_language: Atralith
+status: draft
+version: 0.1.0
+
+purpose: >-
+  Canonical, model-agnostic cinematography grammar for expressing camera intent
+  as governed ATG semantics. Vendor-specific prompt syntax is produced only by
+  downstream adapters and is never authoritative ATG syntax.
+
+families:
+  - id: static
+    members: [locked, tripod, handheld_hold]
+  - id: linear
+    members: [push_in, pull_out, truck_left, truck_right, pedestal_up, pedestal_down]
+  - id: angular
+    members: [pan_left, pan_right, tilt_up, tilt_down, roll_cw, roll_ccw]
+  - id: orbital
+    members: [arc_left, arc_right, orbit_cw, orbit_ccw]
+  - id: tracking
+    members: [follow, lead, chase, lateral_track]
+  - id: reveal
+    members: [push_past, pass_through, crane_reveal, rise_reveal]
+  - id: compound
+    members: [dolly_zoom, orbit_push, truck_pan, crane_orbit]
+
+camera_move_contract:
+  required:
+    - id
+    - family
+    - trajectory
+    - subject_lock
+    - framing_start
+    - framing_end
+  optional:
+    - direction
+    - velocity
+    - acceleration
+    - camera_height
+    - lens_behavior
+    - parallax_expected
+    - continuity_constraints
+    - duration_seconds
+    - stabilization
+    - collision_policy
+    - occlusion_policy
+
+semantics:
+  trajectory:
+    type: enum
+    values: [none, linear, angular, orbital, spline, subject_relative, scene_relative]
+  velocity:
+    type: enum
+    values: [micro, slow, medium, fast, ramp_up, ramp_down, custom]
+  acceleration:
+    type: enum
+    values: [constant, ease_in, ease_out, ease_in_out, custom]
+  subject_lock:
+    type: enum
+    values: [none, soft, center, lead_room, gaze_relative, rigid]
+  lens_behavior:
+    type: enum
+    values: [fixed, zoom_in, zoom_out, dolly_zoom, focal_pull]
+  stabilization:
+    type: enum
+    values: [locked, stabilized, shoulder, handheld, floating]
+  parallax_expected:
+    type: enum
+    values: [none, low, medium, high, scene_defined]
+
+adapters:
+  authority: downstream_only
+  targets:
+    - minimax_h3
+    - higgsfield
+    - kling
+    - seedance
+    - runway
+    - generic_video_model
+  rules:
+    - "Adapters MAY translate canonical camera semantics into provider prompt syntax."
+    - "Adapters MUST NOT redefine the canonical meaning of an ATG camera move."
+    - "Provider-specific fields MUST remain non-authoritative annotations."
+
+verification:
+  verifier: PARALLAX
+  receipt_schema: agentropolis.parallax.camera-receipt.v1
+  observations:
+    - camera_displacement
+    - angular_displacement
+    - subject_screen_position
+    - framing_delta
+    - parallax_delta
+    - occlusion_events
+    - trajectory_continuity
+  verdicts: [PASS, PARTIAL, FAIL, UNVERIFIABLE]
+  denial_rule: >-
+    A denied camera action MUST emit an explicit denial record. Absence of visible
+    movement alone is not sufficient evidence that a denial was enforced.
+
+governance:
+  corridor: [Identity, Mandate, Plan, Execute, Receipt, Audit]
+  policy_notes:
+    - "Camera intent is declarative until execution is authorized."
+    - "Execution adapters are capability-scoped by runtime policy."
+    - "PARALLAX receipts verify observed motion independently of generation prompts where possible."
+
+source_notes:
+  - "Movement taxonomy inspired by common cinematography and AI-video camera-control conventions."
+  - "No third-party prompt text is canonicalized or copied as ATG syntax."
