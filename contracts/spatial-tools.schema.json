@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.dev/contracts/spatial-tools.schema.json",
+  "title": "ATG Spatial Tool Contract",
+  "type": "object",
+  "required": ["version", "tools"],
+  "properties": {
+    "version": { "const": "1.0" },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "effect", "requiresProvenance", "grantsExecutionAuthority"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "spatial.query_scene",
+              "spatial.focus_entity",
+              "spatial.set_quantization",
+              "spatial.annotate_scene",
+              "spatial.serialize_scene",
+              "spatial.request_action_from_evidence"
+            ]
+          },
+          "effect": {
+            "type": "string",
+            "enum": ["read", "presentation", "compile_only"]
+          },
+          "requiresProvenance": { "type": "boolean" },
+          "grantsExecutionAuthority": { "const": false }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": "1.0",
+      "tools": [
+        {
+          "name": "spatial.query_scene",
+          "effect": "read",
+          "requiresProvenance": true,
+          "grantsExecutionAuthority": false
+        },
+        {
+          "name": "spatial.request_action_from_evidence",
+          "effect": "compile_only",
+          "requiresProvenance": true,
+          "grantsExecutionAuthority": false
+        }
+      ]
+    }
+  ]
+}
