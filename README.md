@@ -22,7 +22,7 @@ Canonical naming migration requirements are in
 |---|---|
 | **ATG** | Atralith agentic language, semantic contracts, schemas, authority references, receipts, compatibility and domain profiles |
 | **ATG LANGUAGE surface** | Human-visible/native rendering derived from structured Semantic IR |
-| **Domain profiles** | Bounded extensions such as ATG:SIGNAL, ATG:VERIFY, ATG:IP, ATG:MARKET, ATG:AGENT-LINK, ATG:BROADCAST and ATG:ARCANA54 |
+| **Domain profiles** | Bounded extensions such as ATG:SIGNAL, ATG:VERIFY, ATG:IP, ATG:MARKET, ATG:AGENT-LINK, ATG:BROADCAST, ATG:ARCANA54 and ATG:COGNITION |
 | **Adapters** | Provider/runtime implementations that execute authorized work without owning language semantics |
 
 ## Core execution corridor
@@ -91,10 +91,10 @@ Current and emerging profiles include:
 - **ATG:MARKET** — governed market evidence and market-action semantics
 - **ATG:AGENT-LINK** — agent linking and cross-runtime relationship semantics
 - **ATG:BROADCAST** — campaign, KOL, channel, broadcast and attribution semantics
-- **ATG:ARCANA54** — programmable-story-world domain vocabulary
+- **ATG:ARCANA54** — programmable-story-world domain vocabulary\n- **ATG:COGNITION** — human-selected presentation, verbosity, and NEURO workstyle semantics
 - **ATG LANGUAGE** — native visible language surface
 
-A domain profile may add vocabulary and constraints. It may not silently weaken identity, mandate, policy, authority, receipt, provenance, verification, or settlement-routing boundaries.
+See `docs/ATG-PROFILE-COGNITION.md` for the human-facing cognition profile.\n\nA domain profile may add vocabulary and constraints. It may not silently weaken identity, mandate, policy, authority, receipt, provenance, verification, or settlement-routing boundaries.
 
 ## Broadcast and GTM
 
