@@ -1,0 +1,9 @@
+{
+  "artifact":{"artifact_id":"artifact:test-01","media_class":"text","digest":"sha256:test"},
+  "origin":{"generator_class":"test","generator_version":"1"},
+  "signal":{"profile_id":"atg.signal.test","signal_class":"none","payload_mode":"none","user_tracking":false,"executable_semantics":false},
+  "authority":{"mandate_id":"mandate:test","capability_handle":"capability:test"},
+  "policy":{"policy_id":"policy:test","verification_required":true,"covert_payloads_forbidden":true},
+  "verification":{"state":"verified","verified_at":"2026-13-01T00:00:00Z"},
+  "receipt":{"receipt_id":"receipt:test","required":true,"created_at":"not-even-a-date"}
+}
